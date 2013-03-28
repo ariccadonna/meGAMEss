@@ -161,3 +161,21 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+# Unity3D .gitignore file.
+#	 Store this file at the root of your local repository.
+Hack_n_Track/Library/AssetImportState
+Hack_n_Track/Library/AssetServerCacheV3
+Hack_n_Track/Library/FailedAssetImports.txt
+Hack_n_Track/Library/ScriptAssemblies
+Hack_n_Track/Library/ScriptMapper
+Hack_n_Track/Library/assetDatabase3
+Hack_n_Track/Library/cache
+Hack_n_Track/Library/expandedItems
+Hack_n_Track/Library/metadata
+Hack_n_Track/Library/previews
+Hack_n_Track/Library/guidmapper
+Temp
+*.pidb
+build
+
