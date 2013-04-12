@@ -23,13 +23,11 @@ public class LoginEventHandler extends BaseServerEventHandler
    @Override
    public void handleServerEvent(ISFSEvent event) throws SFSException {
       String clientUsername = (String) event.getParameter(SFSEventParam.LOGIN_NAME);
-      //Integer clientId = ((SFSObject) event.getParameter(SFSEventParam.LOGIN_IN_DATA)).getInt("id");
       String clientHash = (String) event.getParameter(SFSEventParam.LOGIN_PASSWORD);
       ISession clientSession = (ISession)event.getParameter(SFSEventParam.SESSION);
       
       String dbUsername = null;
       String dbHash = null;
-      Integer dbGroup = null;
       
       if(clientHash == "") {
          SFSErrorData data = new SFSErrorData(SFSErrorCode.LOGIN_BAD_PASSWORD);
@@ -41,9 +39,9 @@ public class LoginEventHandler extends BaseServerEventHandler
       PreparedStatement stmt = null;
       try {
          connection = dbManager.getConnection();
-         stmt = connection.prepareStatement("SELECT * FROM users WHERE username = ?;",Statement.RETURN_GENERATED_KEYS, ResultSet.TYPE_SCROLL_INSENSITIVE);
-         stmt.setString(1, clientUsername);
-       //  stmt.setInt(1, clientId);
+         stmt = connection.prepareStatement("SELECT * FROM ? WHERE username = ?;",Statement.RETURN_GENERATED_KEYS, ResultSet.TYPE_SCROLL_INSENSITIVE);
+         stmt.setString(1, LoginConsts.USER_TABLE);
+         stmt.setString(2, clientUsername);;
          
          ResultSet result = stmt.executeQuery();
          
@@ -55,7 +53,6 @@ public class LoginEventHandler extends BaseServerEventHandler
          
          dbUsername = result.getString("username");
          dbHash = result.getString("password");
-         //dbGroup = result.getInt("*****");
 
          boolean verify = getApi().checkSecurePassword(clientSession, dbHash, clientHash);
    
@@ -68,11 +65,6 @@ public class LoginEventHandler extends BaseServerEventHandler
             }
          }
          
-         /*if(***** == 8) {
-            SFSErrorData data = new SFSErrorData(SFSErrorCode.LOGIN_BAD_PASSWORD);
-            data.addParameter(clientUsername);
-            throw new SFSLoginException("You are banned from social interaction. Check the forums to find out how long your ban lasts."  + clientId, data);
-         }*/
       }
       
       catch (SQLException e) {
