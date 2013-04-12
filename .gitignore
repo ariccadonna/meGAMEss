@@ -79,7 +79,6 @@ DocProject/Help/html
 publish
 
 # Others
-[Bb]in
 [Oo]bj
 sql
 TestResults
@@ -144,7 +143,7 @@ pip-log.txt
 .DS_Store
 
 # Unity3D .gitignore file.
-#	 Store this file at the root of your local repository.
+#   Store this file at the root of your local repository.
 Hack_n_Track/Library/AssetImportState
 Hack_n_Track/Library/AssetServerCacheV3
 Hack_n_Track/Library/FailedAssetImports.txt
@@ -159,4 +158,3 @@ Hack_n_Track/Library/guidmapper
 Temp
 *.pidb
 build
-
