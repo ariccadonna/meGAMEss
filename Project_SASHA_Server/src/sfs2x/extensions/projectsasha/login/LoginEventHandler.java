@@ -39,9 +39,8 @@ public class LoginEventHandler extends BaseServerEventHandler
       PreparedStatement stmt = null;
       try {
          connection = dbManager.getConnection();
-         stmt = connection.prepareStatement("SELECT * FROM ? WHERE username = ?;",Statement.RETURN_GENERATED_KEYS, ResultSet.TYPE_SCROLL_INSENSITIVE);
-         stmt.setString(1, LoginConsts.USER_TABLE);
-         stmt.setString(2, clientUsername);;
+         stmt = connection.prepareStatement("SELECT * FROM "+ LoginConsts.USER_TABLE +" WHERE username = ?;",Statement.RETURN_GENERATED_KEYS, ResultSet.TYPE_SCROLL_INSENSITIVE);
+         stmt.setString(1, clientUsername);;
          
          ResultSet result = stmt.executeQuery();
          
