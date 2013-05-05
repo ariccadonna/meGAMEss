@@ -11,7 +11,9 @@ public class LoginExtension extends SFSExtension
 	public void init()
 	{
 		addEventHandler(SFSEventType.USER_LOGIN, LoginEventHandler.class);		
-		trace("   LOGIN MANAGER INITIALIZED ! ");
+		addEventHandler(SFSEventType.USER_LOGOUT, LogoutEventHander.class);
+		//addRequestHandler("setOnline", SetPlayerOnline.class);
+		trace("----- LOGIN MANAGER INITIALIZED! -----");
 	}
 	
 	@Override
@@ -19,10 +21,7 @@ public class LoginExtension extends SFSExtension
 	{
 		super.destroy();
 		removeEventHandler(SFSEventType.USER_LOGIN);
-		trace("LOGIN MANAGER STOPPED ! ");
+		removeEventHandler(SFSEventType.USER_LOGOUT);
+		trace("----- LOGIN MANAGER STOPPED! -----");
 	}
-		
-	
-	
-	
 }

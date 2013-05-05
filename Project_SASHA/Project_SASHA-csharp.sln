@@ -1,7 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
-Project("{84FBA0C0-1AD6-6C60-77AB-FCD024B28A95}") = "Hack_n_Track", "Assembly-CSharp-vs.csproj", "{69C5ED78-6BAD-DBA2-EA0F-C8D0AAC4FA1B}"
+Project("{6BD3ECE6-D531-A867-C799-6CEEDA7928F2}") = "Project_SASHA", "Assembly-CSharp-vs.csproj", "{AF164675-CEDE-8EC1-AF97-AF1260F2863B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,15 +9,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{69C5ED78-6BAD-DBA2-EA0F-C8D0AAC4FA1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69C5ED78-6BAD-DBA2-EA0F-C8D0AAC4FA1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69C5ED78-6BAD-DBA2-EA0F-C8D0AAC4FA1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69C5ED78-6BAD-DBA2-EA0F-C8D0AAC4FA1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF164675-CEDE-8EC1-AF97-AF1260F2863B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF164675-CEDE-8EC1-AF97-AF1260F2863B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF164675-CEDE-8EC1-AF97-AF1260F2863B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF164675-CEDE-8EC1-AF97-AF1260F2863B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-															GlobalSection(MonoDevelopProperties) = preSolution
+																																											GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1

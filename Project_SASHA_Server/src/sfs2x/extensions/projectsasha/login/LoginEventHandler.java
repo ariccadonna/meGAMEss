@@ -28,6 +28,7 @@ public class LoginEventHandler extends BaseServerEventHandler
       
       String dbUsername = null;
       String dbHash = null;
+      boolean dbIsOnline = false;
       
       if(clientHash == "") {
          SFSErrorData data = new SFSErrorData(SFSErrorCode.LOGIN_BAD_PASSWORD);
@@ -40,7 +41,7 @@ public class LoginEventHandler extends BaseServerEventHandler
       try {
          connection = dbManager.getConnection();
          stmt = connection.prepareStatement("SELECT * FROM "+ LoginConsts.USER_TABLE +" WHERE username = ?;",Statement.RETURN_GENERATED_KEYS, ResultSet.TYPE_SCROLL_INSENSITIVE);
-         stmt.setString(1, clientUsername);;
+         stmt.setString(1, clientUsername);
          
          ResultSet result = stmt.executeQuery();
          
@@ -52,7 +53,13 @@ public class LoginEventHandler extends BaseServerEventHandler
          
          dbUsername = result.getString("username");
          dbHash = result.getString("password");
-
+         dbIsOnline = result.getBoolean("online");
+         
+         if(dbIsOnline){
+        	 SFSErrorData data = new SFSErrorData(SFSErrorCode.LOGIN_ALREADY_LOGGED);
+        	 throw new SFSLoginException("User Already Online.", data);
+         }
+         
          boolean verify = getApi().checkSecurePassword(clientSession, dbHash, clientHash);
    
          if (!verify) {
@@ -63,6 +70,15 @@ public class LoginEventHandler extends BaseServerEventHandler
                throw new SFSLoginException("Nice try...");
             }
          }
+         
+        stmt = connection.prepareStatement("UPDATE "+ LoginConsts.USER_TABLE + " SET online=? WHERE username = ?",Statement.RETURN_GENERATED_KEYS, ResultSet.TYPE_SCROLL_INSENSITIVE);
+ 		
+ 		 stmt.setBoolean(1, !dbIsOnline);
+         stmt.setString(2, dbUsername);
+         String onoff = !dbIsOnline==true?"on":"off";
+         trace("User "+dbUsername+" set "+onoff+"line");
+         //Set user online or offline
+         stmt.execute();
          
       }
       
