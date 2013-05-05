@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\LoginLobbys.cs" />
-     <Compile Include="Assets\Scripts\LoginScreen.cs" />
      <Compile Include="Assets\Scripts\SmartFoxConnection.cs" />
  <Reference Include="SmartFox2">
  <HintPath>Assets\Plugins\SmartFox2.dll</HintPath>

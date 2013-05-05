@@ -12,6 +12,7 @@ using Sfs2X.Entities;
 using Sfs2X.Requests;
 using Sfs2X.Logging;
 using Sfs2X.Entities.Data;
+using Sfs2X.Util;
 
 public class LoginLobbys : MonoBehaviour {
 	private const string LASTUSERNAME = "LAST_USER_NAME_USED";
@@ -67,6 +68,8 @@ public class LoginLobbys : MonoBehaviour {
 		}
 
 		smartFox.AddLogListener(LogLevel.INFO, OnDebugMessage);
+		
+		SetErrorMessages();
 		
 		username = PlayerPrefs.GetString(LASTUSERNAME, "");
 		password = PlayerPrefs.GetString(LASTPASSWORD, "");
@@ -738,5 +741,11 @@ public class LoginLobbys : MonoBehaviour {
       	settings.IsGame = false;
       	smartFox.Send(new CreateRoomRequest(settings, true, smartFox.LastJoinedRoom));
    }
+	
+	void SetErrorMessages(){
+		SFSErrorCodes.SetErrorMessage(2, "Username is not recognized");
+		SFSErrorCodes.SetErrorMessage(3, "Wrong password");
+		SFSErrorCodes.SetErrorMessage(6, "User already logged");
+	}
 
 }
