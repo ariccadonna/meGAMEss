@@ -17,6 +17,7 @@ using Sfs2X.Util;
 public class LoginLobbys : MonoBehaviour {
 	private const string LASTUSERNAME = "LAST_USER_NAME_USED";
 	private const string LASTPASSWORD = "LAST_PASSWORD_USED";
+	private const string MOTD = "Welcome";
 	
 	private SmartFox smartFox;
 	private string zone = "World1";
@@ -30,12 +31,17 @@ public class LoginLobbys : MonoBehaviour {
 	private bool showGameLobby;
 	private bool loginError = false;
 	private string loginErrorMessage = "";
+	private bool gameCreationError = false;
+	private string createGameErrorMessage = "";
 	private string errorMessage = "";
 	private bool showLoadingScreen = false;
 	
+	private string gameName = "";
+	private bool gamePrivate;
+	private string gamePassword = "";
+	
 	private string newMessage = "";
-	private ArrayList lobbyChatMessages = new ArrayList();
-	private ArrayList gameLobbyChatMessages = new ArrayList();
+	private ArrayList chatMessages = new ArrayList();
 	private System.Object messagesLocker = new System.Object();
 	public GUISkin gSkin;
 	
@@ -50,6 +56,9 @@ public class LoginLobbys : MonoBehaviour {
 	private int screenHeight;
 	private int windowWidth;
 	private int windowHeight;
+	
+	private const string NOGAMENAME = "Insert Game Name!";
+	private const string SHORTORLONGNAME = "Game Name length should be between 3 and 10";
 
 	// Use this for initialization
 	void Start () 
@@ -74,7 +83,6 @@ public class LoginLobbys : MonoBehaviour {
 		username = PlayerPrefs.GetString(LASTUSERNAME, "");
 		password = PlayerPrefs.GetString(LASTPASSWORD, "");
 		
-		lobbyChatMessages.Add("> Welcome");
 	}
 	
 	void FixedUpdate() 
@@ -94,6 +102,7 @@ public class LoginLobbys : MonoBehaviour {
 		ReplaceGUIStyle();
 		
 		screenWidth = Screen.width;
+		Debug.Log(Screen.width);
 		screenHeight = Screen.height;
 		GUI.Label(new Rect(0, 0, screenWidth, screenHeight), "", "background");
 		GUI.Label(new Rect((int)(screenWidth / 3.8), 10, screenWidth / 2, screenHeight / 6), "", "loginTitle");
@@ -133,7 +142,7 @@ public class LoginLobbys : MonoBehaviour {
 					}
 					else if(creatingGame)
 					{
-						displayWindow(12); //Game Creation
+						displayWindow(12, new Rect((int)(screenWidth/3.6), (int)(screenHeight/4),windowWidth, windowHeight)); //Game Creation
 					}
 					else
 					{
@@ -236,6 +245,10 @@ public class LoginLobbys : MonoBehaviour {
 		
 				// Startup up UDP
 				smartFox.InitUDP(serverName, serverPort);
+				
+				//Message of the day setup
+				chatMessages.Add(MOTD);
+
 			}
 		}
 		catch (Exception ex) 
@@ -260,8 +273,12 @@ public class LoginLobbys : MonoBehaviour {
 	 */
 	public void OnLogout(BaseEvent evt) {
 		Debug.Log("OnLogout");
-		isLoggedIn = false;		
+		isLoggedIn = false;	
+		creatingGame = false;
+		showGameLobby = false;
 		currentActiveRoom = null;
+		smartFox.LastJoinedRoom = null;
+		ResetChatHistory();
 		smartFox.RemoveAllEventListeners();
 		smartFox.Disconnect();
 	}
@@ -271,7 +288,7 @@ public class LoginLobbys : MonoBehaviour {
 	*/
 	public void OnJoinRoom(BaseEvent evt) 
 	{
-		
+		ResetChatHistory();
 		Room room = (Room)evt.Params["room"];
 		currentActiveRoom = room;
 		// If we joined a game room, then we either created it (and auto joined) or manually selected a game to join
@@ -289,7 +306,7 @@ public class LoginLobbys : MonoBehaviour {
 	public void OnUserEnterRoom(BaseEvent evt) {
 		User user = (User)evt.Params["user"];
 		lock (messagesLocker) {
-			lobbyChatMessages.Add(user.Name + " joined room");
+			chatMessages.Add(user.Name + " joined room");
 		}
 	}
 
@@ -299,15 +316,10 @@ public class LoginLobbys : MonoBehaviour {
 	private void OnUserLeaveRoom(BaseEvent evt) 
 	{
 		User user = (User)evt.Params["user"];
-		Room room = (Room)evt.Params["room"];
-		if(room.Name == "Lobby")
-			lock (messagesLocker) {
-				lobbyChatMessages.Add(user.Name + " left room");
-			}
-		else
-		{
-			//STUB: COMPLETE IT FOR GAME LOBBY
-		}
+		//Room room = (Room)evt.Params["room"];
+		if(user.Name != smartFox.MySelf.Name)
+			lock (messagesLocker) 
+				chatMessages.Add(user.Name + " left room");
 	}
 	
 	/*
@@ -316,8 +328,8 @@ public class LoginLobbys : MonoBehaviour {
 	public void OnRoomAdded(BaseEvent evt) 
 	{
 		Room room = (Room)evt.Params["room"];
-		// Update view (only if room is game)
-			SetupGameList();
+		Debug.Log("Room added with name: "+room.Name);
+		SetupGameList();
 	}
 	
 	/*
@@ -334,10 +346,8 @@ public class LoginLobbys : MonoBehaviour {
 	*/
 	public void OnUserCountChange(BaseEvent evt) 
 	{
-		//Room room = (Room)evt.Params["room"];
-		//if (room.IsGame ) {
-			SetupGameList();
-		//}
+		Debug.Log("User count change");
+		SetupGameList();
 	}
 
 	/*
@@ -345,6 +355,7 @@ public class LoginLobbys : MonoBehaviour {
 	*/
 	public void OnRoomDeleted(BaseEvent evt) 
 	{
+		Debug.Log("Room deleted");
 		SetupGameList();
 	}
 	
@@ -354,20 +365,21 @@ public class LoginLobbys : MonoBehaviour {
 	private void OnPublicMessage(BaseEvent evt) 
 	{
 		User sender = (User)evt.Params["sender"];
-		Debug.Log (evt.Type);
 		try {
 			string message = (string)evt.Params["message"];
-	
+			Debug.Log ("Public message in:"+evt.Params["room"]);
+			Debug.Log(evt.Params);
 			// We use lock here to ensure cross-thread safety on the messages collection 
-			lock (messagesLocker) {
-				if(evt.Params["room"]=="lobby")
-					lobbyChatMessages.Add("> " + sender.Name + ": " + message);
-				else
-					gameLobbyChatMessages.Add("> " + sender.Name + ": " + message);
-			}
+			Debug.Log(evt.Params["room"]);
+			lock (messagesLocker)
+					chatMessages.Add("> " + sender.Name + ": " + message);
+				
 			
 			chatScrollPosition.y = Mathf.Infinity;
 			Debug.Log("> " + sender.Name + ": " + message);
+			lock (messagesLocker)
+				foreach (string messages in chatMessages)
+					Debug.Log (messages);
 			
 		}
 		catch (Exception ex) {
@@ -392,7 +404,7 @@ public class LoginLobbys : MonoBehaviour {
 	/**********************/
 	/*  Auxiliar Methods  */
 	/**********************/
-	public string CalculateMD5(string input) {
+	private string CalculateMD5(string input) {
         // step 1, calculate MD5 hash from input
         MD5 md5 = System.Security.Cryptography.MD5.Create();
         byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
@@ -407,7 +419,7 @@ public class LoginLobbys : MonoBehaviour {
         return sb.ToString();
     }
 	
-	public void ReplaceGUIStyle()
+	private void ReplaceGUIStyle()
 	{
 		GUI.skin = gSkin;
 	}
@@ -487,7 +499,7 @@ public class LoginLobbys : MonoBehaviour {
 		GUI.Window(windowID,rectPos,WinFunction,"");
 	}
 	
-	void LoginWindow(int windowID)
+	private void LoginWindow(int windowID)
 	{
 		int textXPosition = (int) (windowWidth/8);
 		int fieldXPosition = (int) (windowWidth/2.7);
@@ -495,7 +507,10 @@ public class LoginLobbys : MonoBehaviour {
 		int fieldWidth = (int) (windowWidth/2.5);
 		int fieldHeight = 20;
 		
+		Debug.Log (textXPosition);
+		
 		GUI.Box(new Rect(0, 0, windowWidth, windowHeight), "","log_win");
+		//GUILayout.BeginArea();
         GUI.Label(new Rect((windowWidth/2)-45, 0, 30, 30), "Login","log_label");
 		
 		GUI.Label(new Rect(textXPosition, fieldYBasePosition, 100, 100), "Username: ");
@@ -523,7 +538,7 @@ public class LoginLobbys : MonoBehaviour {
 		
 	}
 	
-	void GeneralLobbyWindow(int windowID)
+	private void GeneralLobbyWindow(int windowID)
 	{
 		int chatBoxLeft = 10;
 		int chatBoxTop = (int)(screenHeight/ 5);
@@ -539,8 +554,7 @@ public class LoginLobbys : MonoBehaviour {
 		int gameListTop = chatBoxTop;
 		int gameListHeight = chatBoxHeight;
 		int gameListWidth = screenWidth-chatBoxWidth-userListWidth-30;
-		
-		
+				
 		//**************//
 		// Chat history //
 		//**************//
@@ -558,7 +572,7 @@ public class LoginLobbys : MonoBehaviour {
 		GUILayout.BeginVertical();
 		// We use lock here to ensure cross-thread safety on the messages collection 
 		lock (messagesLocker)
-			foreach (string message in lobbyChatMessages)
+			foreach (string message in chatMessages)
 				GUILayout.Label(message);
 		
 		GUILayout.EndScrollView();
@@ -569,7 +583,7 @@ public class LoginLobbys : MonoBehaviour {
         newMessage = GUI.TextField(new Rect(chatBoxLeft+1, chatBoxTop+chatBoxHeight+5, chatBoxWidth-110, 20), newMessage, 50);
         if (GUI.Button(new Rect(chatBoxLeft + chatBoxWidth - 105, chatBoxTop+chatBoxHeight+4, 105, 22), "Send") || (Event.current.type == EventType.keyDown && Event.current.character == '\n')) 
 		{
-			smartFox.Send( new PublicMessageRequest(newMessage) );
+			smartFox.Send( new PublicMessageRequest(newMessage, null , currentActiveRoom));
 			newMessage = "";
 		}
 		
@@ -613,7 +627,6 @@ public class LoginLobbys : MonoBehaviour {
 		GUILayout.Space(screenHeight / 24);
 		
 		if (smartFox.RoomList.Count != 1) {
-//			Debug.Log(smartFox.RoomList.Count);
 			// We always have 1 non-game room - Main Lobby
 			GUILayoutOption[] paramGameList = { GUILayout.Width(gameListWidth - 20), GUILayout.Height(gameListHeight - 25) };
 			gameScrollPosition = GUILayout.BeginScrollView(gameScrollPosition, false, true, paramGameList);
@@ -640,17 +653,39 @@ public class LoginLobbys : MonoBehaviour {
 		}
 	}
 	
-	void GameCreationWindow(int windowID)
+	private void GameCreationWindow(int windowID)
 	{
-		if (GUI.Button(new Rect(windowWidth/2, windowHeight/2, 200, 22), "Create Game")){
-			CreateNewRoom();
-			creatingGame = false;
-			showLoadingScreen = false;
-			showGameLobby = true;
+		int textXPosition = (int) (windowWidth/8);
+		int textWidth = 100;
+		int fieldXPosition = (int) (windowWidth/2.7);
+		int fieldYBasePosition = (int) (windowHeight/10);
+		int fieldWidth = (int) (windowWidth/2.5);
+		int fieldHeight = 20;
+		GUI.Box(new Rect(0, 0, windowWidth, windowHeight), "","log_win");
+        GUI.Label(new Rect((windowWidth/2)-45, 0, 100, 30), "Create New Game","log_label");
+		
+		GUI.Label(new Rect(textXPosition, fieldYBasePosition, textWidth, 100), "Game Name: ");
+		gameName = GUI.TextField(new Rect(fieldXPosition, fieldYBasePosition, fieldWidth, fieldHeight), gameName, 25);
+			
+		GUI.Label(new Rect(textXPosition, fieldYBasePosition*2, textWidth, 100), "Is private?: ");
+		gamePrivate = GUI.Toggle(new Rect(fieldXPosition, fieldYBasePosition*2, fieldWidth, fieldHeight), gamePrivate, "");
+		if(gamePrivate){
+			GUI.Label(new Rect(textXPosition, fieldYBasePosition*3, textWidth, 100), "Password: ");
+			gamePassword = GUI.TextField(new Rect(fieldXPosition, fieldYBasePosition*3,fieldWidth, fieldHeight), gamePassword);
 		}
+		
+		//GUI.Button(new Rect(textXPosition, fieldYBasePosition*8, (fieldWidth+fieldXPosition)-textXPosition, 100), "Users");
+		GUI.Label(new Rect(textXPosition, fieldYBasePosition*4, (fieldWidth+fieldXPosition)-textXPosition, 100), createGameErrorMessage, "errorLabel");
+
+		if (GUI.Button(new Rect(textXPosition, fieldYBasePosition*5, fieldWidth/2, windowHeight / 12f), "Create Game"))
+		{
+			CreateNewGameRoom();
+		}
+		if (GUI.Button(new Rect(fieldXPosition + fieldWidth/2, fieldYBasePosition*5, fieldWidth/2, windowHeight / 12f), "Back"))
+			ExitCreateGameLobby();
 	}
 	
-	void GameLobbyWindow(int windowID)
+	private void GameLobbyWindow(int windowID)
 	{
 		
 		int chatBoxLeft = 10;
@@ -661,7 +696,7 @@ public class LoginLobbys : MonoBehaviour {
 		int userListLeft = chatBoxLeft+chatBoxWidth+5;
 		int userListTop = chatBoxTop;
 		int userListHeight = chatBoxHeight;
-		int userListWidth = (int)(screenWidth/3);
+		int userListWidth = (int)(screenWidth/3)-25;
 		
 		//**************//
 		// Chat history //
@@ -680,7 +715,7 @@ public class LoginLobbys : MonoBehaviour {
 		GUILayout.BeginVertical();
 		// We use lock here to ensure cross-thread safety on the messages collection 
 		lock (messagesLocker)
-			foreach (string message in gameLobbyChatMessages)
+			foreach (string message in chatMessages)
 				GUILayout.Label(message);
 		
 		GUILayout.EndScrollView();
@@ -719,33 +754,81 @@ public class LoginLobbys : MonoBehaviour {
 		GUILayout.EndScrollView ();
 		GUILayout.EndArea ();
 		
-		if (GUI.Button(new Rect(userListLeft, userListTop+userListHeight+4, (userListWidth-5)/2, 22), "Logout"))
+		if (GUI.Button(new Rect(userListLeft, userListTop+userListHeight+4, (userListWidth-10)/3, 22), "Back"))
+			ExitGameLobby();
+		
+		if (GUI.Button(new Rect(userListLeft+userListWidth/3, userListTop+userListHeight+4, (userListWidth-10)/3, 22), "Logout"))
 			smartFox.Send( new LogoutRequest());
 					
-		if (GUI.Button(new Rect(3+userListLeft+userListWidth/2, userListTop+userListHeight+4, (userListWidth-5)/2, 22), "Quit"))
+		if (GUI.Button(new Rect(userListLeft+2*userListWidth/3, userListTop+userListHeight+4, (userListWidth)/3, 22), "Quit"))
 			CloseApplication();
 	}
 	
-	void CloseApplication() 
+	private void CloseApplication() 
 	{
 		UnregisterSFSSceneCallbacks();
 		Application.Quit();
 	}
 	
-	void CreateNewRoom()
+	private void CreateNewGameRoom()
    	{
-		print ("creating a new room");
-      	RoomSettings settings = new RoomSettings("First Game");
-      	settings.MaxUsers = 4;
-      	settings.MaxSpectators = 0;
-      	settings.IsGame = false;
-      	smartFox.Send(new CreateRoomRequest(settings, true, smartFox.LastJoinedRoom));
+		gameCreationError = false;
+		
+		if(gameName == ""){
+			SetCustomErrorText(NOGAMENAME);
+			gameCreationError = true;
+		}
+		
+		if(gameName.Length<3 || gameName.Length > 10){
+			SetCustomErrorText(SHORTORLONGNAME);
+			gameCreationError = true;
+		}
+   
+		if(!gameCreationError){
+			RoomSettings settings = new RoomSettings(gameName);
+      		settings.MaxUsers = 4;
+      		settings.MaxSpectators = 0;
+      		settings.IsGame = false;
+      		smartFox.Send(new CreateRoomRequest(settings, true, smartFox.LastJoinedRoom));
+			
+			gameName = "";
+			creatingGame = false;
+			showLoadingScreen = false;
+			showGameLobby = true;
+		}
    }
 	
-	void SetErrorMessages(){
+	private void SetErrorMessages(){
 		SFSErrorCodes.SetErrorMessage(2, "Username is not recognized");
 		SFSErrorCodes.SetErrorMessage(3, "Wrong password");
 		SFSErrorCodes.SetErrorMessage(6, "User already logged");
 	}
-
+	
+	private void ResetChatHistory(){
+		chatMessages = null;
+		chatMessages = new ArrayList();
+	}
+	
+	private void ExitCreateGameLobby(){
+		creatingGame = false;
+		gameCreationError = false;
+		showLoadingScreen = false;
+		showGameLobby = false;
+		SetCustomErrorText("");
+	}
+	
+	private void SetCustomErrorText(String s){
+		createGameErrorMessage = s;
+	}
+	
+	private void ExitGameLobby(){
+		smartFox.Send(new JoinRoomRequest("Lobby"));
+		creatingGame = false;
+		gameCreationError = false;
+		showLoadingScreen = false;
+		showGameLobby = false;
+		SetCustomErrorText("");
+		
+		
+	}
 }

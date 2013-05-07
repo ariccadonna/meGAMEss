@@ -2,6 +2,13 @@
 **LATEST OFFICIAL VERSION**:  [0.0.1.05052013] 
 
 ChangeLog:
+08-May-2013
+1. **Server:**
+  * Added Disconnect Event in loginExtension
+2. **Client:**
+  * Added Game Lobby Creation
+  * Fixed generalLobby and gameLobby chats
+  
 05-May-2013
 
 1. **Server:**

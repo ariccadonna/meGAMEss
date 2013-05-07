@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.smartfoxserver.bitswarm.sessions.ISession;
-import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.core.SFSEventParam;
 import com.smartfoxserver.v2.core.ISFSEvent;
 import com.smartfoxserver.v2.db.IDBManager;
