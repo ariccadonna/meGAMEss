@@ -25,7 +25,7 @@ public class CreateGameLobby extends BaseClientRequestHandler{
 		
 		crs.setAutoRemoveMode(SFSRoomRemoveMode.WHEN_EMPTY);
 		crs.setName(name);
-		crs.setGroupId("gamesLobby");
+		crs.setGroupId("default");
 		crs.setGame(isGame);
 		crs.setMaxVariablesAllowed(100);
 		crs.setMaxSpectators(0);
