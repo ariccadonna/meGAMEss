@@ -138,14 +138,17 @@ public class LoginLobbys : MonoBehaviour {
 					if(!creatingGame && !showGameLobby)
 					{
 						displayWindow(11); //GeneralLobby
+						Debug.Log ("Show general lobby");
 					}
 					else if(creatingGame)
 					{
 						displayWindow(12, new Rect((int)(screenWidth/3.6), (int)(screenHeight/4),windowWidth, windowHeight)); //Game Creation
+						Debug.Log ("Show creation window");
 					}
 					else
 					{
 						displayWindow(13); //Game Lobby
+						Debug.Log ("Show game lobby");
 					}
                 } 
 				else 
@@ -290,6 +293,7 @@ public class LoginLobbys : MonoBehaviour {
 		ResetChatHistory();
 		Room room = (Room)evt.Params["room"];
 		currentActiveRoom = room;
+		SetupGameList();
 		// If we joined a game room, then we either created it (and auto joined) or manually selected a game to join
 		if (room.IsGame) {
 			showLoadingScreen = true;
@@ -469,7 +473,7 @@ public class LoginLobbys : MonoBehaviour {
 		
 		roomNameStrings = rooms.ToArray();
 		roomFullStrings = roomsFull.ToArray();
-        
+		
 		if (smartFox.LastJoinedRoom == null) {
 			smartFox.Send(new JoinRoomRequest("Lobby"));
 		} else {
@@ -527,7 +531,7 @@ public class LoginLobbys : MonoBehaviour {
 		int fieldHeight = 20;
 		
 		GUI.Box(new Rect(0, 0, windowWidth, windowHeight), "","log_win");
-		//GUILayout.BeginArea();
+
         GUI.Label(new Rect((windowWidth/2)-45, 0, 30, 30), "Login","log_label");
 		
 		GUI.Label(new Rect(textXPosition, fieldYBasePosition, 100, 100), "Username: ");
@@ -578,7 +582,7 @@ public class LoginLobbys : MonoBehaviour {
 		// ChatBox
 		GUI.Box(new Rect(chatBoxLeft, chatBoxTop, chatBoxWidth, chatBoxHeight), "Chat","box");
 	
-        GUILayout.BeginArea(new Rect(chatBoxLeft+5, chatBoxTop, chatBoxWidth - 20, chatBoxHeight - 25));
+        GUILayout.BeginArea(new Rect(chatBoxLeft+5, chatBoxTop, chatBoxWidth - 20, chatBoxHeight));
 		GUILayout.Space(screenHeight / 24);
 		
 		//Side Scroller
@@ -721,7 +725,7 @@ public class LoginLobbys : MonoBehaviour {
 		// ChatBox
 		GUI.Box(new Rect(chatBoxLeft, chatBoxTop, chatBoxWidth, chatBoxHeight), "Chat","box");
 	
-        GUILayout.BeginArea(new Rect(chatBoxLeft+5, chatBoxTop, chatBoxWidth - 20, chatBoxHeight - 25));
+        GUILayout.BeginArea(new Rect(chatBoxLeft+5, chatBoxTop, chatBoxWidth - 20, chatBoxHeight));
 		GUILayout.Space(screenHeight / 24);
 		
 		//Side Scroller
@@ -845,7 +849,6 @@ public class LoginLobbys : MonoBehaviour {
 		showLoadingScreen = false;
 		showGameLobby = false;
 		SetCustomErrorText("");
-		
-		
+		roomSelection = -1;
 	}
 }
