@@ -1,8 +1,15 @@
 ## Welcome to Project S.A.S.H.A.!
-**LATEST OFFICIAL VERSION**:  [0.0.1.05052013] 
+**LATEST OFFICIAL VERSION**:  [0.0.1.09052013] 
 
 ChangeLog:
+
+09-May-2013
+
+1. **Server:**
+  * Added custom gameLobby creation handler  
+
 08-May-2013
+
 1. **Server:**
   * Added Disconnect Event in loginExtension
 2. **Client:**
