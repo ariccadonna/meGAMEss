@@ -102,7 +102,6 @@ public class LoginLobbys : MonoBehaviour {
 		ReplaceGUIStyle();
 		
 		screenWidth = Screen.width;
-		Debug.Log(Screen.width);
 		screenHeight = Screen.height;
 		GUI.Label(new Rect(0, 0, screenWidth, screenHeight), "", "background");
 		GUI.Label(new Rect((int)(screenWidth / 3.8), 10, screenWidth / 2, screenHeight / 6), "", "loginTitle");
@@ -176,7 +175,7 @@ public class LoginLobbys : MonoBehaviour {
 		smartFox.AddEventListener(SFSEvent.ROOM_REMOVE, OnRoomDeleted);
 		smartFox.AddEventListener(SFSEvent.PUBLIC_MESSAGE, OnPublicMessage);
 		smartFox.AddEventListener(SFSEvent.UDP_INIT, OnUdpInit);
-		//smartFox.AddEventListener(SFSEvent.EXTENSION_RESPONSE, OnExtensionResponse);
+		smartFox.AddEventListener(SFSEvent.EXTENSION_RESPONSE, OnExtensionResponse);
 	}
 	
 	private void UnregisterSFSSceneCallbacks() 
@@ -303,7 +302,8 @@ public class LoginLobbys : MonoBehaviour {
 	/*
 	* Handle a new user that just entered the current room
 	*/
-	public void OnUserEnterRoom(BaseEvent evt) {
+	public void OnUserEnterRoom(BaseEvent evt) 
+	{
 		User user = (User)evt.Params["user"];
 		lock (messagesLocker) {
 			chatMessages.Add(user.Name + " joined room");
@@ -399,6 +399,25 @@ public class LoginLobbys : MonoBehaviour {
 			Debug.Log("UDP ok");
 			SetupGeneralLobby();
 		}
+	}
+	
+	/*
+	* Handle response from server side
+	*/
+	public void OnExtensionResponse(BaseEvent evt)
+	{
+		string cmd = (string)evt.Params["cmd"];
+    	SFSObject dataObject = (SFSObject)evt.Params["params"];
+		switch (cmd) {
+			case "createGameLobby":
+				bool success = dataObject.GetBool("success");
+				Debug.Log("Response for: "+cmd+" - returned:"+ success);
+				if(success)
+					smartFox.Send (new JoinRoomRequest(dataObject.GetUtfString("roomName")));
+			break;
+		}
+		
+			
 	}
 	
 	/**********************/
@@ -506,8 +525,6 @@ public class LoginLobbys : MonoBehaviour {
 		int fieldYBasePosition = (int) (windowHeight/10);
 		int fieldWidth = (int) (windowWidth/2.5);
 		int fieldHeight = 20;
-		
-		Debug.Log (textXPosition);
 		
 		GUI.Box(new Rect(0, 0, windowWidth, windowHeight), "","log_win");
 		//GUILayout.BeginArea();
@@ -785,11 +802,11 @@ public class LoginLobbys : MonoBehaviour {
 		}
    
 		if(!gameCreationError){
-			RoomSettings settings = new RoomSettings(gameName);
-      		settings.MaxUsers = 4;
-      		settings.MaxSpectators = 0;
-      		settings.IsGame = false;
-      		smartFox.Send(new CreateRoomRequest(settings, true, smartFox.LastJoinedRoom));
+			ISFSObject param = new SFSObject();
+         	param.PutUtfString("name", gameName);
+			param.PutBool("isGame", false);
+			
+			smartFox.Send(new ExtensionRequest("createGameLobby",param));
 			
 			gameName = "";
 			creatingGame = false;
