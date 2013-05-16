@@ -44,8 +44,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\BuddyMessenger.cs" />
+     <Compile Include="Assets\Scripts\ComboBox.cs" />
      <Compile Include="Assets\Scripts\LoginLobbys.cs" />
      <Compile Include="Assets\Scripts\SmartFoxConnection.cs" />
+     <Compile Include="Assets\Scripts\openingLogo.cs" />
  <Reference Include="SmartFox2">
  <HintPath>Assets\Plugins\SmartFox2.dll</HintPath>
  </Reference>

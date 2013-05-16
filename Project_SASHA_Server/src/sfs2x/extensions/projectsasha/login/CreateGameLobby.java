@@ -29,7 +29,7 @@ public class CreateGameLobby extends BaseClientRequestHandler{
 		crs.setGame(isGame);
 		crs.setMaxVariablesAllowed(100);
 		crs.setMaxSpectators(0);
-		crs.setMaxUsers(6);
+		crs.setMaxUsers(5);
 		crs.setDynamic(true);
 		
 		      

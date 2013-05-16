@@ -1,7 +1,21 @@
 ## Welcome to Project S.A.S.H.A.!
-**LATEST OFFICIAL VERSION**:  [0.0.1.09052013] 
+**LATEST OFFICIAL VERSION**:  [0.0.1.16052013] 
 
 ChangeLog:
+
+16-May-2013
+
+1. **Server:**
+  * Added basic structure to the startGame handler
+  * Max user for a new game is now 5 instead of 6
+
+2. **Client:**
+  * Added Buddy list
+  * Implemented chat commands for whisper and to add/remove a buddy
+  * Added a small legend for chat commands
+  * Fixed login and general lobby layouts
+  * Added a new empty scene to be filled with meGAMEss logo
+  * Added Login and Lobby music to the scene
 
 09-May-2013
 
