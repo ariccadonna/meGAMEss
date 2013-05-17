@@ -1,7 +1,18 @@
 ## Welcome to Project S.A.S.H.A.!
-**LATEST OFFICIAL VERSION**:  [0.0.1.16052013] 
+**LATEST OFFICIAL VERSION**:  [0.0.1.17052013] 
 
 ChangeLog:
+
+17-May-2013
+
+1. **Server:**
+  * Modified gameLobby creation for private game handling
+  * Added Accept Invite handler
+
+2. **Client:**
+  * Added chat commands
+  * Added Game invitation
+  * Updated font size in labels and boxes
 
 16-May-2013
 
@@ -44,6 +55,6 @@ ChangeLog:
   * Create Game
   * Complete Game Lobby
 
-12-April-2031
+12-April-2013
 * Renamed to Project S.A.S.H.A.
 * Completed Server loginExtension
