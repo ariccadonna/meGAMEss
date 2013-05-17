@@ -19,12 +19,19 @@ public class CreateGameLobby extends BaseClientRequestHandler{
 	private void createGameLobby(User sender, ISFSObject params){
 
 		CreateRoomSettings crs = new CreateRoomSettings();
-
 		String name = params.getUtfString("name");
+		String password = "";
+		boolean isPrivate = false;
 		boolean isGame = params.getBool("isGame");
+		if(params.getBool("isPrivate")){
+			 password = params.getUtfString("password");
+			 isPrivate = params.getBool("isPrivate");
+		}
 		
 		crs.setAutoRemoveMode(SFSRoomRemoveMode.WHEN_EMPTY);
 		crs.setName(name);
+		crs.setPassword(password);
+		crs.setHidden(isPrivate);
 		crs.setGroupId("default");
 		crs.setGame(isGame);
 		crs.setMaxVariablesAllowed(100);
@@ -39,6 +46,7 @@ public class CreateGameLobby extends BaseClientRequestHandler{
 			getApi().createRoom(sender.getZone(),crs,sender);
 		    reback.putBool("success", true);
 		    reback.putUtfString("roomName", name);
+		    reback.putUtfString("password", password);
 		} catch (SFSCreateRoomException e) {
 			e.printStackTrace();
 		    reback.putBool("success", false);

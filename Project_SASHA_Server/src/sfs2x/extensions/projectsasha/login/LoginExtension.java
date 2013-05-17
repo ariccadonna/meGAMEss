@@ -14,6 +14,7 @@ public class LoginExtension extends SFSExtension
 		addEventHandler(SFSEventType.USER_LOGOUT, LogoutEventHandler.class);
 		addEventHandler(SFSEventType.USER_DISCONNECT, DisconnectEventHandler.class);
 		addRequestHandler("createGameLobby", CreateGameLobby.class);
+		addRequestHandler("acceptInvite", AcceptInviteHandler.class);
 		addRequestHandler("startGame", StartGameHandler.class);
 		trace("----- LOGIN MANAGER INITIALIZED! -----");
 	}

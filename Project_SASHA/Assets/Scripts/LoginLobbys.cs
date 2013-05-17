@@ -11,7 +11,9 @@ using Sfs2X.Core;
 using Sfs2X.Entities;
 using Sfs2X.Entities.Managers;
 using Sfs2X.Entities.Variables;
+using Sfs2X.Entities.Invitation;
 using Sfs2X.Requests;
+using Sfs2X.Requests.Game;
 using Sfs2X.Logging;
 using Sfs2X.Entities.Data;
 using Sfs2X.Util;
@@ -20,14 +22,14 @@ using Sfs2X.Util;
 public class LoginLobbys : MonoBehaviour {
 	private const string LASTUSERNAME = "LAST_USER_NAME_USED";
 	private const string LASTPASSWORD = "LAST_PASSWORD_USED";
-	private const string MOTD = "Welcome";
+	private const string MOTD = "Welcome, type /h or /help for chat commands";
 	
 	private SmartFox smartFox;
 	private string zone = "World1";
 	private string serverName = "127.0.0.1";
 	private int serverPort = 9933;
 	private string username = "";
-    private string password = "";
+	private string password = "";
 	
 	private bool isLoggedIn;
 	private bool creatingGame;
@@ -71,6 +73,8 @@ public class LoginLobbys : MonoBehaviour {
 	private List<Buddy> buddies = new List<Buddy>();
 	GUIContent[] buddyContents;
 	private bool isBuddyListInited;
+	
+	private Invitation currentInvitation;
 	
 	// Use this for initialization
 	void Start () 
@@ -191,6 +195,9 @@ public class LoginLobbys : MonoBehaviour {
 		smartFox.AddEventListener(SFSEvent.PRIVATE_MESSAGE, OnPrivateMessage);
 		smartFox.AddEventListener(SFSEvent.UDP_INIT, OnUdpInit);
 		smartFox.AddEventListener(SFSEvent.EXTENSION_RESPONSE, OnExtensionResponse);
+		smartFox.AddEventListener(SFSEvent.INVITATION, onInvitationReceived);
+		smartFox.AddEventListener(SFSEvent.INVITATION_REPLY, OnInvitationReply);
+		smartFox.AddEventListener(SFSEvent.INVITATION_REPLY_ERROR, onInvitationReplyError);
 		//smartFox.AddLogListener(LogLevel.DEBUG, OnDebugMessage);	
 		
 		// Callbacks for buddy events
@@ -278,11 +285,7 @@ public class LoginLobbys : MonoBehaviour {
 				
 				SetupGeneralLobby();
 				
-				smartFox.Send(new InitBuddyListRequest());
-				
-				//Message of the day setup
-				chatMessages.Add(MOTD);
-
+				smartFox.Send(new InitBuddyListRequest());		
 			}
 		}
 		catch (Exception ex) 
@@ -326,6 +329,9 @@ public class LoginLobbys : MonoBehaviour {
 	public void OnJoinRoom(BaseEvent evt) 
 	{
 		ResetChatHistory();
+		//Message of the day setup
+		lock(messagesLocker)
+			chatMessages.Add(MOTD);
 		Room room = (Room)evt.Params["room"];
 		currentActiveRoom = room;
 		SetupGameList();
@@ -465,6 +471,29 @@ public class LoginLobbys : MonoBehaviour {
 		}
 	}
 	
+	public void OnInvitationReply(BaseEvent evt)
+	{
+		currentInvitation = (Invitation) evt.Params["invitation"];
+		User invitee = (User)evt.Params["invitee"];
+	    if ((InvitationReply)evt.Params["reply"] == InvitationReply.REFUSE)
+        {
+			lock(messagesLocker) 
+				chatMessages.Add("[Server]: " + invitee.Name + " has refused the invitation");
+		}
+	}
+	
+	public void onInvitationReceived(BaseEvent evt)
+	{
+		currentInvitation = (Invitation) evt.Params["invitation"];
+			lock(messagesLocker) 
+				chatMessages.Add(currentInvitation.Inviter.Name + " invited you to a game. Type /accept to join");
+		//Debug.Log ("got an invite "+evt.Params["invitee"]);
+	}
+	
+	public void onInvitationReplyError(BaseEvent evt){
+		Debug.Log("Failed to reply to invitation due to the following problem: " + evt.Params["errorMessage"]);
+	}
+	
 	/*
 	 * Handle UDP Initialization
 	 */
@@ -492,7 +521,7 @@ public class LoginLobbys : MonoBehaviour {
 				bool success = dataObject.GetBool("success");
 				Debug.Log("Response for: "+cmd+" - returned:"+ success);
 				if(success)
-					smartFox.Send (new JoinRoomRequest(dataObject.GetUtfString("roomName")));
+					smartFox.Send (new JoinRoomRequest(dataObject.GetUtfString("roomName"),dataObject.GetUtfString("password")));
 			break;
 			
 			case "startGame":
@@ -717,6 +746,9 @@ public class LoginLobbys : MonoBehaviour {
 				continue;
 			}
 			
+			if(room.IsHidden)
+				continue;
+			
 			Debug.Log ("Room id: " + room.Id + " has name: " + room.Name);
 			
 			rooms.Add(room.Name);
@@ -783,7 +815,7 @@ public class LoginLobbys : MonoBehaviour {
 		int fieldHeight = 20;
 		int labelHeight = 100;
 		
-		GUI.Box(new Rect(textXPosition-20, fieldYBasePosition-20 , fieldXPosition+fieldWidth-textXPosition+40, labelHeight*2), "","smallBox");
+		GUI.Box(new Rect(textXPosition-20, fieldYBasePosition-20 , fieldXPosition+fieldWidth-textXPosition+60, labelHeight*2), "","smallBox");
 		
 		GUI.Label(new Rect(textXPosition, fieldYBasePosition, 100, labelHeight), "Username: ");
 		username = GUI.TextField(new Rect(fieldXPosition, fieldYBasePosition, fieldWidth, fieldHeight), username, 25);
@@ -864,9 +896,7 @@ public class LoginLobbys : MonoBehaviour {
 			newMessage = "";
 		}
 		
-		GUI.Label (new Rect(chatBoxLeft+1,chatBoxTop+chatBoxHeight+25, chatBoxWidth-110,20),"Private Message: /w username text");
-		GUI.Label (new Rect(chatBoxLeft+1,chatBoxTop+chatBoxHeight+40, chatBoxWidth-110,25),"Add to buddy list: /add username");
-		GUI.Label (new Rect(chatBoxLeft+1,chatBoxTop+chatBoxHeight+55, chatBoxWidth-110,25),"Remove from buddy list: /remove username");
+		//GUI.Label (new Rect(chatBoxLeft+1,chatBoxTop+chatBoxHeight+25, chatBoxWidth-110,20),"[/help][/h] shows chat commands");
 		
 		//**************//
 		//   User list  //
@@ -1040,9 +1070,7 @@ public class LoginLobbys : MonoBehaviour {
 			newMessage = "";
 		}
 		
-		GUI.Label (new Rect(chatBoxLeft+1,chatBoxTop+chatBoxHeight+25, chatBoxWidth-110,20),"Private Message: /w username text");
-		GUI.Label (new Rect(chatBoxLeft+1,chatBoxTop+chatBoxHeight+40, chatBoxWidth-110,25),"Add to buddy list: /add username");
-		GUI.Label (new Rect(chatBoxLeft+1,chatBoxTop+chatBoxHeight+55, chatBoxWidth-110,25),"Remove from buddy list: /remove username");
+		//GUI.Label (new Rect(chatBoxLeft+1,chatBoxTop+chatBoxHeight+25, chatBoxWidth-110,20),"[/help][/h] shows chat commands");
 		
 		//**************//
 		//   User list  //
@@ -1138,9 +1166,10 @@ public class LoginLobbys : MonoBehaviour {
    
 		if(!gameCreationError){
 			ISFSObject param = new SFSObject();
-         	param.PutUtfString("name", gameName);
+			param.PutUtfString("name", gameName);
 			param.PutBool("isGame", false);
-			
+			param.PutBool ("isPrivate", gamePrivate);
+			param.PutUtfString("password", gamePassword);
 			smartFox.Send(new ExtensionRequest("createGameLobby",param));
 			
 			gameName = "";
@@ -1186,72 +1215,281 @@ public class LoginLobbys : MonoBehaviour {
 	public void processChatMessage(string theMessage){
 		
 		string[] splittedMessage = theMessage.Split(' ');
+		int parametersLength = splittedMessage.Length;
 		ISFSObject parameters = new SFSObject();
-		string buddyUsername;
-			
-		switch (splittedMessage[0]){
-			case "/w": //private message
-				User recipient = smartFox.UserManager.GetUserByName(splittedMessage[1]);
-				theMessage = "";
-				if(recipient.Name == smartFox.MySelf.Name){
-					lock(messagesLocker)
-						chatMessages.Add ("[Server]: you can't whisper yourself");
-					break;
-				}
-				for(int j = 2; j<splittedMessage.Length;j++)
-					theMessage += " "+splittedMessage[j];
-				//ISFSObject parameters = new SFSObject();
-				parameters.PutUtfString("recipientName", recipient.Name);
-				smartFox.Send(new PrivateMessageRequest(theMessage,recipient.Id,parameters));
-			break;
-			
-			case "/add": //add Buddy
-				buddyUsername = splittedMessage[1];
-				User buddyToAdd;
-				if(buddyUsername == smartFox.MySelf.Name){
-					lock(messagesLocker)
-						chatMessages.Add ("[Server]: you can't add yourself to your buddy list");
-					break;
-				}
-				if(smartFox.UserManager.ContainsUserName(buddyUsername))
-				{
-					if(!smartFox.BuddyManager.ContainsBuddy(buddyUsername))
+		string buddyUsername, gameName, gamePassword;
+		char[] chars = splittedMessage[0].ToCharArray();
+		bool isCommand = chars[0] == '/'?true:false;
+		Room gameRoom;
+
+		if(isCommand){
+			switch (splittedMessage[0]){
+				
+				/*
+				 * whisper a user
+				 * /whisper <username> <text>
+				 */
+				case "/whisper":
+				case "/w": //private message
+				
+					if(parametersLength == 1 || splittedMessage[1]=="")//missing username and message
 					{
-						smartFox.Send(new AddBuddyRequest(buddyUsername));
-						lock(messagesLocker)
-							chatMessages.Add("[Server]: " + buddyUsername + " added to buddy list");
+						lock(messagesLocker){
+								chatMessages.Add ("[Server]: missing username and message \n usage: /w <username> <text>");
+								chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
 					}
-				}else{
-					lock (messagesLocker)
-						chatMessages.Add("[Server]: " + buddyUsername + " is not online");
-				}
-			break;
-			
-			case "/remove": //remove Buddy
-				buddyUsername = splittedMessage[1];
-				if(smartFox.BuddyManager.ContainsBuddy(buddyUsername)){
-					smartFox.Send (new RemoveBuddyRequest(buddyUsername));
-					lock(messagesLocker)
-						chatMessages.Add("[Server]: " + buddyUsername + " removed from buddy list");
-				}else{
-					lock(messagesLocker)
-						chatMessages.Add("[Server]: " + buddyUsername + " not present in your buddy list");
-				}
-			break;
-			
-			case "/invite": //invite to Game
-				//TODO
-				//	/invite username
-			break;
-			
-			case "/join": //join an existing Game
-				//TODO
-				// /join gameName password
-			break;
-			
-			default: //public message
-				smartFox.Send(new PublicMessageRequest(theMessage, null , currentActiveRoom));	
-			break;
+				
+					if(parametersLength == 2 || splittedMessage[2]=="")//missing message
+					{
+						lock(messagesLocker){
+								chatMessages.Add ("[Server]: missing message \n usage: /w <username> <text>");
+								chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+				
+					User recipient = smartFox.UserManager.GetUserByName(splittedMessage[1]);
+					theMessage = "";
+					if(recipient == null){
+						lock(messagesLocker){
+							chatMessages.Add ("[Server]: user " + splittedMessage[1] + " is not online");
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+					if(recipient.Name == smartFox.MySelf.Name){
+						lock(messagesLocker){
+							chatMessages.Add ("[Server]: you can't whisper yourself");
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+					for(int j = 2; j<splittedMessage.Length;j++)
+						theMessage += " "+splittedMessage[j];
+					parameters.PutUtfString("recipientName", recipient.Name);
+					smartFox.Send(new PrivateMessageRequest(theMessage,recipient.Id,parameters));
+				break;
+				
+				/*
+				 * add to buddy list
+				 * /add <username>
+				 */
+				case "/add": //add Buddy
+	
+					if(parametersLength == 1)//missing username and message
+					{
+						lock(messagesLocker){
+								chatMessages.Add ("[Server]: missing username \n usage: /add <username>");
+								chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+				
+					buddyUsername = splittedMessage[1];
+					User buddyToAdd;
+					if(buddyUsername == smartFox.MySelf.Name){
+						lock(messagesLocker){
+							chatMessages.Add ("[Server]: you can't add yourself to your buddy list");
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+					if(smartFox.UserManager.ContainsUserName(buddyUsername))
+					{
+						if(!smartFox.BuddyManager.ContainsBuddy(buddyUsername))
+						{
+							smartFox.Send(new AddBuddyRequest(buddyUsername));
+							lock(messagesLocker){
+								chatMessages.Add("[Server]: " + buddyUsername + " added to buddy list");
+								chatScrollPosition.y = Mathf.Infinity;
+							}
+						}
+					}else{
+						lock (messagesLocker){
+							chatMessages.Add("[Server]: " + buddyUsername + " is not online");
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+					}
+				break;
+				
+				/*
+				 * remove from buddy list
+				 * /remove <username>
+				 */
+				case "/remove":
+				case "/rm": //remove Buddy
+					if(parametersLength == 1)//missing username and message
+					{
+						lock(messagesLocker){
+								chatMessages.Add ("[Server]: missing username \n usage: [/rm][/remove] <username>");
+								chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+				
+					buddyUsername = splittedMessage[1];
+					if(smartFox.BuddyManager.ContainsBuddy(buddyUsername)){
+						smartFox.Send (new RemoveBuddyRequest(buddyUsername));
+						lock(messagesLocker){
+							chatMessages.Add("[Server]: " + buddyUsername + " removed from buddy list");
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+					}else{
+						lock(messagesLocker){
+							chatMessages.Add("[Server]: " + buddyUsername + " not present in your buddy list");
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+					}
+				break;
+				
+				/*
+				 * invite to current Game
+				 * /invite <username>
+				 */
+				case "/invite":
+				case "/inv": //invite to Game
+					if(parametersLength == 1)//missing username and message
+					{
+						lock(messagesLocker){
+								chatMessages.Add ("[Server]: missing username \n usage: [/inv][/invite] <username>");
+								chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+				
+					buddyUsername = splittedMessage[1];
+					User user1 = smartFox.UserManager.GetUserByName(buddyUsername);
+					if(user1.Name == smartFox.MySelf.Name){
+						lock(messagesLocker)
+							chatMessages.Add ("[Server]: you can't add yourself to current game");
+						break;
+					}
+					if(smartFox.UserManager.ContainsUser(user1)){
+						List<object> invitedUsers = new List<object>();
+						invitedUsers.Add(user1);
+						parameters.PutUtfString("gameName", smartFox.LastJoinedRoom.Name);
+						smartFox.Send( new InviteUsersRequest(invitedUsers, 20, parameters) );
+						smartFox.Send (new PublicMessageRequest(smartFox.MySelf.Name + " invited " + buddyUsername + " to current game"));
+					}else{
+						lock(messagesLocker){
+							chatMessages.Add ("[Server]: " + buddyUsername + " is not online");
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+					}
+				break;
+				
+				/*
+				 * join an existing Game
+				 * /join <gameName> [<gamePassword>]
+				 */
+				case "/join":
+				case "/j": 
+					if(parametersLength < 2)
+					{
+						lock(messagesLocker){
+								chatMessages.Add ("[Server]: missing parameters \n usage: [/j][/join] <gameName> [<gamePassword>]");
+								chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+					gameName = splittedMessage[1];
+					if(parametersLength > 2) //if there is a password
+						gamePassword = splittedMessage[2];
+					else
+						gamePassword = "";
+					
+					if(smartFox.RoomManager.ContainsRoom(gameName)) 
+						//if gameLobby exist join it
+						smartFox.Send ( new JoinRoomRequest(gameName,gamePassword));
+					else{
+						//if not, create a new gameLobby
+			        	parameters.PutUtfString("name", gameName);
+						parameters.PutBool("isGame", false);
+						parameters.PutUtfString ("password", gamePassword);
+						if(gamePassword!="")
+							parameters.PutBool ("isPrivate", true);
+						else
+							parameters.PutBool("isPrivate", false);
+						smartFox.Send(new ExtensionRequest("createGameLobby",parameters));
+						creatingGame = false;
+						showLoadingScreen = false;
+						showGameLobby = true;
+					}
+				break;
+				
+				/*
+				 * accept current invite
+				 * /accept
+				 */
+				case "/accept": //accept an invite to a game
+					if(currentInvitation == null){
+						lock(messagesLocker){
+							chatMessages.Add("[Server]: You don't have any game invitation to accept");
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+					parameters = (SFSObject)currentInvitation.Params;
+					gameName = (string) parameters.GetUtfString("gameName");
+					gameRoom = smartFox.RoomManager.GetRoomByName(gameName);
+					smartFox.Send (new InvitationReplyRequest(currentInvitation,InvitationReply.ACCEPT));
+					if(gameRoom!=null && !gameRoom.IsHidden){
+						smartFox.Send (new JoinRoomRequest(gameName));
+					}else if(gameRoom.IsHidden){
+						parameters.PutUtfString("gameName", gameName);
+						smartFox.Send(new ExtensionRequest("acceptInvite",parameters));
+					}	
+					creatingGame = false;
+					showLoadingScreen = false;
+					showGameLobby = true;
+				break;
+				
+				/*
+				 * refuse current invite
+				 * /refuse
+				 */
+				case "/refuse": //accept an invite to a game
+					if(currentInvitation == null){
+						lock(messagesLocker){
+							chatMessages.Add("[Server]: You don't have any game invitation to refuse");
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+						break;
+					}
+					parameters = (SFSObject)currentInvitation.Params;
+					smartFox.Send (new InvitationReplyRequest(currentInvitation,InvitationReply.REFUSE));
+					currentInvitation = null;
+				break;
+				
+				case "/help":
+				case "/h":
+					lock(messagesLocker){
+						chatMessages.Add("--------------------------HELP--------------------------");
+						chatMessages.Add("[/w][/whisper] <username> <text> : send a PM to username");
+						chatMessages.Add("[/add] <username> : add username to buddy list");
+						chatMessages.Add("[/rm][/remove] <username> : remove username from buddy list");
+						chatMessages.Add("[/inv][/invite] <username> : invite username to current game");
+						chatMessages.Add("[/accept] : accept current invite request");
+						chatMessages.Add("[/refuse] : refuse current invite request");
+						chatMessages.Add("[/j][/join] <gameName> [<gamePassword>]: join/create gameName with an \n\t\t\t\t\t\t optional password");
+						chatMessages.Add("--------------------------------------------------------");
+						chatScrollPosition.y = Mathf.Infinity;
+					}
+						//chatMessages.Add("[/h][/help] : shows this messages");
+				
+				break;
+				default: //command not found
+					lock(messagesLocker){
+							chatMessages.Add("[Server]: can't find command "+splittedMessage[0]);
+							chatScrollPosition.y = Mathf.Infinity;
+						}
+				break;
+			}
+		}else{
+			//public message
+			smartFox.Send(new PublicMessageRequest(theMessage, null , currentActiveRoom));	
 		}
 	}
 }
