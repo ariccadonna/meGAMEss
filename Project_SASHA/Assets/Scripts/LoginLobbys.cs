@@ -338,7 +338,7 @@ public class LoginLobbys : MonoBehaviour {
 		// If we joined a game room, then we either created it (and auto joined) or manually selected a game to join
 		if (room.IsGame) {
 			showLoadingScreen = true;
-			Debug.Log ("Joined game room " + room.Name);
+			Debug.Log("Joined game room " + room.Name);
 			UnregisterSFSSceneCallbacks();
 			Application.LoadLevel("GameLevel");
 		}
@@ -412,7 +412,7 @@ public class LoginLobbys : MonoBehaviour {
 		User sender = (User)evt.Params["sender"];
 		try {
 			string message = (string)evt.Params["message"];
-			Debug.Log ("Public message in:"+evt.Params["room"]);
+			Debug.Log("Public message in:"+evt.Params["room"]);
 			// Debug.Log(evt.Params);
 			// We use lock here to ensure cross-thread safety on the messages collection 
 			Debug.Log(evt.Params["room"]);
@@ -471,6 +471,9 @@ public class LoginLobbys : MonoBehaviour {
 		}
 	}
 	
+	/*
+	 * Handle a invitation reply 
+	 */
 	public void OnInvitationReply(BaseEvent evt)
 	{
 		currentInvitation = (Invitation) evt.Params["invitation"];
@@ -482,14 +485,19 @@ public class LoginLobbys : MonoBehaviour {
 		}
 	}
 	
+	/*
+	 * Handle a invitation recived
+	 */
 	public void onInvitationReceived(BaseEvent evt)
 	{
 		currentInvitation = (Invitation) evt.Params["invitation"];
 			lock(messagesLocker) 
 				chatMessages.Add(currentInvitation.Inviter.Name + " invited you to a game. Type /accept to join");
-		//Debug.Log ("got an invite "+evt.Params["invitee"]);
 	}
 	
+	/*
+	 * Handle invitation errors
+	 */
 	public void onInvitationReplyError(BaseEvent evt){
 		Debug.Log("Failed to reply to invitation due to the following problem: " + evt.Params["errorMessage"]);
 	}
@@ -525,7 +533,8 @@ public class LoginLobbys : MonoBehaviour {
 			break;
 			
 			case "startGame":
-				Debug.Log ("Start Game Request");
+				//TODO
+				Debug.Log("Start Game Request");
 			break;
 		}
 		
@@ -557,7 +566,7 @@ public class LoginLobbys : MonoBehaviour {
 	{
 		lock(messagesLocker) 
 		{
-	    	messages.Add( (Buddy)evt.Params["buddy"] + " removed" );
+	    	messages.Add((Buddy)evt.Params["buddy"] + " removed" );
 		}
 		OnBuddyListUpdate(evt);
 	}  
@@ -572,7 +581,7 @@ public class LoginLobbys : MonoBehaviour {
 		
 		lock(messagesLocker) 
 		{
-		    messages.Add( (Buddy)evt.Params["buddy"] + " " + message );
+		    messages.Add((Buddy)evt.Params["buddy"] + " " + message );
 		}
 		smartFox.Send(new PrivateMessageRequest(message + " you", buddy.Id));
 		
@@ -695,7 +704,7 @@ public class LoginLobbys : MonoBehaviour {
 	 */
 	private void OnBuddyVarsUpdate(BaseEvent evt) 
 	{
-		Debug.Log (("Buddy variables update from: " + (Buddy)evt.Params["buddy"]));
+		Debug.Log(("Buddy variables update from: " + (Buddy)evt.Params["buddy"]));
 	}
 	
 	public void UpdateBuddyVars(SFSBuddyVariable buddyVar) 
@@ -708,6 +717,10 @@ public class LoginLobbys : MonoBehaviour {
 	/**********************/
 	/*  Auxiliar Methods  */
 	/**********************/
+	
+	/*
+	 * Calculate MD5 of input string
+	 */
 	private string CalculateMD5(string input) {
         // step 1, calculate MD5 hash from input
         MD5 md5 = System.Security.Cryptography.MD5.Create();
@@ -723,17 +736,25 @@ public class LoginLobbys : MonoBehaviour {
         return sb.ToString();
     }
 	
+	/*
+	 * Replace Default GUI.skin with a custom one
+	 */
 	private void ReplaceGUIStyle()
 	{
 		GUI.skin = gSkin;
 	}
 	
+	/*
+	 * General lobby initial setup
+	 */
 	private void SetupGeneralLobby() {
 		SetupGameList();
-		
 	}
 	
-	private void SetupGameList () {
+	/*
+	 * Game list setup fired at each update
+	 */
+	private void SetupGameList() {
         
 		List<string> rooms = new List<string> ();
 		List<string> roomsFull = new List<string> ();
@@ -749,7 +770,7 @@ public class LoginLobbys : MonoBehaviour {
 			if(room.IsHidden)
 				continue;
 			
-			Debug.Log ("Room id: " + room.Id + " has name: " + room.Name);
+			Debug.Log("Room id: " + room.Id + " has name: " + room.Name);
 			
 			rooms.Add(room.Name);
 			roomsFull.Add(room.Name + " (" + room.UserCount + "/" + room.MaxUsers + ")");
@@ -765,6 +786,9 @@ public class LoginLobbys : MonoBehaviour {
 		}
 	}
 	
+	/*
+	 * Display the window specified by windowID
+	 */
 	private void displayWindow(int windowID){
 		GUI.WindowFunction WinFunction = null;
 		Rect rectPos = new Rect(0, 0, screenWidth, screenHeight);
@@ -786,6 +810,9 @@ public class LoginLobbys : MonoBehaviour {
 		GUI.Window(windowID,rectPos,WinFunction,"");
 	}
 	
+	/*
+	 * Display the window specified by windowID at rectPos
+	 */
 	private void displayWindow(int windowID, Rect rectPos){
 		GUI.WindowFunction WinFunction = null;
 		switch(windowID){
@@ -806,6 +833,9 @@ public class LoginLobbys : MonoBehaviour {
 		GUI.Window(windowID,rectPos,WinFunction,"");
 	}
 	
+	/*
+	 * Display the login window
+	 */
 	private void LoginWindow(int windowID)
 	{
 		int textXPosition = (int) (windowWidth/8);
@@ -838,13 +868,13 @@ public class LoginLobbys : MonoBehaviour {
 		}
 		if (GUI.Button(new Rect(fieldXPosition + fieldWidth/2, fieldYBasePosition*5, fieldWidth/2, windowHeight / 12f), "Quit"))
 			CloseApplication();
-			
-		
 	}
-
+	
+	/*
+	 * Display the general lobby window
+	 */
 	private void GeneralLobbyWindow(int windowID)
 	{
-		
 		int chatBoxLeft = 10;
 		int chatBoxTop = (int)(screenHeight/ 5);
 		int chatBoxWidth = (int)(screenWidth/ 2);
@@ -921,7 +951,7 @@ public class LoginLobbys : MonoBehaviour {
 		GUILayout.EndArea ();
 		
 		if (GUI.Button(new Rect(userListLeft, userListTop+userListHeight+4, (userListWidth-5)/2, 22), "Logout"))
-			smartFox.Send( new LogoutRequest());
+			smartFox.Send(new LogoutRequest());
 					
 		if (GUI.Button(new Rect(3+userListLeft+userListWidth/2, userListTop+userListHeight+4, (userListWidth-5)/2, 22), "Quit"))
 			CloseApplication();
@@ -990,6 +1020,9 @@ public class LoginLobbys : MonoBehaviour {
 		}
 	}
 	
+	/*
+	 * Display the game creation window
+	 */
 	private void GameCreationWindow(int windowID)
 	{
 		int textXPosition = (int) (windowWidth/8);
@@ -1021,6 +1054,9 @@ public class LoginLobbys : MonoBehaviour {
 			ExitCreateGameLobby();
 	}
 	
+	/*
+	 * Display the game lobby window
+	 */
 	private void GameLobbyWindow(int windowID)
 	{
 		
@@ -1131,7 +1167,7 @@ public class LoginLobbys : MonoBehaviour {
 			ExitGameLobby();
 		
 		if (GUI.Button(new Rect(userListLeft+userListWidth/3, buddyListTop+buddyListHeight+4, (userListWidth-10)/3, 22), "Logout"))
-			smartFox.Send( new LogoutRequest());
+			smartFox.Send(new LogoutRequest());
 		
 		if (GUI.Button(new Rect(userListLeft+2*userListWidth/3, buddyListTop+buddyListHeight+50, (userListWidth)/3, 22), "Start Game")){
 			ISFSObject gameParams = new SFSObject();
@@ -1144,12 +1180,18 @@ public class LoginLobbys : MonoBehaviour {
 			CloseApplication();
 	}
 	
+	/*
+	 * Close the game
+	 */
 	private void CloseApplication() 
 	{
 		UnregisterSFSSceneCallbacks();
 		Application.Quit();
 	}
 	
+	/*
+	 * Check params and create new game lobby
+	 */
 	private void CreateNewGameRoom()
    	{
 		gameCreationError = false;
@@ -1168,7 +1210,7 @@ public class LoginLobbys : MonoBehaviour {
 			ISFSObject param = new SFSObject();
 			param.PutUtfString("name", gameName);
 			param.PutBool("isGame", false);
-			param.PutBool ("isPrivate", gamePrivate);
+			param.PutBool("isPrivate", gamePrivate);
 			param.PutUtfString("password", gamePassword);
 			smartFox.Send(new ExtensionRequest("createGameLobby",param));
 			
@@ -1179,17 +1221,26 @@ public class LoginLobbys : MonoBehaviour {
 		}
    }
 	
+	/*
+	 * Custom error messages
+	 */
 	private void SetErrorMessages(){
 		SFSErrorCodes.SetErrorMessage(2, "Username is not recognized");
 		SFSErrorCodes.SetErrorMessage(3, "Wrong password");
 		SFSErrorCodes.SetErrorMessage(6, "User already logged");
 	}
 	
+	/*
+	 * Reset chat history
+	 */
 	private void ResetChatHistory(){
 		chatMessages = null;
 		chatMessages = new ArrayList();
 	}
 	
+	/*
+	 * Exit from GameCreationWindow()
+	 */
 	private void ExitCreateGameLobby(){
 		creatingGame = false;
 		gameCreationError = false;
@@ -1198,10 +1249,16 @@ public class LoginLobbys : MonoBehaviour {
 		SetCustomErrorText("");
 	}
 	
-	private void SetCustomErrorText(String s){
+	/*
+	 * Aux function to set error text
+	 */
+	private void SetCustomErrorText(string s){
 		createGameErrorMessage = s;
 	}
 	
+	/*
+	 * Exit from GameLobbyWindow()
+	 */
 	private void ExitGameLobby(){
 		smartFox.Send(new JoinRoomRequest("Lobby"));
 		creatingGame = false;
@@ -1212,6 +1269,18 @@ public class LoginLobbys : MonoBehaviour {
 		roomSelection = -1;
 	}
 	
+	/*
+	 * Process chat messages/commands
+	 * Available commands:
+	 * /w [or /whisper] <username> <text>
+	 * /add <username>
+	 * /rm [or /remove] <username>
+	 * /inv [or /invite] <username>
+	 * /accept
+	 * /refuse
+	 * /j [or /join] <gameName> [<gamePassword>]
+	 * /h [or /help]
+	 */   
 	public void processChatMessage(string theMessage){
 		
 		string[] splittedMessage = theMessage.Split(' ');
@@ -1320,7 +1389,7 @@ public class LoginLobbys : MonoBehaviour {
 				 */
 				case "/remove":
 				case "/rm": //remove Buddy
-					if(parametersLength == 1)//missing username and message
+					if(parametersLength == 1) //missing username and message
 					{
 						lock(messagesLocker){
 								chatMessages.Add ("[Server]: missing username \n usage: [/rm][/remove] <username>");
@@ -1349,8 +1418,8 @@ public class LoginLobbys : MonoBehaviour {
 				 * /invite <username>
 				 */
 				case "/invite":
-				case "/inv": //invite to Game
-					if(parametersLength == 1)//missing username and message
+				case "/inv":
+					if(parametersLength == 1) //missing username and message
 					{
 						lock(messagesLocker){
 								chatMessages.Add ("[Server]: missing username \n usage: [/inv][/invite] <username>");
@@ -1370,8 +1439,8 @@ public class LoginLobbys : MonoBehaviour {
 						List<object> invitedUsers = new List<object>();
 						invitedUsers.Add(user1);
 						parameters.PutUtfString("gameName", smartFox.LastJoinedRoom.Name);
-						smartFox.Send( new InviteUsersRequest(invitedUsers, 20, parameters) );
-						smartFox.Send (new PublicMessageRequest(smartFox.MySelf.Name + " invited " + buddyUsername + " to current game"));
+						smartFox.Send(new InviteUsersRequest(invitedUsers, 20, parameters));
+						smartFox.Send(new PublicMessageRequest(smartFox.MySelf.Name + " invited " + buddyUsername + " to current game"));
 					}else{
 						lock(messagesLocker){
 							chatMessages.Add ("[Server]: " + buddyUsername + " is not online");
@@ -1402,14 +1471,14 @@ public class LoginLobbys : MonoBehaviour {
 					
 					if(smartFox.RoomManager.ContainsRoom(gameName)) 
 						//if gameLobby exist join it
-						smartFox.Send ( new JoinRoomRequest(gameName,gamePassword));
+						smartFox.Send (new JoinRoomRequest(gameName,gamePassword));
 					else{
 						//if not, create a new gameLobby
 			        	parameters.PutUtfString("name", gameName);
 						parameters.PutBool("isGame", false);
-						parameters.PutUtfString ("password", gamePassword);
+						parameters.PutUtfString("password", gamePassword);
 						if(gamePassword!="")
-							parameters.PutBool ("isPrivate", true);
+							parameters.PutBool("isPrivate", true);
 						else
 							parameters.PutBool("isPrivate", false);
 						smartFox.Send(new ExtensionRequest("createGameLobby",parameters));
