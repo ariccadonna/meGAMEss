@@ -19,6 +19,11 @@ public class GameConsts
 	public static final int BRUTEFORCER_ATTACK_LEVEL= 10;
 	public static final int BRUTEFORCER_MAX_LEVEL	= 3;
 	
+	
+	public static final int BASE_PAYMENT_AMOUNT 	= 5;
+	public static final int BASE_DEFENCE_LEVEL		= 5;
+	public static final int BASE_ATTACK_LEVEL		= 5;
+	
 	public static final int BANK_BASE_PAYMENT_AMOUNT= 20;
 	public static final int BANK_BASE_DEFENCE_LEVEL	= 10;
 	public static final int BANK_BASE_ATTACK_LEVEL	= 5;

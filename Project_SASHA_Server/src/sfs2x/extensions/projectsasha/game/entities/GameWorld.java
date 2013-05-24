@@ -27,7 +27,7 @@ public class GameWorld
 		gateways.put("east africa",			new Base(null, "nome", "East Africa"));
 		gateways.put("congo",				new Base(null, "nome", "Congo"));
 		gateways.put("madagascar",			new Base(null, "nome", "Madagascar"));
-		gateways.put("south africa",		new Military(null, "nome", "South Africa"));
+		gateways.put("south africa",		new Base(null, "nome", "South Africa"));
 		gateways.put("middle east",			new Base(null, "nome", "Middle East"));
 		gateways.put("afghanistan",			new Base(null, "nome", "Afghanistan"));
 		gateways.put("india",				new Base(null, "nome", "India"));
