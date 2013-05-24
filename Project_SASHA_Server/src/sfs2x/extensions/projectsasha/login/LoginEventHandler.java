@@ -1,5 +1,4 @@
 package sfs2x.extensions.projectsasha.login;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,10 +16,10 @@ import com.smartfoxserver.v2.exceptions.SFSErrorCode;
 import com.smartfoxserver.v2.extensions.BaseServerEventHandler;
 
 public class LoginEventHandler extends BaseServerEventHandler
-{
-   
+{ 
    @Override
-   public void handleServerEvent(ISFSEvent event) throws SFSException {
+   public void handleServerEvent(ISFSEvent event) throws SFSException
+   {
       String clientUsername = (String) event.getParameter(SFSEventParam.LOGIN_NAME);
       String clientHash = (String) event.getParameter(SFSEventParam.LOGIN_PASSWORD);
       ISession clientSession = (ISession)event.getParameter(SFSEventParam.SESSION);
@@ -29,7 +28,8 @@ public class LoginEventHandler extends BaseServerEventHandler
       String dbHash = null;
       boolean dbIsOnline = false;
       
-      if(clientHash == "") {
+      if(clientHash == "") 
+      {
          SFSErrorData data = new SFSErrorData(SFSErrorCode.LOGIN_BAD_PASSWORD);
          throw new SFSLoginException("You are not logged in!", data);
       }
@@ -37,6 +37,7 @@ public class LoginEventHandler extends BaseServerEventHandler
       IDBManager dbManager = getParentExtension().getParentZone().getDBManager();
       Connection connection = null;
       PreparedStatement stmt = null;
+   
       try {
          connection = dbManager.getConnection();
          stmt = connection.prepareStatement("SELECT * FROM "+ LoginConsts.USER_TABLE +" WHERE username = ?;",Statement.RETURN_GENERATED_KEYS, ResultSet.TYPE_SCROLL_INSENSITIVE);
@@ -70,7 +71,7 @@ public class LoginEventHandler extends BaseServerEventHandler
             }
          }
          
-        stmt = connection.prepareStatement("UPDATE "+ LoginConsts.USER_TABLE + " SET online=? WHERE username = ?",Statement.RETURN_GENERATED_KEYS, ResultSet.TYPE_SCROLL_INSENSITIVE);
+         stmt = connection.prepareStatement("UPDATE "+ LoginConsts.USER_TABLE + " SET online=? WHERE username = ?",Statement.RETURN_GENERATED_KEYS, ResultSet.TYPE_SCROLL_INSENSITIVE);
  		
  		 stmt.setBoolean(1, !dbIsOnline);
          stmt.setString(2, dbUsername);
@@ -79,22 +80,20 @@ public class LoginEventHandler extends BaseServerEventHandler
          //Set user online or offline
          stmt.execute();
          
-      }
-      
-      catch (SQLException e) {
+      }catch (SQLException e){
          SFSErrorData errData = new SFSErrorData(SFSErrorCode.GENERIC_ERROR);
          errData.addParameter("SQL Error: " + e.getMessage() + " " + stmt);
          throw new SFSLoginException("A SQL Error occurred: " + e.getMessage(), errData);
-      }
-      
-      finally {
-         if (stmt != null) {
-            try { stmt.close(); }
-            catch (SQLException e) { }
+      }finally{
+         if (stmt != null) 
+         {
+            try{stmt.close();}
+            catch (SQLException e){}
          }
-         if (connection != null) {
-            try { connection.close(); }
-            catch (SQLException e) { }
+         if (connection != null)
+         {
+            try{connection.close();}
+            catch(SQLException e){}
          }
       }
    }

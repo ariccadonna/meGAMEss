@@ -1,5 +1,4 @@
 package sfs2x.extensions.projectsasha.login;
-
 import com.smartfoxserver.v2.api.CreateRoomSettings;
 import com.smartfoxserver.v2.entities.SFSRoomRemoveMode;
 import com.smartfoxserver.v2.entities.User;
@@ -8,22 +7,24 @@ import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.exceptions.SFSCreateRoomException;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 
-
-public class CreateGameLobby extends BaseClientRequestHandler{
-
+public class CreateGameLobby extends BaseClientRequestHandler
+{
 	@Override
-	public void handleClientRequest(User sender, ISFSObject params){
+	public void handleClientRequest(User sender, ISFSObject params)
+	{
 		createGameLobby(sender, params);
 	}
 	
-	private void createGameLobby(User sender, ISFSObject params){
+	private void createGameLobby(User sender, ISFSObject params)
+	{
 
 		CreateRoomSettings crs = new CreateRoomSettings();
 		String name = params.getUtfString("name");
 		String password = "";
 		boolean isPrivate = false;
 		boolean isGame = params.getBool("isGame");
-		if(params.getBool("isPrivate")){
+		if(params.getBool("isPrivate"))
+		{
 			 password = params.getUtfString("password");
 			 isPrivate = params.getBool("isPrivate");
 		}
@@ -39,7 +40,6 @@ public class CreateGameLobby extends BaseClientRequestHandler{
 		crs.setMaxUsers(5);
 		crs.setDynamic(true);
 		
-		      
 		ISFSObject reback = SFSObject.newInstance();
 		
 		try {
@@ -55,6 +55,4 @@ public class CreateGameLobby extends BaseClientRequestHandler{
 			send("createGameLobby", reback, sender);
 		}
 	}
-
 }
-

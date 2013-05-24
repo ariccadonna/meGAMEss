@@ -1,5 +1,4 @@
 package sfs2x.extensions.projectsasha.login;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +19,6 @@ import com.smartfoxserver.v2.extensions.BaseServerEventHandler;
 
 public class LogoutEventHandler extends BaseServerEventHandler
 {
-   
    @Override
    public void handleServerEvent(ISFSEvent event) throws SFSException {
      
@@ -30,8 +28,6 @@ public class LogoutEventHandler extends BaseServerEventHandler
       for(Room r:joinedRooms)
       {
     	  user.removeJoinedRoom(r);
-    	 // if(r.isEmpty())
-    		  
       }
       
       IDBManager dbManager = getParentExtension().getParentZone().getDBManager();
@@ -55,15 +51,16 @@ public class LogoutEventHandler extends BaseServerEventHandler
       }
       
       finally {
-         if (stmt != null) {
-            try { stmt.close(); }
-            catch (SQLException e) { }
+    	 if (stmt != null) 
+         {
+            try{stmt.close();}
+            catch (SQLException e){}
          }
-         if (connection != null) {
-            try { connection.close(); }
-            catch (SQLException e) { }
+         if (connection != null)
+         {
+            try{connection.close();}
+            catch(SQLException e){}
          }
-      }
-      
+      } 
    }
 }

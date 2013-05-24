@@ -166,7 +166,7 @@ public class LoginLobbys : MonoBehaviour {
 						displayWindow(13); //Game Lobby
 					}
                 } 
-				else 
+				else  //Loading Screen
 				{
                     GUI.Box(new Rect(screenWidth/ 2 - screenWidth/ 6, (int)(screenHeight/ 2) - screenHeight/ 6, (int)(screenWidth/ 3), (int)(screenHeight/ 3)), "", "box");
                     GUI.Label(new Rect(screenWidth/ 2 - screenWidth/ 6, (int)(screenHeight/ 2) - screenHeight/ 6, (int)(screenWidth/ 3), (int)(screenHeight/ 3)), "Please wait! Loading...", "loading");
@@ -450,7 +450,7 @@ public class LoginLobbys : MonoBehaviour {
 					if(message == "addToBuddy")
 					{
 						lock (messagesLocker)
-							chatMessages.Add("[Server]: " + sender.Name + " added you to buddy list");
+							chatMessages.Add("[SASHA]: " + sender.Name + " added you to buddy list");
 					}
 					else
 					{
@@ -481,7 +481,7 @@ public class LoginLobbys : MonoBehaviour {
 	    if ((InvitationReply)evt.Params["reply"] == InvitationReply.REFUSE)
         {
 			lock(messagesLocker) 
-				chatMessages.Add("[Server]: " + invitee.Name + " has refused the invitation");
+				chatMessages.Add("[SASHA]: " + invitee.Name + " has refused the invitation");
 		}
 	}
 	
@@ -534,7 +534,10 @@ public class LoginLobbys : MonoBehaviour {
 			
 			case "startGame":
 				//TODO
-				Debug.Log("Start Game Request");
+				showLoadingScreen = true;
+				Debug.Log("Started Game " + currentActiveRoom.Name);
+				UnregisterSFSSceneCallbacks();
+				//Application.LoadLevel("GameRoom");
 			break;
 		}
 		
@@ -844,8 +847,9 @@ public class LoginLobbys : MonoBehaviour {
 		int fieldWidth = (int) (windowWidth/2.5);
 		int fieldHeight = 20;
 		int labelHeight = 100;
+		int boxHeight = (fieldYBasePosition*6+windowHeight/12) -fieldYBasePosition;
 		
-		GUI.Box(new Rect(textXPosition-20, fieldYBasePosition-20 , fieldXPosition+fieldWidth-textXPosition+60, labelHeight*2), "","smallBox");
+		GUI.Box(new Rect(textXPosition-20, fieldYBasePosition-20 , fieldXPosition+fieldWidth-textXPosition+60, boxHeight), "","smallBox");
 		
 		GUI.Label(new Rect(textXPosition, fieldYBasePosition, 100, labelHeight), "Username: ");
 		username = GUI.TextField(new Rect(fieldXPosition, fieldYBasePosition, fieldWidth, fieldHeight), username, 25);
@@ -1287,6 +1291,8 @@ public class LoginLobbys : MonoBehaviour {
 		int parametersLength = splittedMessage.Length;
 		ISFSObject parameters = new SFSObject();
 		string buddyUsername, gameName, gamePassword;
+		if (theMessage.Length == 0)
+			return;
 		char[] chars = splittedMessage[0].ToCharArray();
 		bool isCommand = chars[0] == '/'?true:false;
 		Room gameRoom;
@@ -1304,7 +1310,7 @@ public class LoginLobbys : MonoBehaviour {
 					if(parametersLength == 1 || splittedMessage[1]=="")//missing username and message
 					{
 						lock(messagesLocker){
-								chatMessages.Add ("[Server]: missing username and message \n usage: /w <username> <text>");
+								chatMessages.Add ("[SASHA]: missing username and message \n usage: /w <username> <text>");
 								chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1313,7 +1319,7 @@ public class LoginLobbys : MonoBehaviour {
 					if(parametersLength == 2 || splittedMessage[2]=="")//missing message
 					{
 						lock(messagesLocker){
-								chatMessages.Add ("[Server]: missing message \n usage: /w <username> <text>");
+								chatMessages.Add ("[SASHA]: missing message \n usage: /w <username> <text>");
 								chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1323,14 +1329,14 @@ public class LoginLobbys : MonoBehaviour {
 					theMessage = "";
 					if(recipient == null){
 						lock(messagesLocker){
-							chatMessages.Add ("[Server]: user " + splittedMessage[1] + " is not online");
+							chatMessages.Add ("[SASHA]: user " + splittedMessage[1] + " is not online");
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
 					}
 					if(recipient.Name == smartFox.MySelf.Name){
 						lock(messagesLocker){
-							chatMessages.Add ("[Server]: you can't whisper yourself");
+							chatMessages.Add ("[SASHA]: you can't whisper yourself");
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1350,7 +1356,7 @@ public class LoginLobbys : MonoBehaviour {
 					if(parametersLength == 1)//missing username and message
 					{
 						lock(messagesLocker){
-								chatMessages.Add ("[Server]: missing username \n usage: /add <username>");
+								chatMessages.Add ("[SASHA]: missing username \n usage: /add <username>");
 								chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1360,7 +1366,7 @@ public class LoginLobbys : MonoBehaviour {
 					User buddyToAdd;
 					if(buddyUsername == smartFox.MySelf.Name){
 						lock(messagesLocker){
-							chatMessages.Add ("[Server]: you can't add yourself to your buddy list");
+							chatMessages.Add ("[SASHA]: you can't add yourself to your buddy list");
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1371,13 +1377,13 @@ public class LoginLobbys : MonoBehaviour {
 						{
 							smartFox.Send(new AddBuddyRequest(buddyUsername));
 							lock(messagesLocker){
-								chatMessages.Add("[Server]: " + buddyUsername + " added to buddy list");
+								chatMessages.Add("[SASHA]: " + buddyUsername + " added to buddy list");
 								chatScrollPosition.y = Mathf.Infinity;
 							}
 						}
 					}else{
 						lock (messagesLocker){
-							chatMessages.Add("[Server]: " + buddyUsername + " is not online");
+							chatMessages.Add("[SASHA]: " + buddyUsername + " is not online");
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 					}
@@ -1392,7 +1398,7 @@ public class LoginLobbys : MonoBehaviour {
 					if(parametersLength == 1) //missing username and message
 					{
 						lock(messagesLocker){
-								chatMessages.Add ("[Server]: missing username \n usage: [/rm][/remove] <username>");
+								chatMessages.Add ("[SASHA]: missing username \n usage: [/rm][/remove] <username>");
 								chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1402,12 +1408,12 @@ public class LoginLobbys : MonoBehaviour {
 					if(smartFox.BuddyManager.ContainsBuddy(buddyUsername)){
 						smartFox.Send (new RemoveBuddyRequest(buddyUsername));
 						lock(messagesLocker){
-							chatMessages.Add("[Server]: " + buddyUsername + " removed from buddy list");
+							chatMessages.Add("[SASHA]: " + buddyUsername + " removed from buddy list");
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 					}else{
 						lock(messagesLocker){
-							chatMessages.Add("[Server]: " + buddyUsername + " not present in your buddy list");
+							chatMessages.Add("[SASHA]: " + buddyUsername + " not present in your buddy list");
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 					}
@@ -1422,7 +1428,7 @@ public class LoginLobbys : MonoBehaviour {
 					if(parametersLength == 1) //missing username and message
 					{
 						lock(messagesLocker){
-								chatMessages.Add ("[Server]: missing username \n usage: [/inv][/invite] <username>");
+								chatMessages.Add ("[SASHA]: missing username \n usage: [/inv][/invite] <username>");
 								chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1432,7 +1438,7 @@ public class LoginLobbys : MonoBehaviour {
 					User user1 = smartFox.UserManager.GetUserByName(buddyUsername);
 					if(user1.Name == smartFox.MySelf.Name){
 						lock(messagesLocker)
-							chatMessages.Add ("[Server]: you can't add yourself to current game");
+							chatMessages.Add ("[SASHA]: you can't add yourself to current game");
 						break;
 					}
 					if(smartFox.UserManager.ContainsUser(user1)){
@@ -1443,7 +1449,7 @@ public class LoginLobbys : MonoBehaviour {
 						smartFox.Send(new PublicMessageRequest(smartFox.MySelf.Name + " invited " + buddyUsername + " to current game"));
 					}else{
 						lock(messagesLocker){
-							chatMessages.Add ("[Server]: " + buddyUsername + " is not online");
+							chatMessages.Add ("[SASHA]: " + buddyUsername + " is not online");
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 					}
@@ -1458,7 +1464,7 @@ public class LoginLobbys : MonoBehaviour {
 					if(parametersLength < 2)
 					{
 						lock(messagesLocker){
-								chatMessages.Add ("[Server]: missing parameters \n usage: [/j][/join] <gameName> [<gamePassword>]");
+								chatMessages.Add ("[SASHA]: missing parameters \n usage: [/j][/join] <gameName> [<gamePassword>]");
 								chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1495,7 +1501,7 @@ public class LoginLobbys : MonoBehaviour {
 				case "/accept": //accept an invite to a game
 					if(currentInvitation == null){
 						lock(messagesLocker){
-							chatMessages.Add("[Server]: You don't have any game invitation to accept");
+							chatMessages.Add("[SASHA]: You don't have any game invitation to accept");
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1522,7 +1528,7 @@ public class LoginLobbys : MonoBehaviour {
 				case "/refuse": //accept an invite to a game
 					if(currentInvitation == null){
 						lock(messagesLocker){
-							chatMessages.Add("[Server]: You don't have any game invitation to refuse");
+							chatMessages.Add("[SASHA]: You don't have any game invitation to refuse");
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 						break;
@@ -1530,6 +1536,36 @@ public class LoginLobbys : MonoBehaviour {
 					parameters = (SFSObject)currentInvitation.Params;
 					smartFox.Send (new InvitationReplyRequest(currentInvitation,InvitationReply.REFUSE));
 					currentInvitation = null;
+				break;
+				
+				/*
+				 * leave current gameLobby
+				 * /leave
+				 */
+				case "/leave":
+					if(currentActiveRoom.Name != "Lobby")
+						ExitGameLobby();
+					else
+					lock(messagesLocker){
+							chatMessages.Add("[SASHA]: You can't leave general lobby");
+							chatScrollPosition.y = Mathf.Infinity;
+					}
+				break;
+				
+				/*
+				 * logout from server
+				 * /logout
+				 */
+				case "/logout":
+					smartFox.Send(new LogoutRequest());
+				break;
+				
+				/*
+				 * quit the application
+				 * /quit
+				 */
+				case "/quit":
+					CloseApplication();
 				break;
 				
 				case "/help":
@@ -1551,7 +1587,7 @@ public class LoginLobbys : MonoBehaviour {
 				break;
 				default: //command not found
 					lock(messagesLocker){
-							chatMessages.Add("[Server]: can't find command "+splittedMessage[0]);
+							chatMessages.Add("[SASHA]: can't find command "+splittedMessage[0]);
 							chatScrollPosition.y = Mathf.Infinity;
 						}
 				break;
