@@ -1,8 +1,18 @@
 ## Welcome to Project S.A.S.H.A.!
-**LATEST OFFICIAL VERSION**:  [0.0.1.17052013] 
+**LATEST OFFICIAL VERSION**:  [0.0.1.24052013] 
 
 ChangeLog:
+24-May-2013
+1. **Server:**
+  * Added Game Classes and Basic Handlers
+  * Added Basic Game Logic
+  * Completed startGame Handler
 
+2. **Client:**
+  * Added chat commands
+  * Added Game invitation
+  * Updated font size in labels and boxes
+  
 17-May-2013
 
 1. **Server:**
