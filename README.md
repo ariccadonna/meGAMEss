@@ -8,11 +8,6 @@ ChangeLog:
   * Added Game Classes and Basic Handlers
   * Added Basic Game Logic
   * Completed startGame Handler
-
-2. **Client:**
-  * Added chat commands
-  * Added Game invitation
-  * Updated font size in labels and boxes
   
 17-May-2013
 
