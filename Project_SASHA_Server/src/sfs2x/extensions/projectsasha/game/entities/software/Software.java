@@ -60,8 +60,10 @@ public abstract class Software
 	
 	public void downgrade()
 	{
-		if(this.version == 1)
+		if(this.version == 1){
+			System.out.println("Unable to downgrade "+this.name+" since it's already at V"+this.version);
 			return;
+		}
 		
 		System.out.println("Downgrading "+this.name+" from V"+this.version+" to V"+(this.version-1));
 		this.version -= 1;

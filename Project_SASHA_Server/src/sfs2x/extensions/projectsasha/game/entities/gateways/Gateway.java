@@ -188,6 +188,7 @@ public abstract class Gateway
 	{
 		if(this.owner!=p)
 		{
+			System.out.println("[" + this.state + "]-> " + "cant uninstall software (" + theSoftware.getName() + "): " + p.getName()+" is not my owner (" + this.getOwner().getName() + ")");
 			return;
 		}
 		
@@ -219,6 +220,19 @@ public abstract class Gateway
 		return slot;
 	}
 	
+	public void upgradeSoftware(Software type){
+		if(this.hasSoftware(type))
+			this.getInstalledSoftware(type).downgrade();
+		else
+			System.out.println("["+this.getState()+"]-> Software "+type.getName()+" is not installed"); 
+	}
+	
+	public void downgradeSoftware(Software type){
+		if(this.hasSoftware(type))
+			this.getInstalledSoftware(type).downgrade();
+		else
+			System.out.println("["+this.getState()+"]-> Software "+type.getName()+" is not installed"); 
+	}
 	
 	
 	@Override
