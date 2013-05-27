@@ -10,11 +10,15 @@ public class BruteForcer extends Software
 	public BruteForcer() 
 	{
 		super(GameConsts.BRUTEFORCER_NAME, 1);
+		setCumulative(GameConsts.BRUTEFORCER_CUMULATIVE);
+		setType(GameConsts.BRUTEFORCER);
 	}
 	
 	public BruteForcer(int version) 
 	{
 		super(GameConsts.BRUTEFORCER_NAME, version);
+		setCumulative(GameConsts.BRUTEFORCER_CUMULATIVE);
+		setType(GameConsts.BRUTEFORCER);
 	}
 	
 	@Override
@@ -28,12 +32,14 @@ public class BruteForcer extends Software
 	{
 		if(this.version < GameConsts.BRUTEFORCER_MAX_LEVEL)
 		{
-			System.out.println("Upgrading "+this.name+" from V"+this.version+" to V"+(this.version+1));
+			if(GameConsts.DEBUG)
+				System.out.println("Upgrading "+this.name+" from V"+this.version+" to V"+(this.version+1));
 			this.version += 1;
 		}
 		else
 		{
-			System.out.println(this.name+" is already at maximum level (V"+GameConsts.BRUTEFORCER_MAX_LEVEL+")");
+			if(GameConsts.DEBUG)
+				System.out.println(this.name+" is already at maximum level (V"+GameConsts.BRUTEFORCER_MAX_LEVEL+")");
 		}
 	}	
 	

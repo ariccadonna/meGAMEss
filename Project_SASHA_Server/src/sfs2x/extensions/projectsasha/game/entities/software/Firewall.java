@@ -10,12 +10,16 @@ public class Firewall extends Software
 	public Firewall() 
 	{
 		super(GameConsts.FIREWALL_NAME, 1);
+		setCumulative(GameConsts.FIREWALL_CUMULATIVE);
+		setType(GameConsts.FIREWALL);
 	}
 	
 	
 	public Firewall(int version) 
 	{
 		super(GameConsts.FIREWALL_NAME, version);
+		setCumulative(GameConsts.FIREWALL_CUMULATIVE);
+		setType(GameConsts.FIREWALL);
 	}
 	
 	@Override
@@ -31,12 +35,14 @@ public class Firewall extends Software
 			return;
 		if(this.version < GameConsts.FIREWALL_MAX_LEVEL)
 		{
-			System.out.println("Upgrading "+this.name+" from V"+this.version+" to V"+(this.version+1));
+			if(GameConsts.DEBUG)
+				System.out.println("Upgrading "+this.name+" in slot "+this.slot+" from V"+this.version+" to V"+(this.version+1));
 			this.version += 1;
 		}
 		else
 		{
-			System.out.println(this.name+" is already at maximum level (V"+GameConsts.FIREWALL_MAX_LEVEL+")");
+			if(GameConsts.DEBUG)
+				System.out.println(this.name+" is already at maximum level (V"+GameConsts.FIREWALL_MAX_LEVEL+")");
 		}
 	}	
 	

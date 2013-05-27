@@ -403,7 +403,7 @@ public class GameWorld
 						}),
 				new Region("The Jungle", new Gateway[]
 						{
-							gateways.get("central africa"), 
+							//gateways.get("central africa"), 
 							gateways.get("south africa"),
 							gateways.get("madagascar")
 						}),

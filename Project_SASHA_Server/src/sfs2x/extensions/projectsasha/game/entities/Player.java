@@ -1,5 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities;
 
+import java.util.Arrays;
+
 import sfs2x.extensions.projectsasha.game.GameConsts;
 
 
@@ -66,5 +68,15 @@ public class Player
 	public int getMoney()
 	{
 		return this.money;
+	}
+	
+	@Override 
+	public String toString(){
+		String returnString = "/*****************************************\\\n";
+		returnString += " * Name:\t "+this.name+"\n";
+		returnString += " * Money:\t "+this.money+"\n";
+		returnString += "\\*****************************************/";
+		return returnString;
+		
 	}
 }

@@ -8,6 +8,7 @@ import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.ia.Trace;
 import sfs2x.extensions.projectsasha.game.entities.software.Software;
+import sfs2x.extensions.projectsasha.game.entities.software.SoftwareFactory;
 
 public abstract class Gateway 
 {	
@@ -20,8 +21,7 @@ public abstract class Gateway
 	private Player owner;
 	private String name, state;
 	private int id;
-	private boolean has_BruteForcer;
-	private boolean has_BruteFirewall;
+
 
 	public Gateway(Player owner, String name, String state)
 	{
@@ -31,8 +31,6 @@ public abstract class Gateway
 		this.id = getNewID();
 		this.traces = new ArrayList<Trace>();
 		this.installedSoftware = new Software[GameConsts.MAX_SOFTWARE_INSTALLED];
-		this.has_BruteForcer = this.hasSoftware(GameConsts.BRUTEFORCER);
-		this.has_BruteFirewall = this.hasSoftware(GameConsts.FIREWALL);
 	}	
 	
 	
@@ -102,17 +100,20 @@ public abstract class Gateway
 		return this.installedSoftware;
 	}
 	
-	
-	public Software getInstalledSoftware(Software type)
+	public Software getInstalledSoftware(String type)
 	{
 		for(Software s : installedSoftware)
 		{
-			if (s.getClass() == type.getClass())
+			if (s.getType() == type)
 				return s;
 		}
 		return null;
 	}
 	
+	public Software getInstalledSoftware(int slot)
+	{
+		return installedSoftware[slot];
+	}
 	
 	//SETTERS
 	
@@ -128,8 +129,7 @@ public abstract class Gateway
 	protected abstract int getBaseDefenceLevel();
 	public abstract int getPaymentAmount();
 	public abstract void onGatewayConquered(Player newOwner, Player oldOwner);
-	
-	
+		
 	//STATIC METHODS
 	
 	private static synchronized int getNewID()
@@ -137,76 +137,102 @@ public abstract class Gateway
 		return lastGatewayID++;
 	}
 	
-	
 	public static void hack(Gateway from, Gateway to){
 		
 		/*********************/
 		/** hack logic here **/
 		/*********************/
-		
-		System.out.print(from.getOwner().getName()+" is trying to hack "+to.state+" from "+from.state+": ");
+		if(GameConsts.DEBUG)
+			System.out.print(from.getOwner().getName()+" is trying to hack "+to.state+" from "+from.state+": ");
 		int difference = to.getDefenceLevel()-from.getAttackLevel();
 		if(difference < 0){
 			to.setOwner(from.getOwner());
-			System.out.println("SUCCESS");
+			if(GameConsts.DEBUG)
+				System.out.println("SUCCESS");
 		}else{
-			System.out.println("FAIL");
+			if(GameConsts.DEBUG)
+				System.out.println("FAIL");
 		}
 	}
 	
 	//NON STATIC METHODS
-	public void installSoftware(Software newSoftware, Player p)
+	public void installSoftware(String type, Player hacker)
 	{
-		if(this.owner!=p)
+		Software newSoftware = SoftwareFactory.makeSoftware(type);
+		if(this.owner!=hacker)
 		{
-			System.out.println("[" + this.state + "]-> " + "cant install software (" + newSoftware.getName() + "): " + p.getName()+" is not my owner (" + this.getOwner().getName() + ")");
+			if(GameConsts.DEBUG)
+				if(this.owner == null)
+					System.out.println("[" + this.state + "]-> " + "cant install software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (NEUTRAL)");
+				else
+					System.out.println("[" + this.state + "]-> " + "cant install software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (" + this.getOwner().getName() + ")");
 			return;
 		}
 		
-		if(this.hasSoftware(newSoftware))
+		if(this.hasSoftware(newSoftware.getType()) && !newSoftware.isCumulative())
 		{
-			System.out.println("[" + this.state + "]-> " + "Can't install software " + newSoftware.getName() + ": already installed!");
+			if(GameConsts.DEBUG)
+				System.out.println("[" + this.state + "]-> " + "Can't install software " + newSoftware.getName() + ": already installed!");
 			return;
 		}
 		
 		int available_slot = this.getNextSoftwareSlotAvailable();
-		
 		newSoftware.setVersion(1);
 		
 		if(available_slot < GameConsts.MAX_SOFTWARE_INSTALLED)
 		{
-			System.out.println("["+this.state+"]-> Installing "+newSoftware.getName()+" V"+newSoftware.getVersion());
+			if(GameConsts.DEBUG)
+				System.out.println("["+this.state+"]-> Installing "+newSoftware.getName()+" V"+newSoftware.getVersion()+" in slot "+(available_slot+1));
 			newSoftware.setSlot(available_slot);
 			installedSoftware[available_slot] = newSoftware;
 			
 		}else
-			System.out.println("["+this.state+"]-> You dont have enough slot for "+newSoftware.getName());
-		
+			if(GameConsts.DEBUG)
+				System.out.println("["+this.state+"]-> You dont have enough slot for "+newSoftware.getName());		
 	}
 	
-	public void uninstallSoftware(Software theSoftware, Player p)
+	public void uninstallSoftware(String type, Player p)
 	{
-		if(this.owner!=p)
+		this.uninstallSoftware(type, p, 0);
+	}
+	
+	public void uninstallSoftware(String type, Player hacker, int slot)
+	{
+		Software newSoftware = SoftwareFactory.makeSoftware(type);
+		
+		if(this.owner!=hacker)
 		{
-			System.out.println("[" + this.state + "]-> " + "cant uninstall software (" + theSoftware.getName() + "): " + p.getName()+" is not my owner (" + this.getOwner().getName() + ")");
+			if(GameConsts.DEBUG)
+				if(this.owner == null)
+					System.out.println("[" + this.state + "]-> " + "cant uninstall software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (NEUTRAL)");
+				else
+					System.out.println("[" + this.state + "]-> " + "cant uninstall software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (" + this.getOwner().getName() + ")");
 			return;
 		}
 		
-		if(this.hasSoftware(theSoftware))
+		
+		if(this.hasSoftware(type) && !this.getInstalledSoftware(type).isCumulative()) //installed and not cumulative
 		{
-			System.out.println("["+this.state+"]-> Uninstalling "+theSoftware.getName()+" V"+theSoftware.getVersion());
-			this.getInstalledSoftware(theSoftware).setVersion(0);
-			this.getInstalledSoftware(theSoftware);
-			installedSoftware[this.getInstalledSoftware(theSoftware).getSlot()] = null;
+			Software theSoftware = this.getInstalledSoftware(type); 
+			if(GameConsts.DEBUG)
+				System.out.println("["+this.state+"]-> Uninstalling "+theSoftware.getName()+" V"+theSoftware.getVersion());
+			theSoftware.setVersion(0);
+			installedSoftware[theSoftware.getSlot()] = null;
+		}
+		else if(this.hasSoftware(type)) //installed and cumulative
+		{
+			Software theSoftware = this.getInstalledSoftware(type); 
+			if(GameConsts.DEBUG)
+				System.out.println("["+this.state+"]-> Uninstalling "+theSoftware.getName()+" V"+theSoftware.getVersion()+" in slot "+(slot+1));
+			this.getInstalledSoftware(slot).setVersion(0);
+			installedSoftware[slot] = null;
 		}
 	}
 	
-	public boolean hasSoftware(Software type){
+	public boolean hasSoftware(String type){
 		for(Software s : installedSoftware)
-		{
-			if(s != null && type.getClass() == s.getClass())
+			if(s != null && type == s.getType())
 				return true;
-		}
 		return false;
 	}
 	
@@ -220,20 +246,98 @@ public abstract class Gateway
 		return slot;
 	}
 	
-	public void upgradeSoftware(Software type){
+	public void upgradeSoftware(int slot, Player hacker){
+		Software sw = null;
+		try
+		{
+			sw = this.getInstalledSoftware(slot);
+			this.upgradeSoftware(sw.getType(), hacker, slot);
+		}
+		catch(NullPointerException e)
+		{
+			if(GameConsts.DEBUG)
+				System.out.println("Slot "+slot+" is empty");
+		}
+		
+	}
+	
+	public void upgradeSoftware(String type, Player hacker){
+		
+		Software newSoftware = SoftwareFactory.makeSoftware(type);
+		
+		if(this.owner!=hacker)
+		{
+			if(GameConsts.DEBUG)
+				if(this.owner == null)
+					System.out.println("[" + this.state + "]-> " + "cant upgrade software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (NEUTRAL)");
+				else
+					System.out.println("[" + this.state + "]-> " + "cant upgrade software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (" + this.getOwner().getName() + ")");
+			return;
+		}
+		
+		if(this.hasSoftware(type))
+			this.getInstalledSoftware(type).upgrade();
+		else
+			if(GameConsts.DEBUG)
+				System.out.println("["+this.getState()+"]-> Software " + newSoftware.getName() + " is not installed"); 
+	}
+	
+	public void upgradeSoftware(String type, Player hacker,  int slot){
+		
+		Software newSoftware = SoftwareFactory.makeSoftware(type);
+		
+		if(this.owner!=hacker)
+		{
+			if(GameConsts.DEBUG)
+				if(this.owner == null)
+					System.out.println("[" + this.state + "]-> " + "cant upgrade software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (NEUTRAL)");
+				else
+					System.out.println("[" + this.state + "]-> " + "cant upgrade software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (" + this.getOwner().getName() + ")");
+			return;
+		}
+		
+		if(this.hasSoftware(type))
+			this.getInstalledSoftware(slot).upgrade();
+		else
+			if(GameConsts.DEBUG)
+				System.out.println("["+this.getState()+"]-> Software " + newSoftware.getName() + " is not installed"); 
+	}
+	
+	public void downgradeSoftware(String type, Player hacker){
+		
+		Software newSoftware = SoftwareFactory.makeSoftware(type);
+		
+		if(this.owner!=hacker)
+		{
+			if(GameConsts.DEBUG)
+				System.out.println("[" + this.state + "]-> " + "cant upgrade software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (" + this.getOwner().getName() + ")");
+			return;
+		}
+		
 		if(this.hasSoftware(type))
 			this.getInstalledSoftware(type).downgrade();
 		else
-			System.out.println("["+this.getState()+"]-> Software "+type.getName()+" is not installed"); 
+			if(GameConsts.DEBUG)
+				System.out.println("["+this.getState()+"]-> Software " + newSoftware.getName() + " is not installed"); 
 	}
 	
-	public void downgradeSoftware(Software type){
+	public void downgradeSoftware(String type, Player hacker, int slot){
+		
+		Software newSoftware = SoftwareFactory.makeSoftware(type);
+		
+		if(this.owner!=hacker)
+		{
+			if(GameConsts.DEBUG)
+				System.out.println("[" + this.state + "]-> " + "cant downgrade software (" + newSoftware.getName() + "): " + hacker.getName()+" is not my owner (" + this.getOwner().getName() + ")");
+			return;
+		}
+		
 		if(this.hasSoftware(type))
-			this.getInstalledSoftware(type).downgrade();
+			this.getInstalledSoftware(slot).downgrade();
 		else
-			System.out.println("["+this.getState()+"]-> Software "+type.getName()+" is not installed"); 
+			if(GameConsts.DEBUG)
+				System.out.println("["+this.getState()+"]-> Software " + newSoftware.getName() + " is not installed"); 
 	}
-	
 	
 	@Override
 	public String toString(){

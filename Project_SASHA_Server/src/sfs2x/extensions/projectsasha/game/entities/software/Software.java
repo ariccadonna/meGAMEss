@@ -1,10 +1,14 @@
 package sfs2x.extensions.projectsasha.game.entities.software;
 
+import sfs2x.extensions.projectsasha.game.GameConsts;
+
 public abstract class Software 
 {
 	protected int version;	//Software version
 	protected String name;	//Software name (ex: firewall, proxy...)
 	protected int slot;
+	protected boolean cumulative;
+	private String type;
 	
 	
 	//CONSTRUCTORS
@@ -13,6 +17,8 @@ public abstract class Software
 	{
 		this.name = name;
 		this.version = version;
+		this.cumulative = false;
+		this.type = "SOFTWARE";
 	}
 	
 	
@@ -54,23 +60,45 @@ public abstract class Software
 	
 	public void upgrade()
 	{
-		System.out.println("Upgrading "+this.name+" from V"+this.version+" to V"+(this.version+1));
+		if(GameConsts.DEBUG)
+			System.out.println("Upgrading "+this.name+" in slot "+this.slot+" from V"+this.version+" to V"+(this.version+1));
 		this.version += 1;
 	}	
 	
 	public void downgrade()
 	{
 		if(this.version == 1){
-			System.out.println("Unable to downgrade "+this.name+" since it's already at V"+this.version);
+			if(GameConsts.DEBUG)
+				System.out.println("Unable to downgrade "+this.name+" since it's already at V"+this.version);
 			return;
 		}
-		
-		System.out.println("Downgrading "+this.name+" from V"+this.version+" to V"+(this.version-1));
+		if(GameConsts.DEBUG)
+			System.out.println("Downgrading "+this.name+" from V"+this.version+" to V"+(this.version-1));
 		this.version -= 1;
 	}	
 	
 	public void setSlot(int theSlot)
 	{
 		this.slot = theSlot;
+	}
+	
+	public boolean isCumulative()
+	{
+		return this.cumulative;
+	}
+	
+	public void setCumulative(boolean cumulative)
+	{
+		this.cumulative = cumulative;
+	}
+	
+	public String getType()
+	{
+		return this.type;
+	}
+	
+	public void setType(String type)
+	{
+		this.type = type;
 	}
 }
