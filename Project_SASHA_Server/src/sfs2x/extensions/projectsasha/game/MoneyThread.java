@@ -9,7 +9,7 @@ import sfs2x.extensions.projectsasha.game.GameConsts;
 
 public class MoneyThread implements Runnable
 {
-	GameWorld world;
+	private GameWorld world;
 	private Gateway[] gateways;
 	
 	public MoneyThread(GameWorld world) {
@@ -53,7 +53,10 @@ public class MoneyThread implements Runnable
 					if(giveBonusMoney)
 					{
 						if(GameConsts.DEBUG)
-							System.out.println(prevOwner.getName() + " is getting " + (size*GameConsts.BONUS_MONEY_PER_REGION) + " bonus money for " + region.name);
+							System.out.println(prevOwner.getName() + " is getting "
+										+ (size*GameConsts.BONUS_MONEY_PER_REGION) 
+										+ " bonus money for " + region.name);
+						
 						prevOwner.addMoney(size*GameConsts.BONUS_MONEY_PER_REGION);
 					}
 						
