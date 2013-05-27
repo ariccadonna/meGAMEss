@@ -2,6 +2,18 @@
 **LATEST OFFICIAL VERSION**:  [0.0.1.24052013] 
 
 ChangeLog:
+
+27-May-2013
+
+1. **Server:**
+  * Added all the Software Classes
+  * Bugfixed GameWorld
+  * Added Money Update Thread
+  * Completed startGame Handler
+  
+  
+ChangeLog:
+
 24-May-2013
 
 1. **Server:**
