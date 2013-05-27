@@ -48,7 +48,7 @@ public class GameConsts
 	
 	public static final String IDS						= "IDS";
 	public static final String IDS_NAME 				= "Prelude Detection System";
-	public static final int IDS_LEVEL 				= 100;
+	public static final int IDS_DETECTION 				= 100;
 	public static final int IDS_MAX_LEVEL				= 3;
 	public static final boolean IDS_CUMULATIVE			= false;
 	
