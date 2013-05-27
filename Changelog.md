@@ -8,9 +8,7 @@ ChangeLog:
 1. **Server:**
   * Added all the Software Classes
   * Bugfixed GameWorld
-  * Added Money Update Thread
-  * Completed startGame Handler
-  
+  * Added Money Update Thread  
   
 ChangeLog:
 
