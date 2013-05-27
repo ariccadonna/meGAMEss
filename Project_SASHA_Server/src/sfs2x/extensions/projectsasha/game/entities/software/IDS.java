@@ -47,5 +47,9 @@ public class IDS extends Software
 		return toString;
 	}
 	
+	public int getDetection(int version)
+	{
+		return IDS_DETECTION - (25 * version);
+	}
 	
 }
