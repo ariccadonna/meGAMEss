@@ -47,5 +47,10 @@ public class Proxy extends Software
 		return toString;
 	}
 	
+	public int getRange(int version)
+	{
+
+		return PROXY_ATTACK_LEVEL * version;
 	
+	}
 }
