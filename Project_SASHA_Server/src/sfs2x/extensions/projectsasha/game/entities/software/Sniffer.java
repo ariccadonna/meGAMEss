@@ -47,5 +47,9 @@ public class Sniffer extends Software
 		return toString;
 	}
 	
+	public int getItem(int versione)
+	{
+		return version;
+	}
 	
 }
