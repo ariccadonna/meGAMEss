@@ -3,7 +3,7 @@
 +#################
 +
 +.project
-+.classpath
+.classpath
 +
 +# External tool builders
 +.externalToolBuilders/
