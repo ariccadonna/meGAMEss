@@ -18,6 +18,7 @@ public abstract class Gateway
 	private List<Trace> traces;
 	private Software[] installedSoftware;
 	private Gateway[] neighboors;
+	private Map<String,Integer> distanceFromAttackGateway = new Hashtable<String,Integer>();
 	private Player owner;
 	private String name, state;
 	private int id;
@@ -70,6 +71,31 @@ public abstract class Gateway
 	{
 		return state;
 	}
+	
+	public int getWeightByRelevance(int attackRelevance)
+	{
+		float traceCount=0;
+		
+		for(Trace t : traces)
+			if(t.relevance == attackRelevance)
+				traceCount++;
+		return (int)((1/(1+traceCount))*100);
+	}
+	
+	public int getWeightByDistance(String playerName)
+	{
+		return distanceFromAttackGateway.get(playerName);
+	}
+	
+	public void setWeightByDistance(String playerName, int weight)
+	{
+		distanceFromAttackGateway.put(playerName, weight);
+	}
+	
+	public void resetWeightByDistance(String playerName)
+	{
+		setWeightByDistance(playerName, 0);
+	}	
 	
 	public int getDefenceLevel()
 	{
