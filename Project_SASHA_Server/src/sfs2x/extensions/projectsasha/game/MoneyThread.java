@@ -53,10 +53,7 @@ public class MoneyThread implements Runnable
 					if(giveBonusMoney)
 					{
 						if(GameConsts.DEBUG)
-							System.out.println(prevOwner.getName() + " is getting "
-										+ (size*GameConsts.BONUS_MONEY_PER_REGION) 
-										+ " bonus money for " + region.name);
-						
+							System.out.println(prevOwner.getName() + " is getting " + (size*GameConsts.BONUS_MONEY_PER_REGION) + " bonus money for " + region.name);
 						prevOwner.addMoney(size*GameConsts.BONUS_MONEY_PER_REGION);
 					}
 						
@@ -68,27 +65,13 @@ public class MoneyThread implements Runnable
 			            Gateway currentGateway = world.gateways.get(key);
 			            
 			            if(currentGateway.getOwner()!=null)
-			            	if(currentGateway.getOwner().getName()!= "NEUTRAL")
-			            	{
-			            		if(GameConsts.DEBUG)
-			            			System.out.println(currentGateway.getOwner().getName()+" earned "+currentGateway.getPaymentAmount()+" for "+currentGateway.getState());
-			            		currentGateway.getOwner().addMoney(currentGateway.getPaymentAmount());
-			            	}
+			            {
+			            	if(GameConsts.DEBUG)
+			            		System.out.println(currentGateway.getOwner().getName()+" earned "+currentGateway.getPaymentAmount()+" for "+currentGateway.getState());
+			            	currentGateway.getOwner().addMoney(currentGateway.getPaymentAmount());
+			            }
 			        }
-		        while (iterator.hasNext()) 
-		        {
-		        	
-		            String key = (String) iterator.next();
-		            Gateway currentGateway = world.gateways.get(key);
-		            
-		            if(currentGateway.getOwner()!=null)
-		            	if(currentGateway.getOwner().getName()!= "NEUTRAL")
-		            	{
-		            		if(GameConsts.DEBUG)
-		            			System.out.println(currentGateway.getOwner().getName()+" earned "+currentGateway.getPaymentAmount()+" for "+currentGateway.getState());
-		            		currentGateway.getOwner().addMoney(currentGateway.getPaymentAmount());
-		            	}
-		        }
+				 
 		        if(GameConsts.DEBUG)
 		        	System.out.println("----------- Money Update End -----------");
 			} 
