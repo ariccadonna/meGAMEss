@@ -5,8 +5,7 @@
 +.project
 Project_SASHA_Server/.classpath
 Project_SASHA_Server/.project
-./Project_SASHA_Server/.classpath
-./Project_SASHA_Server/.project
+Project_SASHA_Server/.settings/*
 +
 +# External tool builders
 +.externalToolBuilders/
