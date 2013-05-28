@@ -3,7 +3,7 @@
 +#################
 +
 +.project
-Project_SASHA_Server/.classpath
+Project_SASHA_Server\.classpath
 +
 +# External tool builders
 +.externalToolBuilders/
