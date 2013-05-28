@@ -1476,10 +1476,16 @@ public class LoginLobbys : MonoBehaviour {
 					else
 						gamePassword = "";
 					
-					if(smartFox.RoomManager.ContainsRoom(gameName)) 
+					if(smartFox.RoomManager.ContainsRoom(gameName))
+					{
 						//if gameLobby exist join it
 						smartFox.Send (new JoinRoomRequest(gameName,gamePassword));
-					else{
+						creatingGame = false;
+						showLoadingScreen = false;
+						showGameLobby = true;
+					}
+					else
+					{
 						//if not, create a new gameLobby
 			        	parameters.PutUtfString("name", gameName);
 						parameters.PutBool("isGame", false);
