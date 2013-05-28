@@ -47,12 +47,16 @@ public class StartGameHandler extends BaseClientRequestHandler{
 
 		try {clonedRoom = getApi().createRoom(sender.getZone(),crs,userList.get(0));} 
 		catch (SFSCreateRoomException e) {e.printStackTrace();}
-		
+		 reback.putUtfString("roomName", clonedRoom.getName());
+		 reback.putUtfString("password", clonedRoom.getPassword());
+		 /*
 		for (User u: userList){
-			try {clonedRoom.addUser(u);}
+			try {
+				clonedRoom.addUser(u);
+			}
 			catch (SFSJoinRoomException e){e.printStackTrace();}
-		}
+		}*/
 		
-		send("startGame", reback, clonedRoom.getUserList());
+		send("startGame", reback, userList);
 	}
 }

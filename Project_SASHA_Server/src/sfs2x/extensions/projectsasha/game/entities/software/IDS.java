@@ -39,6 +39,11 @@ public class IDS extends Software
 				System.out.println(this.name+" is already at maximum level (V"+GameConsts.IDS_MAX_LEVEL+")");
 		}
 	}	
+
+	public int getDetection(int version)
+	{
+		return GameConsts.IDS_DETECTION - (25 * this.version);
+	}
 	
 	@Override
 	public String toString(){
@@ -46,10 +51,4 @@ public class IDS extends Software
 		toString += " - D:"+this.getDefenceLevel()+" A:"+ this.getAttackLevel()+"\n * \t\t";
 		return toString;
 	}
-	
-	public int getDetection(int version)
-	{
-		return IDS_DETECTION - (25 * version);
-	}
-	
 }

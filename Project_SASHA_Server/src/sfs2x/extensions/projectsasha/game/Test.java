@@ -23,8 +23,6 @@ public class Test
 	private static Player p, p2;
 	private static Gateway starting_gateway;
 	private static Gateway starting_gateway_u2;
-	private static Scanner kbd = new Scanner(System.in);
-	private static String s = null;
 	//static MoneyThread moneyTh;
 	private static Thread moneyThread;
 

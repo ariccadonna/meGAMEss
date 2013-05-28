@@ -163,8 +163,8 @@ public abstract class Gateway
 		return lastGatewayID++;
 	}
 	
-	public static void hack(Gateway from, Gateway to){
-		
+	public static boolean hack(Gateway from, Gateway to){
+		boolean ret = false;
 		/*********************/
 		/** hack logic here **/
 		/*********************/
@@ -175,10 +175,13 @@ public abstract class Gateway
 			to.setOwner(from.getOwner());
 			if(GameConsts.DEBUG)
 				System.out.println("SUCCESS");
+			ret = true;
 		}else{
 			if(GameConsts.DEBUG)
 				System.out.println("FAIL");
+			ret = false;
 		}
+		return ret;
 	}
 	
 	//NON STATIC METHODS

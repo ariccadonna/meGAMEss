@@ -55,6 +55,11 @@ public class Player
 		return ownerName;
 	}
 	
+	public String getUserName()
+	{
+		return this.name;
+	}
+	
 	public void addMoney(int value)
 	{
 			this.money += value;

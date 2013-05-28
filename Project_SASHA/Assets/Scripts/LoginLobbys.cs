@@ -533,11 +533,9 @@ public class LoginLobbys : MonoBehaviour {
 			break;
 			
 			case "startGame":
-				//TODO
-				showLoadingScreen = true;
-				Debug.Log("Started Game " + currentActiveRoom.Name);
+				smartFox.Send(new JoinRoomRequest(dataObject.GetUtfString("roomName"),dataObject.GetUtfString("password")));
 				UnregisterSFSSceneCallbacks();
-				//Application.LoadLevel("GameRoom");
+				Application.LoadLevel("gameRoom");
 			break;
 		}
 		
@@ -1178,6 +1176,9 @@ public class LoginLobbys : MonoBehaviour {
          	gameParams.PutInt("roomId", currentActiveRoom.Id);
 			gameParams.PutBool("isGame", false);
 			smartFox.Send(new ExtensionRequest("startGame",gameParams));
+			
+			showLoadingScreen = true;
+			Debug.Log("Started Game " + currentActiveRoom.Name);
 		}
 					
 		if (GUI.Button(new Rect(userListLeft+2*userListWidth/3, buddyListTop+buddyListHeight+4, (userListWidth)/3, 22), "Quit"))

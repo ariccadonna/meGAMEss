@@ -40,17 +40,15 @@ public class Proxy extends Software
 		}
 	}	
 	
+	public int getRange()
+	{
+		return GameConsts.PROXY_ATTACK_LEVEL * this.version;
+	}
+	
 	@Override
 	public String toString(){
 		String toString = this.getName() + " V"+this.getVersion();
 		toString += " - D:"+this.getDefenceLevel()+" A:"+ this.getAttackLevel()+"\n * \t\t";
 		return toString;
-	}
-	
-	public int getRange(int version)
-	{
-
-		return PROXY_ATTACK_LEVEL * version;
-	
-	}
+	}	
 }
