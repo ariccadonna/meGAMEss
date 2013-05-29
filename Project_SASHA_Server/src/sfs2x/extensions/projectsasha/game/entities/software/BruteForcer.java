@@ -45,8 +45,6 @@ public class BruteForcer extends Software
 	
 	@Override
 	public String toString(){
-		String firewallToString = this.getName() + " V"+this.getVersion();
-		firewallToString += " - D:"+this.getDefenceLevel()+" A:"+ this.getAttackLevel()+"\n * \t\t";
-		return firewallToString;
+		return this.getName() + " V"+this.getVersion();
 	}
 }

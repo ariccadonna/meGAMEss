@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import com.smartfoxserver.v2.entities.data.SFSObject;
+
 import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.ia.Trace;
@@ -273,21 +275,24 @@ public abstract class Gateway
 		}
 		
 		
-		if(this.hasSoftware(type) && !this.getInstalledSoftware(type).isCumulative()) //installed and not cumulative
+		if(this.hasSoftware(type)) //is installed
 		{
 			Software theSoftware = this.getInstalledSoftware(type); 
-			if(GameConsts.DEBUG)
-				System.out.println("["+this.state+"]-> Uninstalling "+theSoftware.getName()+" V"+theSoftware.getVersion());
-			theSoftware.setVersion(0);
-			installedSoftware[theSoftware.getSlot()] = null;
-		}
-		else if(this.hasSoftware(type)) //installed and cumulative
-		{
-			Software theSoftware = this.getInstalledSoftware(type); 
-			if(GameConsts.DEBUG)
-				System.out.println("["+this.state+"]-> Uninstalling "+theSoftware.getName()+" V"+theSoftware.getVersion()+" in slot "+(slot+1));
-			this.getInstalledSoftware(slot).setVersion(0);
-			installedSoftware[slot] = null;
+			
+			if(!this.getInstalledSoftware(type).isCumulative()) //not cumulative
+			{
+				if(GameConsts.DEBUG)
+					System.out.println("["+this.state+"]-> Uninstalling "+theSoftware.getName()+" V"+theSoftware.getVersion());
+				theSoftware.setVersion(0);
+				installedSoftware[theSoftware.getSlot()] = null;
+			}
+			else //cumulative
+			{
+				if(GameConsts.DEBUG)
+					System.out.println("["+this.state+"]-> Uninstalling "+theSoftware.getName()+" V"+theSoftware.getVersion()+" in slot "+(slot+1));
+				this.getInstalledSoftware(slot).setVersion(0);
+				installedSoftware[slot] = null;
+			}
 		}
 	}
 	

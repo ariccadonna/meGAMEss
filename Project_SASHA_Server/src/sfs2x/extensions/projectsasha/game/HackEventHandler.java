@@ -15,16 +15,15 @@ import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 public class HackEventHandler extends BaseClientRequestHandler{
 	public void handleClientRequest(User sender, ISFSObject params){
 
+		GameWorld world = RoomHelper.getWorld(this);
 		Player p = new Player(sender);		
 		
-		trace("Request World info");
-		GameWorld world = RoomHelper.getWorld(this);
 		
 		Gateway from = world.gateways.get(params.getUtfString("gatewayFrom"));
 		Gateway to = world.gateways.get(params.getUtfString("gatewayTo"));
 
 		boolean success = Gateway.hack(from, to);
-		trace("got an hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
+		trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", success);
 		send("hack", reback, sender);

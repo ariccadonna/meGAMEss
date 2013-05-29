@@ -19,12 +19,16 @@ public class GameExtension extends SFSExtension
 		WorldInit();
 		
 		trace("----- GAME EXTENSION INITIALIZED! -----");
+		addRequestHandler("getWorldSetup", WorldSetupHandler.class);
+		trace("WorldSetupHandler	=>		INITIALIZED");
 		addRequestHandler("hack", HackEventHandler.class);	
-		trace("HackHandler              	=>     INITIALIZED");
+		trace("HackHandler			=>		INITIALIZED");
 		addRequestHandler("spawnMe", SpawnMeHandler.class);
-		trace("SpawnMeHandler               =>     INITIALIZED");
+		trace("SpawnMeHandler		=>		INITIALIZED");
 		addRequestHandler("getTime", GetTimeHandler.class);
-		trace("GetTimeHandler               =>     INITIALIZED");
+		trace("GetTimeHandler		=>		INITIALIZED");
+		addRequestHandler("gatewayInfo", GatewayInfoHandler.class);
+		trace("GatewayInfoHandler 	=>		INITIALIZED");
 		
 		addEventHandler(SFSEventType.USER_DISCONNECT, OnUserGoneHandler.class);
 		addEventHandler(SFSEventType.USER_LEAVE_ROOM, OnUserGoneHandler.class);
@@ -38,12 +42,16 @@ public class GameExtension extends SFSExtension
 	{
 		super.destroy();
 		trace("----- GAME EXTENSION STOPPED! -----");
+		removeRequestHandler("getWorldSetup");
+		trace("WorldSetupHandler	=>		STOPPED");
 		removeRequestHandler("hack");
-		trace("HackHandler              	=>     STOPPED");
+		trace("HackHandler			=>		STOPPED");
 		removeRequestHandler("SpawnMeHandler");
-		trace("SpawnMeHandler               =>     STOPPED");
+		trace("SpawnMeHandler		=>		STOPPED");
 		removeRequestHandler("GetTimeHandler");
-		trace("GetTimeHandler               =>     STOPPED");
+		trace("GetTimeHandler		=>		STOPPED");
+		removeRequestHandler("gatewayInfo");
+		trace("GatewayInfoHandler 	=>		STOPPED");
 		trace("----- GAME EXTENSION STOPPED! -----");
 	}
 	

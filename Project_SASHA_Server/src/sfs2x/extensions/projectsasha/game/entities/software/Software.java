@@ -8,7 +8,8 @@ public abstract class Software
 	protected String name;	//Software name (ex: firewall, proxy...)
 	protected int slot;
 	protected boolean cumulative;
-	private String type;
+	protected String type;
+	protected boolean hasTriggeredAction;
 	
 	
 	//CONSTRUCTORS
@@ -19,6 +20,7 @@ public abstract class Software
 		this.version = version;
 		this.cumulative = false;
 		this.type = "SOFTWARE";
+		this.hasTriggeredAction = false;
 	}
 	
 	
@@ -100,5 +102,20 @@ public abstract class Software
 	public void setType(String type)
 	{
 		this.type = type;
+	}
+	
+	
+	public void setTriggeredAction(boolean hasTriggeredAction)
+	{
+		this.hasTriggeredAction = hasTriggeredAction;
+	}
+	
+	public boolean getTriggeredAction()
+	{
+		return this.hasTriggeredAction;
+	}
+	
+	public void runTriggetedAction(){
+		return;
 	}
 }

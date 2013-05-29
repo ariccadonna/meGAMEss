@@ -42,10 +42,7 @@ public class LogCleaner extends Software
 	
 	@Override
 	public String toString(){
-		String toString = this.getName() + " V"+this.getVersion();
-		toString += " - D:"+this.getDefenceLevel()+" A:"+ this.getAttackLevel()+"\n * \t\t";
-		return toString;
+		return this.getName() + " V"+this.getVersion();
 	}
-	
 	
 }
