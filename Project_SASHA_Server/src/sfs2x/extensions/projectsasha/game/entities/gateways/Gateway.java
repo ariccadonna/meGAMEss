@@ -1,10 +1,13 @@
 package sfs2x.extensions.projectsasha.game.entities.gateways;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.Player;
@@ -24,7 +27,7 @@ public abstract class Gateway
 	private Player owner;
 	private String name, state;
 	private int id;
-
+	private Set<Integer> startedAttacks = Collections.synchronizedSet(new HashSet<Integer>());
 
 	public Gateway(Player owner, String name, String state)
 	{
@@ -32,7 +35,7 @@ public abstract class Gateway
 		this.name = name;
 		this.state = state;
 		this.id = getNewID();
-		this.traces = new ArrayList<Trace>();
+		this.traces = new Vector<Trace>();
 		this.installedSoftware = new Software[GameConsts.MAX_SOFTWARE_INSTALLED];
 	}	
 	
@@ -94,12 +97,40 @@ public abstract class Gateway
 		distanceFromAttackGateway.put(playerName, weight);
 	}
 	
+	public Set<Integer> getStartedAttacks() 
+	{
+		return startedAttacks;
+	}
+
+	public void addStartedAttack(int startedAttack) 
+	{
+		this.startedAttacks.add(startedAttack);
+	}
+
+	public void removeStartedAttack(int startedAttack) 
+	{
+		this.startedAttacks.remove(startedAttack);
+	}
+
+	public boolean hasStartedAttack(int startedAttack)
+	{
+		return this.startedAttacks.contains(startedAttack);
+	}
+	
+	synchronized public void confiscate()
+	{
+		this.traces.clear();
+		this.installedSoftware = new Software[GameConsts.MAX_SOFTWARE_INSTALLED];
+		this.owner = null;
+		this.startedAttacks.clear();	
+	}
+	
 	public void resetWeightByDistance(String playerName)
 	{
 		setWeightByDistance(playerName, 0);
 	}	
 	
-	public int getDefenceLevel()
+	synchronized public int getDefenceLevel()
 	{
 		int dl = getBaseDefenceLevel();
 		
@@ -111,7 +142,7 @@ public abstract class Gateway
 		return dl;
 	}
 	
-	public int getAttackLevel()
+	synchronized public int getAttackLevel()
 	{
 		int dl = getBaseAttackLevel();
 		
@@ -123,12 +154,12 @@ public abstract class Gateway
 		return dl;
 	}
 	
-	public Software[] getInstalledSoftwares()
+	synchronized public Software[] getInstalledSoftwares()
 	{
 		return this.installedSoftware;
 	}
 	
-	public Software getInstalledSoftware(String type)
+	synchronized public Software getInstalledSoftware(String type)
 	{
 		for(Software s : installedSoftware)
 		{
@@ -138,7 +169,7 @@ public abstract class Gateway
 		return null;
 	}
 	
-	public Software getInstalledSoftware(int slot)
+	synchronized public Software getInstalledSoftware(int slot)
 	{
 		return installedSoftware[slot];
 	}
@@ -187,7 +218,7 @@ public abstract class Gateway
 	}
 	
 	//NON STATIC METHODS
-	public void installSoftware(String type, Player hacker)
+	synchronized public void installSoftware(String type, Player hacker)
 	{
 		Software newSoftware = SoftwareFactory.makeSoftware(type);
 		if(this.owner!=hacker)
@@ -260,14 +291,14 @@ public abstract class Gateway
 		}
 	}
 	
-	public boolean hasSoftware(String type){
+	synchronized public boolean hasSoftware(String type){
 		for(Software s : installedSoftware)
 			if(s != null && type == s.getType())
 				return true;
 		return false;
 	}
 	
-	public int getNextSoftwareSlotAvailable(){
+	synchronized public int getNextSoftwareSlotAvailable(){
 		int slot = 0;
 		
 		for(Software s : installedSoftware)
@@ -313,7 +344,7 @@ public abstract class Gateway
 				System.out.println("["+this.getState()+"]-> Software " + newSoftware.getName() + " is not installed"); 
 	}
 	
-	public void upgradeSoftware(String type, Player hacker,  int slot){
+	synchronized public void upgradeSoftware(String type, Player hacker,  int slot){
 		
 		Software newSoftware = SoftwareFactory.makeSoftware(type);
 		
@@ -334,7 +365,7 @@ public abstract class Gateway
 				System.out.println("["+this.getState()+"]-> Software " + newSoftware.getName() + " is not installed"); 
 	}
 	
-	public void downgradeSoftware(String type, Player hacker){
+	synchronized public void downgradeSoftware(String type, Player hacker){
 		
 		Software newSoftware = SoftwareFactory.makeSoftware(type);
 		
@@ -352,7 +383,7 @@ public abstract class Gateway
 				System.out.println("["+this.getState()+"]-> Software " + newSoftware.getName() + " is not installed"); 
 	}
 	
-	public void downgradeSoftware(String type, Player hacker, int slot){
+	synchronized public void downgradeSoftware(String type, Player hacker, int slot){
 		
 		Software newSoftware = SoftwareFactory.makeSoftware(type);
 		
@@ -371,7 +402,7 @@ public abstract class Gateway
 	}
 	
 	@Override
-	public String toString(){
+	synchronized public String toString(){
 		String ownerName = this.owner == null?"NEUTRAL":this.owner.getName();
 		String returnString = "/*****************************************\\\n";
 		returnString += " * Owner:\t "+ownerName+"\n";
