@@ -1,6 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities.software;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 
 public class IDS extends Software
@@ -49,4 +50,13 @@ public class IDS extends Software
 	public String toString(){
 		return this.getName() + " V"+this.getVersion();
 	}
+
+	@Override
+	public void runTriggeredAction(Gateway from, Gateway to)
+	{
+		int tempo = this.getDetection(this.getVersion());
+		for(int i = tempo; i>=0; i--);
+		//funzione avviso hack
+	}
+
 }

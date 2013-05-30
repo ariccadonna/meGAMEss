@@ -1,6 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities.software;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 
 public class Virus extends Software
@@ -45,5 +46,22 @@ public class Virus extends Software
 		return this.getName() + " V"+this.getVersion();
 	}
 	
+	@Override
+	public void runTriggeredAction(Gateway from, Gateway to)
+	{
+		if(to.hasSoftware(GameConsts.ANTIVIRUS))
+		{
+			Software s = to.getInstalledSoftware(GameConsts.VIRUS);
+			s.runTriggeredAction(from, to);
+		}
+		if(!to.hasSoftware(GameConsts.ANTIVIRUS)&& from.hasSoftware(GameConsts.VIRUS))
+		{
+			Software[] lista = to.getInstalledSoftwares();
+			for(int i=0;i<this.getVersion();i++)
+				to.uninstallSoftware(lista[i].getType(), to.getOwner());
+			
+		}
+			
+	}
 	
 }

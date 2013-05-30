@@ -1,6 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities.software;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 
 public class DeepThroat extends Software
@@ -45,5 +46,10 @@ public class DeepThroat extends Software
 		return this.getName() + " V"+this.getVersion();
 	}
 	
+	@Override
+	public void runTriggeredAction(Gateway from, Gateway to)
+	{
+		//avvisare la polizia
+	}
 	
 }

@@ -1,6 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities.software;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 public abstract class Software 
 {
@@ -115,7 +116,14 @@ public abstract class Software
 		return this.hasTriggeredAction;
 	}
 	
-	public void runTriggeredAction(){
+	public void runTriggeredAction()
+	{
 		return;
 	}
+	
+	public void runTriggeredAction(Gateway from, Gateway to)
+	{
+		return;
+	}
+
 }

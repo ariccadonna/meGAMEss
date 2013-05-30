@@ -1,6 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities.software;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 
 public class Sniffer extends Software
@@ -49,4 +50,14 @@ public class Sniffer extends Software
 	public String toString(){
 		return this.getName() + " V"+this.getVersion();
 	}	
+	
+	@Override
+	public void runTriggeredAction(Gateway from, Gateway to)
+	{
+		for(int i=0; i<this.getVersion();i++)
+		{
+			// mostrare oggetto nemico
+		}
+			
+	}
 }
