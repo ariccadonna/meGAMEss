@@ -7,6 +7,7 @@ import com.smartfoxserver.v2.extensions.SFSExtension;
 public class GameExtension extends SFSExtension
 {
 	private GameWorld world; // Reference to World simulation model
+	private static Thread moneyThread;
 	
 	public GameWorld getWorld() 
 	{
@@ -34,6 +35,7 @@ public class GameExtension extends SFSExtension
 		addEventHandler(SFSEventType.USER_LEAVE_ROOM, OnUserGoneHandler.class);
 		addEventHandler(SFSEventType.USER_LOGOUT, OnUserGoneHandler.class);
 		trace("----- GAME EXTENSION INITIALIZED! -----");
+		
 
 	}
 	
@@ -58,7 +60,13 @@ public class GameExtension extends SFSExtension
 	private void WorldInit(){
 		trace("----- WORLD INIT -----");
 		world = new GameWorld(0);
+		moneyThread = new Thread(new MoneyThread(world));
+
 		trace("----- WORLD INIT DONE-----");
+	}
+	
+	private static void produceMoney() {
+		moneyThread.start();
 	}
 	
 	

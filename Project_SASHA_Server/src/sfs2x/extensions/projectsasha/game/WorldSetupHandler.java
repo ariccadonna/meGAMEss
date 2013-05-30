@@ -19,9 +19,14 @@ public class WorldSetupHandler extends BaseClientRequestHandler{
 		
 		GameWorld world = RoomHelper.getWorld(this);
 		
-		List<User> ul = RoomHelper.getCurrentRoom(this).getUserList();
-		Player p = new Player(sender);
-		
+		List<User> userList = RoomHelper.getCurrentRoom(this).getUserList();
+		int i=0;
+		for(User u : userList){
+			Player p = new Player(u);
+			world.gateways.get(GameConsts.STARTING_SPOT[i]).setOwner(p);	
+			//world.gateways.get(GameConsts.STARTING_SPOT[i]).installSoftware(GameConsts.BRUTEFORCER, p);
+			i++;
+		}
 		
 		
 		String str, JSONString;
@@ -35,7 +40,7 @@ public class WorldSetupHandler extends BaseClientRequestHandler{
 		while (itr.hasNext()) {
 			str = itr.next();
 			currentGW = world.gateways.get(str);
-			String GWOwner = currentGW.getOwner()!=null?currentGW.getOwner().getName():"none";
+			String GWOwner = currentGW.getOwner()!=null?currentGW.getOwner().getName():"Neutral";
 			JSONString += "\""+str+"\":{"+
 						"\"STATE\":\""+str+"\","+
 						"\"NAME\":\""+currentGW.getName()+"\","+

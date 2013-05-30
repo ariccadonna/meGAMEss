@@ -24,8 +24,7 @@ public class MoneyThread implements Runnable
 			try 
 			{
 				Thread.sleep(GameConsts.MONEY_UPDATE_TIME);
-				if(GameConsts.DEBUG)
-					System.out.println("---------- Money Update Start ----------");
+				
 				/* Money logic here */
 				Iterator<String> iterator = world.gateways.keySet().iterator();
 				Region[] regions = world.regions;
@@ -51,12 +50,7 @@ public class MoneyThread implements Runnable
 						}
 					}
 					if(giveBonusMoney)
-					{
-						if(GameConsts.DEBUG)
-							System.out.println(prevOwner.getName() + " is getting " + (size*GameConsts.BONUS_MONEY_PER_REGION) + " bonus money for " + region.name);
 						prevOwner.addMoney(size*GameConsts.BONUS_MONEY_PER_REGION);
-					}
-						
 				}
 				 while (iterator.hasNext()) 
 			        {
@@ -65,22 +59,14 @@ public class MoneyThread implements Runnable
 			            Gateway currentGateway = world.gateways.get(key);
 			            
 			            if(currentGateway.getOwner()!=null)
-			            {
-			            	if(GameConsts.DEBUG)
-			            		System.out.println(currentGateway.getOwner().getName()+" earned "+currentGateway.getPaymentAmount()+" for "+currentGateway.getState());
 			            	currentGateway.getOwner().addMoney(currentGateway.getPaymentAmount());
-			            }
-			        }
-				 
-		        if(GameConsts.DEBUG)
-		        	System.out.println("----------- Money Update End -----------");
-			} 
+			        }		 
+		 	} 
 			catch (InterruptedException e) 
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 	}
 }

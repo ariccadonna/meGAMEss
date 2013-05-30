@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Arrays;
+import java.util.Set;
+
+import org.json.JSONObject;
 
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
@@ -32,6 +36,8 @@ public class Test
 		world = new GameWorld(0);
 		moneyThread = new Thread(new MoneyThread(world));
 		
+		//JSONObject GatewayJSON = new JSONObject(world.gateways);//troppa roba
+		System.out.println(json());
 		u = new User("TestUser");
 		p = new Player(u);
 		
@@ -160,5 +166,35 @@ public class Test
 				System.out.println("-------- Starting gateway info --------");
 			break;
 		}
+	}
+	public static String json(){
+		Set<String> set = world.gateways.keySet();
+		Iterator<String> itr = set.iterator();
+		String str;
+		Gateway currentGW;
+		//JSON composition
+		String JSONString  = "{";
+		while (itr.hasNext()) {
+			str = itr.next();
+			currentGW = world.gateways.get(str);
+			String GWOwner = currentGW.getOwner()!=null?currentGW.getOwner().getName():"none";
+			JSONString += "\""+str+"\":{"+
+						"\"STATE\":\""+str+"\","+
+						"\"NAME\":\""+currentGW.getName()+"\","+
+						"\"OWNER\":\""+GWOwner+"\","+
+						"\"ATK\":"+currentGW.getAttackLevel()+","+
+						"\"DEF\":"+currentGW.getDefenceLevel()+","+
+						"\"TYPE\":\""+currentGW.getClass().getSimpleName()+"\","+
+						"\"SW\": ["+
+						"\""+currentGW.getInstalledSoftware(0)+"\","+
+						"\""+currentGW.getInstalledSoftware(1)+"\","+
+						"\""+currentGW.getInstalledSoftware(2)+"\""+
+						"]"+
+						"},";
+			
+		}
+		JSONString = JSONString.substring(0, JSONString.length()-1);
+		JSONString+="}";
+		return JSONString;
 	}
 }

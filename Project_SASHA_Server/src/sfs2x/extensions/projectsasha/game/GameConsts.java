@@ -11,6 +11,8 @@ public class GameConsts
 	public static final int BONUS_MONEY_PER_REGION	= 10;
 	
 	/* Gateway parameters */
+	public static final String[] STARTING_SPOT		= {"iceland","","","",""};
+	
 	public static final int BASE_PAYMENT_AMOUNT 	= 5;
 	public static final int BASE_DEFENCE_LEVEL		= 5;
 	public static final int BASE_ATTACK_LEVEL		= 5;
@@ -73,7 +75,6 @@ public class GameConsts
 	public static final boolean DEEPTHROAT_CUMULATIVE	= false;
 	
 	/* Offensive Software */
-
 	public static final String SNIFFER					= "SNIFFER";
 	public static final String SNIFFER_NAME 			= "WireBass";
 	public static final int SNIFFER_MAX_LEVEL			= 3;
