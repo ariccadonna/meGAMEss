@@ -17,11 +17,11 @@ public class Police
 	private Random rand;
 	private String[] gatewayStates;
 	
-	public Police()
+	public Police(GameWorld currentWorld)
 	{
 		this.rand = new Random();
 		this.gatewayStates = (String[]) Arrays.asList(GameWorld.gateways.keySet()).toArray();
-		this.currGateway = GameWorld.gateways.get(this.gatewayStates[this.rand.nextInt(42)]);
+		this.currGateway = currentWorld.gateways.get(this.gatewayStates[this.rand.nextInt(42)]);
 	}
 	
 	
