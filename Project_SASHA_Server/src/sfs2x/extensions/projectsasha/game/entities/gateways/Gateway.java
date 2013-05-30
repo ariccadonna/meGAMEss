@@ -205,6 +205,11 @@ public abstract class Gateway
 		/*********************/
 		int difference = to.getDefenceLevel()-from.getAttackLevel();
 		if(difference < 0){
+			if(to.hasSoftware(GameConsts.IDS))
+			{
+				Software s = to.getInstalledSoftware(GameConsts.IDS);
+				s.runTriggeredAction(from, to);
+			}
 			to.setOwner(from.getOwner());
 			ret = true;
 		}else{
@@ -357,4 +362,5 @@ public abstract class Gateway
 		returnString += "\\*****************************************/";
 		return returnString;
 	}
+	
 }
