@@ -1,13 +1,12 @@
 package sfs2x.extensions.projectsasha.game;
 
-import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
-import sfs2x.extensions.projectsasha.game.entities.software.Software;
 import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
 
 import com.smartfoxserver.v2.entities.User;
@@ -19,8 +18,12 @@ public class WorldSetupHandler extends BaseClientRequestHandler{
 	public void handleClientRequest(User sender, ISFSObject params){
 		
 		GameWorld world = RoomHelper.getWorld(this);
+		
+		List<User> ul = RoomHelper.getCurrentRoom(this).getUserList();
 		Player p = new Player(sender);
-		//SFSObject reback = SFSObject.newInstance();
+		
+		
+		
 		String str, JSONString;
 		Gateway currentGW = null;
 		
@@ -32,42 +35,27 @@ public class WorldSetupHandler extends BaseClientRequestHandler{
 		while (itr.hasNext()) {
 			str = itr.next();
 			currentGW = world.gateways.get(str);
-			JSONString+="\"GATEWAY\":{";
-			JSONString+="\"STATE\":\""+str+"\",";
-			JSONString+="\"NAME\":\""+currentGW.getName()+"\",";
-
-			if(currentGW.getOwner()!=null)
-				JSONString+="\"OWNER\":\""+currentGW.getOwner().getName()+"\",";
-			else
-				JSONString+="\"OWNER\":\"none\",";
-			
-			JSONString+="\"ATK\":"+currentGW.getAttackLevel()+",";
-			JSONString+="\"DEF\":"+currentGW.getDefenceLevel()+",";
-			JSONString+="\"TYPE\":\""+currentGW.getClass().getSimpleName()+"\",";
-			JSONString+="\"SW\": {";
-			
-			if(currentGW.getInstalledSoftware(0) != null)
-				JSONString+="\"S0\":\""+currentGW.getInstalledSoftware(0)+"\",";
-			else
-				JSONString+="\"S0\":null,";
-			if(currentGW.getInstalledSoftware(1) != null)
-				JSONString+="\"S1\":\""+currentGW.getInstalledSoftware(1)+"\",";
-			else
-				JSONString+="\"S1\":null,";
-			if(currentGW.getInstalledSoftware(2) != null)
-				JSONString+="\"S2\":\""+currentGW.getInstalledSoftware(2)+"\"";
-			else
-				JSONString+="\"S2\":null";
-			
-			JSONString+="}";
-			JSONString+="},";
+			String GWOwner = currentGW.getOwner()!=null?currentGW.getOwner().getName():"none";
+			JSONString += "\""+str+"\":{"+
+						"\"STATE\":\""+str+"\","+
+						"\"NAME\":\""+currentGW.getName()+"\","+
+						"\"OWNER\":\""+GWOwner+"\","+
+						"\"ATK\":"+currentGW.getAttackLevel()+","+
+						"\"DEF\":"+currentGW.getDefenceLevel()+","+
+						"\"TYPE\":\""+currentGW.getClass().getSimpleName()+"\","+
+						"\"SW\": ["+
+						"\""+currentGW.getInstalledSoftware(0)+"\","+
+						"\""+currentGW.getInstalledSoftware(1)+"\","+
+						"\""+currentGW.getInstalledSoftware(2)+"\""+
+						"]"+
+						"},";
 			
 		}
 		JSONString = JSONString.substring(0, JSONString.length()-1);
 		JSONString+="}";
 				
 		SFSObject reback = SFSObject.newFromJsonData(JSONString);
-		trace(reback.getDump());
+		
 		trace("Sending world setup info");
 		
 		send("getWorldSetup", reback, sender);
