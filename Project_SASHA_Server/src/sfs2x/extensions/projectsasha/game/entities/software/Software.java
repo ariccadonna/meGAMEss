@@ -115,7 +115,7 @@ public abstract class Software
 		return this.hasTriggeredAction;
 	}
 	
-	public void runTriggetedAction(){
+	public void runTriggeredAction(){
 		return;
 	}
 }

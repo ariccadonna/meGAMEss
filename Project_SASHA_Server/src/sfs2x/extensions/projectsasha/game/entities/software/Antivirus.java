@@ -45,5 +45,9 @@ public class Antivirus extends Software
 		return this.getName() + " V"+this.getVersion();
 	}
 	
+	@Override
+	public void runTriggeredAction(){
+		
+	}
 	
 }
