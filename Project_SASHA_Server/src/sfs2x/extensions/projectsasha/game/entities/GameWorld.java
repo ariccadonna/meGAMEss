@@ -17,48 +17,48 @@ public class GameWorld
 	{
 		this.id = id;
 	
-		gateways.put("iceland",				new Scientific(null, "nome", "Iceland"));
-		gateways.put("great britain",		new Base(null, "nome", "Great Britain"));
-		gateways.put("scandinavia", 		new Educational(null, "nome", "Scandinavia"));
-		gateways.put("northern europe",		new Bank(null, "nome", "Northern Europe"));
-		gateways.put("ukraine", 			new Base(null, "nome", "Ukraine"));
-		gateways.put("western europe",		new Educational(null, "nome", "Western Europe"));
-		gateways.put("southern europe",		new Base(null, "nome", "Southern Europe"));
-		gateways.put("north africa",		new Base(null, "nome", "Northern Europe"));
-		gateways.put("egypt",				new Military(null, "nome", "Egypt"));
-		gateways.put("east africa",			new Base(null, "nome", "East Africa"));
-		gateways.put("congo",				new Base(null, "nome", "Congo"));
-		gateways.put("madagascar",			new Bank(null, "nome", "Madagascar"));
-		gateways.put("south africa",		new Educational(null, "nome", "South Africa"));
-		gateways.put("middle east",			new Base(null, "nome", "Middle East"));
-		gateways.put("afghanistan",			new Military(null, "nome", "Afghanistan"));
-		gateways.put("india",				new Scientific(null, "nome", "India"));
-		gateways.put("siam",				new Base(null, "nome", "Siam"));
-		gateways.put("china",				new Government(null, "nome", "China"));
-		gateways.put("ural",				new Base(null, "nome", "Ural"));
-		gateways.put("siberia",				new Base(null, "nome", "Siberia"));
-		gateways.put("mongolia",			new Base(null, "nome", "Mongolia"));
-		gateways.put("irkutsk",				new Educational(null, "nome", "Irkutsk"));
-		gateways.put("yakutsk",				new Base(null, "nome", "Yakutsk"));
-		gateways.put("kamchatka",			new Base(null, "nome", "Kamchatka"));
-		gateways.put("japan",				new Scientific(null, "nome", "Japan"));
-		gateways.put("indonesia",			new Base(null, "nome", "Indonesia"));
-		gateways.put("western australia", 	new Government(null, "nome", "Western Australia"));
-		gateways.put("eastern australia", 	new Bank(null, "nome", "Eastern Australia"));
-		gateways.put("new guinea", 			new Base(null, "nome", "New Guinea"));
-		gateways.put("alaska", 				new Scientific(null, "nome", "Alaska"));
-		gateways.put("north west territory",new Base(null, "nome", "North West Territory"));
-		gateways.put("alberta", 			new Base(null, "nome", "Alberta"));
-		gateways.put("western usa", 		new Bank(null, "nome", "Western USA"));
-		gateways.put("eastern usa", 		new Military(null, "nome", "Eastern USA"));
-		gateways.put("ontario", 			new Base(null, "nome", "Ontario"));
-		gateways.put("central america", 	new Base(null, "nome", "Central America"));
-		gateways.put("quebec",				new Base(null, "nome", "Quebec"));
-		gateways.put("greenland",			new Government(null, "nome", "Greenland"));
-		gateways.put("venezuela",			new Base(null, "nome", "Venezuela"));
-		gateways.put("peru",				new Base(null, "nome", "peru"));
-		gateways.put("brazil",				new Military(null, "nome", "Brazil"));
-		gateways.put("argentina",			new Government(null, "nome", "Argentina"));	
+		gateways.put("iceland",				new Scientific(null, "nome", "Iceland", 221, 176));
+		gateways.put("great britain",		new Base(null, "nome", "Great Britain", 138, 30));
+		gateways.put("scandinavia", 		new Educational(null, "nome", "Scandinavia", 203, 106));
+		gateways.put("northern europe",		new Bank(null, "nome", "Northern Europe", 194, 23));
+		gateways.put("ukraine", 			new Base(null, "nome", "Ukraine", 288, 58));
+		gateways.put("western europe",		new Educational(null, "nome", "Western Europe", 136, -37));
+		gateways.put("southern europe",		new Base(null, "nome", "Southern Europe", 219, -14));
+		gateways.put("north africa",		new Base(null, "nome", "Northern Europe", 154, -138 ));
+		gateways.put("egypt",				new Military(null, "nome", "Egypt", 238, -100));
+		gateways.put("east africa",			new Base(null, "nome", "East Africa", 266, -159));
+		gateways.put("congo",				new Base(null, "nome", "Congo", 227, -219));
+		gateways.put("madagascar",			new Bank(null, "nome", "Madagascar", 311, -306));
+		gateways.put("south africa",		new Educational(null, "nome", "South Africa", 231, -308));
+		gateways.put("middle east",			new Base(null, "nome", "Middle East", 302, -71));
+		gateways.put("afghanistan",			new Military(null, "nome", "Afghanistan", 377, -8));
+		gateways.put("india",				new Scientific(null, "nome", "India", 422, -110));
+		gateways.put("siam",				new Base(null, "nome", "Siam", 511, -135));
+		gateways.put("china",				new Government(null, "nome", "China", 484, -40));
+		gateways.put("ural",				new Base(null, "nome", "Ural", 387, 87));
+		gateways.put("siberia",				new Base(null, "nome", "Siberia", 449, 118));
+		gateways.put("mongolia",			new Base(null, "nome", "Mongolia", 545, 30)); //missing 
+		gateways.put("irkutsk",				new Educational(null, "nome", "Irkutsk", 518, 62));
+		gateways.put("yakutsk",				new Base(null, "nome", "Yakutsk", 543, 133));
+		gateways.put("kamchatka",			new Base(null, "nome", "Kamchatka", 639, 126));
+		gateways.put("japan",				new Scientific(null, "nome", "Japan", 322, -8));
+		gateways.put("indonesia",			new Base(null, "nome", "Indonesia", 555, -202));
+		gateways.put("western australia", 	new Government(null, "nome", "Western Australia", 562, -319));
+		gateways.put("eastern australia", 	new Bank(null, "nome", "Eastern Australia", 649, -294));
+		gateways.put("new guinea", 			new Base(null, "nome", "New Guinea", 639, -220));
+		gateways.put("alaska", 				new Scientific(null, "nome", "Alaska", -244, 128));
+		gateways.put("north west territory",new Base(null, "nome", "North West Territory", -146, 122));
+		gateways.put("alberta", 			new Base(null, "nome", "Alberta", -136, 70));
+		gateways.put("western usa", 		new Bank(null, "nome", "Western USA", -146, -2));
+		gateways.put("eastern usa", 		new Military(null, "nome", "Eastern USA", -76, -19));
+		gateways.put("ontario", 			new Base(null, "nome", "Ontario", -64, 65));
+		gateways.put("central america", 	new Base(null, "nome", "Central America", -137, -68));
+		gateways.put("quebec",				new Base(null, "nome", "Quebec", -12, 65));
+		gateways.put("greenland",			new Government(null, "nome", "Greenland", 85, 166));
+		gateways.put("venezuela",			new Base(null, "nome", "Venezuela", -185, -120));
+		gateways.put("peru",				new Base(null, "nome", "Perù", -163, -184));
+		gateways.put("brazil",				new Military(null, "nome", "Brazil", -102, -163));
+		gateways.put("argentina",			new Government(null, "nome", "Argentina", -160, -256));	
 		
 		gateways.get("iceland").setNeighborhoods(new Gateway[]
 		{
@@ -67,7 +67,7 @@ public class GameWorld
 		});
 		gateways.get("great britain").setNeighborhoods(new Gateway[]
 		{
-			gateways.get("island"), 
+			gateways.get("iceland"), 
 			gateways.get("western europe"),
 			gateways.get("northern europe")
 		});
@@ -103,7 +103,7 @@ public class GameWorld
 		gateways.get("southern europe").setNeighborhoods(new Gateway[]
 		{
 			gateways.get("western europe"), 
-			gateways.get("northen europe"),
+			gateways.get("northern europe"),
 			gateways.get("ukraine"),
 			gateways.get("middle east"),
 			gateways.get("egypt"),
@@ -265,7 +265,7 @@ public class GameWorld
 		});
 		gateways.get("alaska").setNeighborhoods(new Gateway[]
 		{
-			gateways.get("kamcatcha"), 
+			gateways.get("kamchatka"), 
 			gateways.get("north west territory"),
 			gateways.get("alberta")
 		});

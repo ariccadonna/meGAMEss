@@ -126,6 +126,8 @@ public class NetworkManager : MonoBehaviour {
 					ISFSObject currentObject = data.GetSFSObject(currentKey);
 					GameObject currentGw = Instantiate(GatewayPrefab) as GameObject;
 					currentGw.transform.name = currentObject.GetUtfString("STATE");
+					Vector3 temp = new Vector3((float)currentObject.GetInt("X"),(float)currentObject.GetInt("Y"),1);
+					currentGw.transform.position = temp;
 					Gateway gw = currentGw.GetComponent<Gateway>();
 					gw.Setup(currentObject);	
 				}

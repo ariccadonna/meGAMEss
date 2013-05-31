@@ -49,6 +49,11 @@ public class Gateway : MonoBehaviour {
 		return this.name;
 	}
 	
+	public string getType()
+	{
+		return this.type;
+	}
+	
 	public string getState()
 	{
 		return this.state;

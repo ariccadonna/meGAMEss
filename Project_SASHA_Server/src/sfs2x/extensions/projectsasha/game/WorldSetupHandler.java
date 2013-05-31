@@ -43,6 +43,8 @@ public class WorldSetupHandler extends BaseClientRequestHandler{
 			String GWOwner = currentGW.getOwner()!=null?currentGW.getOwner().getName():"Neutral";
 			JSONString += "\""+str+"\":{"+
 						"\"STATE\":\""+str+"\","+
+						"\"X\":"+currentGW.getX()+","+
+						"\"Y\":"+currentGW.getY()+","+
 						"\"NAME\":\""+currentGW.getName()+"\","+
 						"\"OWNER\":\""+GWOwner+"\","+
 						"\"ATK\":"+currentGW.getAttackLevel()+","+

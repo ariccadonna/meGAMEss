@@ -22,6 +22,7 @@ public class GameExtension extends SFSExtension
 		trace("----- GAME EXTENSION INITIALIZED! -----");
 		addRequestHandler("getWorldSetup", WorldSetupHandler.class);
 		trace("WorldSetupHandler	=>		INITIALIZED");
+		addRequestHandler("getNeighborhoods", NeightborhoodHandler.class);
 		addRequestHandler("hack", HackEventHandler.class);	
 		trace("HackHandler			=>		INITIALIZED");
 		addRequestHandler("spawnMe", SpawnMeHandler.class);

@@ -6,9 +6,9 @@ import sfs2x.extensions.projectsasha.game.entities.Player;
 public class Government extends Gateway
 {
 	
-	public Government(Player owner, String name, String state) 
+	public Government(Player owner, String name, String state, int x, int y) 
 	{
-		super(owner, name, state);
+		super(owner, name, state, x, y);
 	}
 
 	

@@ -6,9 +6,9 @@ import sfs2x.extensions.projectsasha.game.entities.Player;
 public class Base extends Gateway
 {
 	
-	public Base(Player owner, String name, String state) 
+	public Base(Player owner, String name, String state, int x, int y) 
 	{
-		super(owner, name, state);
+		super(owner, name, state, x, y);
 	}
 
 	

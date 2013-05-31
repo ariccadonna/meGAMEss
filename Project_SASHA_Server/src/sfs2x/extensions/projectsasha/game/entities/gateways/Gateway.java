@@ -28,10 +28,10 @@ public abstract class Gateway
 	private Map<String,Integer> distanceFromAttackGateway = new Hashtable<String,Integer>();
 	private Player owner;
 	private String name, state;
-	private int id;
+	private int id, x, y;
 	private Set<Integer> startedAttacks = Collections.synchronizedSet(new HashSet<Integer>());
 
-	public Gateway(Player owner, String name, String state)
+	public Gateway(Player owner, String name, String state, int x, int y)
 	{
 		this.owner = owner;
 		this.name = name;
@@ -39,6 +39,8 @@ public abstract class Gateway
 		this.id = getNewID();
 		this.traces = new Vector<Trace>();
 		this.installedSoftware = new Software[GameConsts.MAX_SOFTWARE_INSTALLED];
+		this.x = x;
+		this.y = y;
 	}	
 	
 	
@@ -52,11 +54,6 @@ public abstract class Gateway
 	public Player getOwner()
 	{
 		return owner;
-	}
-	
-	public void setOwner(Player p)
-	{
-		this.owner = p;
 	}
 	
 	public Gateway[] getNeighboors()
@@ -92,6 +89,12 @@ public abstract class Gateway
 	public int getWeightByDistance(String playerName)
 	{
 		return distanceFromAttackGateway.get(playerName);
+	}
+	
+	public int getDistance(Gateway to)
+	{
+		return (int)Math.sqrt(Math.pow(to.getX()-this.getX(), 2)+Math.pow(to.getY()-this.getY(), 2));
+		
 	}
 	
 	public void setWeightByDistance(String playerName, int weight)
@@ -176,6 +179,14 @@ public abstract class Gateway
 		return installedSoftware[slot];
 	}
 	
+	synchronized public int getX(){
+		return this.x;
+	}
+	
+	synchronized public int getY(){
+		return this.y;
+	}
+	
 	//SETTERS
 	
 	public void setNeighborhoods(Gateway[] neighboors)
@@ -183,6 +194,10 @@ public abstract class Gateway
 		this.neighboors = neighboors;
 	}
 	
+	public void setOwner(Player p)
+	{
+		this.owner = p;
+	}
 	
 	//ABSTRACT METHODS
 
