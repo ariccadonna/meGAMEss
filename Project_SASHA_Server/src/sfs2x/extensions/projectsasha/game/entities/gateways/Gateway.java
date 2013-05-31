@@ -225,6 +225,12 @@ public abstract class Gateway
 				Software s = to.getInstalledSoftware(GameConsts.IDS);
 				s.runTriggeredAction(from, to);
 			}
+			if(to.hasSoftware(GameConsts.VIRUS))
+			{
+				Software s = to.getInstalledSoftware(GameConsts.VIRUS);
+				s.runTriggeredAction(from, to);
+			}
+
 			to.setOwner(from.getOwner());
 			ret = true;
 		}else{
