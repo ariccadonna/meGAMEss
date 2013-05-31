@@ -378,4 +378,25 @@ public abstract class Gateway
 		return returnString;
 	}
 	
+	public boolean isNeighboor(Gateway s){
+		for(Gateway g : neighboors)
+			if(g != null && g.getName() == s.getName())
+				return true;
+		return false;
+	}
+	
+	synchronized public void setTrace(List<Gateway> list, int level)
+	{
+		if(this.hasSoftware(GameConsts.LOGCLEANER))
+		{
+			Software s = this.getInstalledSoftware(GameConsts.LOGCLEANER); 
+			level-=s.getVersion();
+		}
+		for(Gateway g : list)
+		{
+			Trace tr = new Trace(this,this.getID(),level,this.getName());
+			g.traces.add(tr);
+		}
+	}
+
 }
