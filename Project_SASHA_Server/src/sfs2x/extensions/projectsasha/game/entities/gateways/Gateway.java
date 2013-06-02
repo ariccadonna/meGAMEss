@@ -213,12 +213,18 @@ public abstract class Gateway
 		return lastGatewayID++;
 	}
 	
+	public static int difference(Gateway from, Gateway to)
+	{
+		int diff = to.getDefenceLevel()-from.getAttackLevel();
+		return diff;
+	}
+	
 	public static boolean hack(Gateway from, Gateway to){
 		boolean ret = false;
 		/*********************/
 		/** hack logic here **/
 		/*********************/
-		int difference = to.getDefenceLevel()-from.getAttackLevel();
+		int difference = difference(from, to);
 		if(difference < 0){
 			if(to.hasSoftware(GameConsts.IDS))
 			{
@@ -405,4 +411,11 @@ public abstract class Gateway
 		}
 	}
 
+	synchronized public int hackTime(Gateway to)
+	{
+		//int[] datogliere = {};
+		//calcolo del tempo di hack
+		int time = 180 - difference(this, to);
+		return time;
+	}
 }

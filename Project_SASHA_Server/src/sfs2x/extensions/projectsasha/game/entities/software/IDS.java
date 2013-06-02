@@ -43,7 +43,7 @@ public class IDS extends Software
 		return GameConsts.IDS_DETECTION - (25 * this.version);
 	}
 	
-		@Override
+	@Override
 	public void runTriggeredAction(Gateway from, Gateway to)
 	{
 		int time = this.getDetection(this.getVersion());
