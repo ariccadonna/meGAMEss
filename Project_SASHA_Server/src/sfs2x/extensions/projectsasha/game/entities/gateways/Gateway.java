@@ -12,6 +12,7 @@ import java.util.Vector;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
+import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.ia.Trace;
 import sfs2x.extensions.projectsasha.game.utils.TimerHelper;
@@ -412,15 +413,17 @@ public abstract class Gateway
 		}
 	}
 	
-	synchronized public int hackTime(Gateway to)
+	synchronized public int hackTime(GameWorld game, Gateway to)
 	{
 		//int[] datogliere = {};
-		int i = difference(this, to);
+		int diff,time,bonus;
+		diff = difference(this, to);
 		//calcolo del tempo di hack
-		int time = 180;
+		time = 180;
 		new TimerHelper(time, , this, to);
-		new TimerHelper(i, ,this, to);
-		time
+		new TimerHelper(diff, ,this, to);
+		bonus = this.owner.getConqueredGateway(game, GameConsts.SCI_GATEWAY);
+		time-= diff - bonus;
 		return time;
 	}
 }
