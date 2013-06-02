@@ -13,26 +13,32 @@ public class GameConsts
 	/* Gateway parameters */
 	public static final String[] STARTING_SPOT		= {"iceland","","","",""};
 	
+	public static final String BASE_GATEWAY			= "Base";
 	public static final int BASE_PAYMENT_AMOUNT 	= 5;
 	public static final int BASE_DEFENCE_LEVEL		= 5;
 	public static final int BASE_ATTACK_LEVEL		= 5;
 	
+	public static final String BANK_GATEWAY			= "Bank";
 	public static final int BANK_BASE_PAYMENT_AMOUNT= 20;
 	public static final int BANK_BASE_DEFENCE_LEVEL	= 10;
 	public static final int BANK_BASE_ATTACK_LEVEL	= 5;
 	
+	public static final String EDU_GATEWAY			= "Educational";
 	public static final int EDU_BASE_PAYMENT_AMOUNT	= 5;
 	public static final int EDU_BASE_DEFENCE_LEVEL	= 10;
 	public static final int EDU_BASE_ATTACK_LEVEL	= 5;
 	
+	public static final String GOV_GATEWAY			= "Government";
 	public static final int GOV_BASE_PAYMENT_AMOUNT	= 15;
 	public static final int GOV_BASE_DEFENCE_LEVEL	= 10;
 	public static final int GOV_BASE_ATTACK_LEVEL	= 10;
 	
+	public static final String MIL_GATEWAY			= "Military";
 	public static final int MIL_BASE_PAYMENT_AMOUNT = 10;
 	public static final int MIL_BASE_DEFENCE_LEVEL	= 10;
 	public static final int MIL_BASE_ATTACK_LEVEL	= 15;
 	
+	public static final String SCI_GATEWAY			= "Scientific";
 	public static final int SCI_BASE_PAYMENT_AMOUNT = 10;
 	public static final int SCI_BASE_DEFENCE_LEVEL	= 15;
 	public static final int SCI_BASE_ATTACK_LEVEL	= 5;

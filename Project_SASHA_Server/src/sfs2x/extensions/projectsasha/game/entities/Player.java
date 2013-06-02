@@ -1,8 +1,9 @@
 package sfs2x.extensions.projectsasha.game.entities;
 
-import java.util.Arrays;
+import java.util.Iterator;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 
 import com.smartfoxserver.v2.entities.User;
@@ -73,6 +74,48 @@ public class Player
 	public int getMoney()
 	{
 		return this.money;
+	}
+	
+	public int getConqueredGateway(GameWorld world)
+	{
+		Iterator<String> itr = world.gateways.keySet().iterator();
+		Gateway currentGW;
+		String str;
+		int counter = 0;
+		
+		while (itr.hasNext()) 
+		{
+			str = itr.next();
+			currentGW = world.gateways.get(str);
+			
+			if(currentGW.getOwner() == this)
+				counter++;
+		}
+		
+		return counter;
+		
+	}
+	
+	public int getConqueredGateway(GameWorld world, String type)
+	{
+		Iterator<String> itr = world.gateways.keySet().iterator();
+		Gateway currentGW;
+		String str;
+		int counter = 0;
+		
+		while (itr.hasNext()) 
+		{
+			str = itr.next();
+			currentGW = world.gateways.get(str);
+			
+			if(currentGW.getClass().getSimpleName() != type)
+				continue;
+			
+			if(currentGW.getOwner() == this)
+				counter++;
+		}
+		
+		return counter;
 	}
 	
 	@Override 

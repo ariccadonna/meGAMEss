@@ -28,15 +28,15 @@ public class IDS extends Software
 	}
 	
 	@Override
-	 public void upgrade()
-	 {
-	  if (this==null)
-	   return;
-	  if(this.version < GameConsts.IDS_MAX_LEVEL)
-	   this.version += 1;
-	    else
-	 return;
-	 }
+	public void upgrade()
+	{
+		if (this==null)
+			return;
+		if(this.version < GameConsts.IDS_MAX_LEVEL)
+			this.version += 1;
+		else
+			return;
+	}
 
 	public int getDetection(int version)
 	{
