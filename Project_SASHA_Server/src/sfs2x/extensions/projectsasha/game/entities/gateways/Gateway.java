@@ -420,10 +420,15 @@ public abstract class Gateway
 		diff = difference(this, to);
 		//calcolo del tempo di hack
 		time = 180;
-		new TimerHelper(time, , this, to);
-		new TimerHelper(diff, ,this, to);
+		new TimerHelper(time, this, to);
+		new TimerHelper(diff, this, to);
 		bonus = this.owner.getConqueredGateway(game, GameConsts.SCI_GATEWAY);
 		time-= diff - bonus;
 		return time;
+	}
+	
+	public void startTimedEvent()
+	{
+		//timed event here
 	}
 }

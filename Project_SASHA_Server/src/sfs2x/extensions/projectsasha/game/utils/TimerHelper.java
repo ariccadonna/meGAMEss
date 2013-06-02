@@ -11,6 +11,15 @@ public class TimerHelper {
     Gateway from, to;
     Software callerClass;
 
+	
+	public TimerHelper(int seconds, Gateway from, Gateway to)
+    {
+        timer = new Timer();
+        this.from = from;
+        this.to = to;
+        timer.schedule(new RemindFromGateway(Gateway from, Gateway to), seconds*1000);
+	}
+	
     public TimerHelper(int seconds, Software caller, Gateway from, Gateway to)
     {
         timer = new Timer();
@@ -19,20 +28,35 @@ public class TimerHelper {
         this.to = to;
         timer.schedule(new RemindTaskWithParams(from, to), seconds*1000);
 	}
- 
+	
     public TimerHelper(int seconds, Software caller) {
         timer = new Timer();
         this.callerClass = caller;
         timer.schedule(new RemindTask(), seconds*1000);
 	}
-    
-    class RemindTask extends TimerTask {
+	
+    class RemindFromGateway extends TimerTask
+	{
+		Gateway from, to;
+        public RemindFromGateway(Gateway from, Gateway to) {
+        	this.from = from;
+        	this.to = to;
+		}
+		
+		public void run() {
+            from.startTimedEvent();
+        }
+    }
+	
+    class RemindTask extends TimerTask 
+	{
 		public void run() {
             callerClass.startTimedEvent();
         }
     }
     
-    class RemindTaskWithParams extends TimerTask {
+    class RemindTaskWithParams extends TimerTask 
+	{
     	Gateway from, to;
         public RemindTaskWithParams(Gateway from, Gateway to) {
         	this.from = from;
