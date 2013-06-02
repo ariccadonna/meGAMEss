@@ -17,7 +17,7 @@ public class TimerHelper {
         timer = new Timer();
         this.from = from;
         this.to = to;
-        timer.schedule(new RemindFromGateway(Gateway from, Gateway to), seconds*1000);
+        timer.schedule(new RemindFromGateway(from, to), seconds*1000);
 	}
 	
     public TimerHelper(int seconds, Software caller, Gateway from, Gateway to)
