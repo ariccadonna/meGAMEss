@@ -51,10 +51,10 @@ public class Virus extends Software
 	{
 		if(to.hasSoftware(GameConsts.ANTIVIRUS))
 		{
-			Software s = to.getInstalledSoftware(GameConsts.VIRUS);
+			Software s = to.getInstalledSoftware(GameConsts.ANTIVIRUS);
 			s.runTriggeredAction(from, to);
 		}
-		if(!to.hasSoftware(GameConsts.ANTIVIRUS)&& from.hasSoftware(GameConsts.VIRUS))
+		if(from.hasSoftware(GameConsts.VIRUS))
 		{
 			Software[] lista = to.getInstalledSoftwares();
 			for(int i=0;i<this.getVersion();i++)
