@@ -24,7 +24,6 @@ public class WorldSetupHandler extends BaseClientRequestHandler{
 		for(User u : userList){
 			Player p = new Player(u);
 			world.gateways.get(GameConsts.STARTING_SPOT[i]).setOwner(p);	
-			//world.gateways.get(GameConsts.STARTING_SPOT[i]).installSoftware(GameConsts.BRUTEFORCER, p);
 			i++;
 		}
 		

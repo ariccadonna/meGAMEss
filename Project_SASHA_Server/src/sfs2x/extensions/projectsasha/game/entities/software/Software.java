@@ -112,13 +112,24 @@ public abstract class Software
 		this.version -= 1;
 	}	
 	
-	public void runTriggetedAction()
+	public void startTimedEvent()
 	{
+		return;
+	}
+	
+	public void startTimedEvent(Gateway from, Gateway to)
+	{
+		//Add delayed event here
 		return;
 	}
 	
 	public void runTriggeredAction(Gateway from, Gateway to)
 	{
 		return;
+	}
+
+	public void runTriggeredAction() {
+		// TODO Auto-generated method stub
+		
 	}
 }

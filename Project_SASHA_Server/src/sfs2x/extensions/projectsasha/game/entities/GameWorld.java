@@ -12,6 +12,7 @@ public class GameWorld
 	public int id;
 	public Region[] regions;
 	public static Map<String,Gateway> gateways = new Hashtable<String,Gateway>();
+	public long startingTime;
 	
 	public GameWorld(int id)
 	{
@@ -444,5 +445,10 @@ public class GameWorld
 							gateways.get("eastern australia")
 						}),
 			};
+	}
+	
+	public void setStartingTime(long time)
+	{
+		startingTime = System.currentTimeMillis();
 	}
 }

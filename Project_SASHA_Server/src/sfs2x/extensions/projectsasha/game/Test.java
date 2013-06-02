@@ -3,14 +3,8 @@ package sfs2x.extensions.projectsasha.game;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Calendar;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Arrays;
 import java.util.Set;
-
-import org.json.JSONObject;
 
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
@@ -29,20 +23,23 @@ public class Test
 	private static Gateway starting_gateway_u2;
 	//static MoneyThread moneyTh;
 	private static Thread moneyThread;
+	static long startingTime;
 
 	public static void init(){
 		
 		
 		world = new GameWorld(0);
 		moneyThread = new Thread(new MoneyThread(world));
+		startingTime = System.currentTimeMillis();
 		
 		//JSONObject GatewayJSON = new JSONObject(world.gateways);//troppa roba
-		System.out.println(json());
+		//System.out.println(json());
 		u = new User("TestUser");
 		p = new Player(u);
 		
 		starting_gateway = world.gateways.get("scandinavia");
 		starting_gateway.setOwner(p);
+		
 		Gateway g1 = world.gateways.get("greenland");
 		Gateway g2 = world.gateways.get("alaska");
 		Gateway g3 = world.gateways.get("north west territory");
@@ -79,14 +76,14 @@ public class Test
 		p2 = new Player(u2);
 		
 
-		starting_gateway_u2 = world.gateways.get("northern europe");
+		starting_gateway_u2 = world.gateways.get("kamchatka");
 		starting_gateway_u2.setOwner(p2);
 
 		starting_gateway_u2.installSoftware(GameConsts.ANTIVIRUS, p2);
 		starting_gateway_u2.installSoftware(GameConsts.BRUTEFORCER,  p2);
 		starting_gateway_u2.installSoftware(GameConsts.DEEPTHROAT, p2);
 		starting_gateway_u2.upgradeSoftware(GameConsts.BRUTEFORCER, p2);
-		
+
 		//starting_gateway_u2.installSoftware(GameConsts.DICTIONARY, p);
 		//starting_gateway_u2.installSoftware(GameConsts.FIREWALL, p);
 		//starting_gateway_u2.installSoftware(GameConsts.IDS, p);
@@ -102,10 +99,12 @@ public class Test
 	public static void hack(){
 		//********** Test a caso. ************//
 				Gateway target_gateway = world.gateways.get("ukraine");
-				
-
+				target_gateway.setOwner(p2);
+				target_gateway.installSoftware(GameConsts.IDS, p2);
+				//target_gateway.upgradeSoftware(GameConsts.IDS, p2);
 				Gateway.hack(starting_gateway, target_gateway);
-				Gateway.hack(starting_gateway_u2, target_gateway);
+				System.out.println("-------- Players info --------");
+				//Gateway.hack(starting_gateway_u2, target_gateway);
 				
 				target_gateway.installSoftware(GameConsts.FIREWALL, p2);
 				target_gateway.installSoftware(GameConsts.FIREWALL, p2);
@@ -171,27 +170,31 @@ public class Test
 		Set<String> set = world.gateways.keySet();
 		Iterator<String> itr = set.iterator();
 		String str;
-		Gateway currentGW;
+		Gateway[] neighboors;
+		Gateway currentGW = null;
 		//JSON composition
 		String JSONString  = "{";
+		JSONString  = "{";
+		int i;
 		while (itr.hasNext()) {
 			str = itr.next();
 			currentGW = world.gateways.get(str);
-			String GWOwner = currentGW.getOwner()!=null?currentGW.getOwner().getName():"none";
+			neighboors = currentGW.getNeighboors(); 
 			JSONString += "\""+str+"\":{"+
 						"\"STATE\":\""+str+"\","+
-						"\"NAME\":\""+currentGW.getName()+"\","+
-						"\"OWNER\":\""+GWOwner+"\","+
-						"\"ATK\":"+currentGW.getAttackLevel()+","+
-						"\"DEF\":"+currentGW.getDefenceLevel()+","+
-						"\"TYPE\":\""+currentGW.getClass().getSimpleName()+"\","+
-						"\"SW\": ["+
-						"\""+currentGW.getInstalledSoftware(0)+"\","+
-						"\""+currentGW.getInstalledSoftware(1)+"\","+
-						"\""+currentGW.getInstalledSoftware(2)+"\""+
-						"]"+
-						"},";
+						"\"NB\": [";
+					
+			System.out.print(currentGW.getState()+":");
+			for (i=0; i!=currentGW.getNeighboors().length-1; i++)
+			{
+				System.out.print(neighboors[i].getState()+", ");
+				JSONString +="\""+neighboors[i].getState()+"\",";
+			}	
 			
+			JSONString +="\""+neighboors[currentGW.getNeighboors().length-1].getState()+"\"";
+			System.out.print(neighboors[currentGW.getNeighboors().length-1].getState()+"\n");
+			JSONString +="]"+
+			"},";
 		}
 		JSONString = JSONString.substring(0, JSONString.length()-1);
 		JSONString+="}";

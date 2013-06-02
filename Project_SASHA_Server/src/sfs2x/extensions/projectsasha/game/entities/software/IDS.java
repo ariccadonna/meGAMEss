@@ -1,7 +1,11 @@
 package sfs2x.extensions.projectsasha.game.entities.software;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
+import sfs2x.extensions.projectsasha.game.utils.TimerHelper;
 
 
 public class IDS extends Software
@@ -54,9 +58,19 @@ public class IDS extends Software
 	@Override
 	public void runTriggeredAction(Gateway from, Gateway to)
 	{
-		int tempo = this.getDetection(this.getVersion());
-		for(int i = tempo; i>=0; i--);
+		int time = this.getDetection(this.getVersion());
+		
+		new TimerHelper(time, this, from, to); //start timed event with delayed time
+		
+		for(int i = time; i>=0; i--);
 		//funzione avviso hack
 	}
+
+	@Override
+	public void startTimedEvent(Gateway from, Gateway to)
+	{
+		//Add delayed event here
+	}
+	
 
 }
