@@ -132,4 +132,10 @@ public abstract class Software
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public String toString(){
+		return this.getName() + " V"+this.getVersion();
+	}
+	
 }

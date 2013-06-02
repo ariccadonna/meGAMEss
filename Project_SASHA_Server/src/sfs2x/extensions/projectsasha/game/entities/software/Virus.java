@@ -29,22 +29,10 @@ public class Virus extends Software
 		if (this==null)
 			return;
 		if(this.version < GameConsts.VIRUS_MAX_LEVEL)
-		{
-			if(GameConsts.DEBUG)
-				System.out.println("Upgrading "+this.name+" from V"+this.version+" to V"+(this.version+1));
 			this.version += 1;
-		}
 		else
-		{
-			if(GameConsts.DEBUG)
-				System.out.println(this.name+" is already at maximum level (V"+GameConsts.VIRUS_MAX_LEVEL+")");
-		}
+			return;
 	}	
-	
-	@Override
-	public String toString(){
-		return this.getName() + " V"+this.getVersion();
-	}
 	
 	@Override
 	public void runTriggeredAction(Gateway from, Gateway to)
@@ -59,9 +47,6 @@ public class Virus extends Software
 			Software[] lista = to.getInstalledSoftwares();
 			for(int i=0;i<this.getVersion();i++)
 				to.uninstallSoftware(lista[i].getType(), to.getOwner());
-			
 		}
-			
 	}
-	
 }

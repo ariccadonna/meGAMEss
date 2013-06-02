@@ -29,27 +29,15 @@ public class Sniffer extends Software
 		if (this==null)
 			return;
 		if(this.version < GameConsts.SNIFFER_MAX_LEVEL)
-		{
-			if(GameConsts.DEBUG)
-				System.out.println("Upgrading "+this.name+" from V"+this.version+" to V"+(this.version+1));
 			this.version += 1;
-		}
 		else
-		{
-			if(GameConsts.DEBUG)
-				System.out.println(this.name+" is already at maximum level (V"+GameConsts.SNIFFER_MAX_LEVEL+")");
-		}
+			return;
 	}	
 	
-	public int getItem()
+	public int getDetectedItems()
 	{
 		return this.version;
 	}
-	
-	@Override
-	public String toString(){
-		return this.getName() + " V"+this.getVersion();
-	}	
 	
 	@Override
 	public void runTriggeredAction(Gateway from, Gateway to)

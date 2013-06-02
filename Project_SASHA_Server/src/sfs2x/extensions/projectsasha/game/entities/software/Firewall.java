@@ -34,22 +34,10 @@ public class Firewall extends Software
 		if (this==null)
 			return;
 		if(this.version < GameConsts.FIREWALL_MAX_LEVEL)
-		{
-			if(GameConsts.DEBUG)
-				System.out.println("Upgrading "+this.name+" in slot "+this.slot+" from V"+this.version+" to V"+(this.version+1));
 			this.version += 1;
-		}
 		else
-		{
-			if(GameConsts.DEBUG)
-				System.out.println(this.name+" is already at maximum level (V"+GameConsts.FIREWALL_MAX_LEVEL+")");
-		}
+			return;
 	}	
-	
-	@Override
-	public String toString(){
-		return this.getName() + " V"+this.getVersion();
-	}
 	
 	
 }

@@ -29,27 +29,14 @@ public class Proxy extends Software
 		if (this==null)
 			return;
 		if(this.version < GameConsts.PROXY_MAX_LEVEL)
-		{
-			if(GameConsts.DEBUG)
-				System.out.println("Upgrading "+this.name+" from V"+this.version+" to V"+(this.version+1));
 			this.version += 1;
-		}
 		else
-		{
-			if(GameConsts.DEBUG)
-				System.out.println(this.name+" is already at maximum level (V"+GameConsts.PROXY_MAX_LEVEL+")");
-		}
+			return;
 	}	
 	
 	public int getRange()
 	{
 		return GameConsts.PROXY_ATTACK_LEVEL * this.version;
 	}
-	
-	@Override
-	public String toString(){
-		return this.getName() + " V"+this.getVersion();
-	}
-	
-	
 }
+
