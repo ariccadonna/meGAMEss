@@ -14,6 +14,7 @@ import com.smartfoxserver.v2.entities.data.SFSObject;
 import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.ia.Trace;
+import sfs2x.extensions.projectsasha.game.utils.TimerHelper;
 import sfs2x.extensions.projectsasha.game.entities.software.Software;
 import sfs2x.extensions.projectsasha.game.entities.software.SoftwareFactory;
 
@@ -410,12 +411,16 @@ public abstract class Gateway
 			g.traces.add(tr);
 		}
 	}
-
+	
 	synchronized public int hackTime(Gateway to)
 	{
 		//int[] datogliere = {};
+		int i = difference(this, to);
 		//calcolo del tempo di hack
-		int time = 180 - difference(this, to);
+		int time = 180;
+		new TimerHelper(time, , this, to);
+		new TimerHelper(i, ,this, to);
+		time
 		return time;
 	}
 }
