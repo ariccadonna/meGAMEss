@@ -127,15 +127,17 @@ public class HackEventHandler extends BaseClientRequestHandler{
 		return ret;
 	}
 	
-	public int difference(Gateway from, Gateway to)
+	public int powerDifference(Gateway from, Gateway to)
 	{
-		int diff = to.getAttackLevel()-from.getDefenceLevel();
-		return diff;
+		return to.getAttackLevel()-from.getDefenceLevel();
 	}
 	
 	public int hackTime(GameWorld world, Gateway from, Gateway to)
 	{
-		int[] toLeave = {
+		int bonus;
+		int diff = this.powerDifference(from, to);
+		
+		int[] timeToLeave = {
 						15,15,15,15,15,15,15,15,15, 	// 1-9
 						30,30,30,30,30,30,30,30,30,30,	//10-19
 						30,30,30,30,30,30,30,30,30,30,	//20-29
@@ -147,11 +149,9 @@ public class HackEventHandler extends BaseClientRequestHandler{
 						60,60,60,60,60,					//80-84
 						80,80,80,80,80,80,80,80,80,80	//85-94
 						};
-		int diff,time,bonus;
-		time = 120;
-		diff = toLeave[this.difference(from, to)];
+		
 		bonus = 10*from.getOwner().getConqueredGateway(world, GameConsts.SCI_GATEWAY);
-		time-= diff - bonus;
-		return time;
+		
+		return 120 - timeToLeave[diff] - bonus;
 	}
 }
