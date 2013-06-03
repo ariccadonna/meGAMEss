@@ -9,6 +9,8 @@ public class GameConsts
 	public static final int EARTH_RADIUS			= 6371;
 	public static final int MONEY_UPDATE_TIME		= 5000;
 	public static final int BONUS_MONEY_PER_REGION	= 10;
+	public static final int CONQUER_TIME_TRESHOLD	= 30; //in seconds
+	public static final int FAILTIME				= 10; //in seconds
 	
 	/* Gateway parameters */
 	public static final String[] STARTING_SPOT		= {"iceland","","","",""};

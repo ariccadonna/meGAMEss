@@ -15,17 +15,17 @@ import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 
 public class HackEventHandler extends BaseClientRequestHandler{
 	public void handleClientRequest(User sender, ISFSObject params){
-
+		int time;
+		boolean neutralize;
+		boolean success = false;
 		GameWorld world = RoomHelper.getWorld(this);
 		Player p = new Player(sender);
-		int time;
 		
 		
 		Gateway from = world.gateways.get(params.getUtfString("gatewayFrom"));
 		Gateway to = world.gateways.get(params.getUtfString("gatewayTo"));
-		boolean neutralize = params.getBool("neutralize");
-		boolean success = false;
-		
+		neutralize = params.getBool("neutralize");
+
 		if(to.getOwner()!=null)
 		{
 			if(neutralize == true)
@@ -40,16 +40,13 @@ public class HackEventHandler extends BaseClientRequestHandler{
 			}
 			else	//il gateway deve essere conquistato
 			{	
-				int soglia = 30;
-				success = this.hack(world, from, to, soglia);
+				success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD);
 				trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 			}
 				
 		}
 		else
 		{
-			time = this.hackTime(world, from, to);
-			for(int i=time;i>=0;i--);
 			success = this.hack(world, from, to);
 			trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 		}
@@ -65,6 +62,7 @@ public class HackEventHandler extends BaseClientRequestHandler{
 	
 	public boolean hack(GameWorld world, Gateway from, Gateway to, int extraTime){
 		boolean ret = false;
+		long startTime, endTime;
 		int difference = this.difference(from, to);
 		
 		Software[] attackerSw = from.getInstalledSoftwares();
@@ -101,14 +99,29 @@ public class HackEventHandler extends BaseClientRequestHandler{
 		if(difference > 0)
 		{
 			int waitTime = this.hackTime(world, from, to) + extraTime;
-			long currentTime = System.currentTimeMillis();
-			long freeTime = currentTime+(waitTime*1000);
-			while(System.currentTimeMillis() != freeTime){/*busy wait*/}
+			startTime = System.currentTimeMillis();
+			endTime = startTime+(waitTime*1000);
+			while(System.currentTimeMillis() != endTime)
+			{
+				/*BUSY WAIT*/
+				//currentTick = System.currentTimeMillis()-starTime;
+				//	if(currentTick%1000==0)
+				//		send a countdown to the player for remaining hack time??
+			}
 			to.setOwner(from.getOwner());
 			ret = true;
 		}
 		else
 		{
+			startTime = System.currentTimeMillis();
+			endTime = startTime+(GameConsts.FAILTIME*1000);
+			while(System.currentTimeMillis() != endTime)
+			{
+				/*BUSY WAIT*/
+				//currentTick = System.currentTimeMillis()-starTime;
+				//	if(currentTick%1000==0)
+				//		send a countdown to the player??
+			}
 			ret = false;
 		}
 		return ret;
@@ -122,10 +135,21 @@ public class HackEventHandler extends BaseClientRequestHandler{
 	
 	public int hackTime(GameWorld world, Gateway from, Gateway to)
 	{
-		int[] datogliere = {15,15,15,15,15,15,15,15,15,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,80,80,80,80,80,80,80,80,80,80};
+		int[] toLeave = {
+						15,15,15,15,15,15,15,15,15, 	// 1-9
+						30,30,30,30,30,30,30,30,30,30,	//10-19
+						30,30,30,30,30,30,30,30,30,30,	//20-29
+						40,40,40,40,40,40,40,40,40,40,	//30-39
+						40,40,40,40,40,40,40,40,40,40,	//40-49
+						50,50,50,50,50,50,50,50,50,50,	//50-59
+						50,50,50,50,50,50,50,50,50,50,	//60-69
+						60,60,60,60,60,60,60,60,60,60,	//70-79
+						60,60,60,60,60,					//80-84
+						80,80,80,80,80,80,80,80,80,80	//85-94
+						};
 		int diff,time,bonus;
 		time = 120;
-		diff = datogliere[this.difference(from, to)];
+		diff = toLeave[this.difference(from, to)];
 		bonus = 10*from.getOwner().getConqueredGateway(world, GameConsts.SCI_GATEWAY);
 		time-= diff - bonus;
 		return time;
