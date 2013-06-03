@@ -63,7 +63,7 @@ public class HackEventHandler extends BaseClientRequestHandler{
 	public boolean hack(GameWorld world, Gateway from, Gateway to, int extraTime){
 		boolean ret = false;
 		long startTime, endTime;
-		int difference = this.difference(from, to);
+		int difference = this.powerDifference(from, to);
 		
 		Software[] attackerSw = from.getInstalledSoftwares();
 		Software[] defenderSw = to.getInstalledSoftwares();
