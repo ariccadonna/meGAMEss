@@ -31,9 +31,10 @@ public abstract class Gateway
 	private Player owner;
 	private String name, state;
 	private int id, x, y;
+	private double lat, lon;
 	private Set<Integer> startedAttacks = Collections.synchronizedSet(new HashSet<Integer>());
 
-	public Gateway(Player owner, String name, String state, int x, int y)
+	public Gateway(Player owner, String name, String state, int x, int y, float lat, float lon)
 	{
 		this.owner = owner;
 		this.name = name;
@@ -43,6 +44,8 @@ public abstract class Gateway
 		this.installedSoftware = new Software[GameConsts.MAX_SOFTWARE_INSTALLED];
 		this.x = x;
 		this.y = y;
+		this.lat = lat;
+		this.lon = lon;
 	}	
 	
 	
@@ -102,6 +105,19 @@ public abstract class Gateway
 	public void setWeightByDistance(String playerName, int weight)
 	{
 		distanceFromAttackGateway.put(playerName, weight);
+	}
+	
+	public int distanceFrom(Gateway dest)
+	{
+		double dLat = Math.toRadians(dest.lat - this.lat);
+		double dLon =  Math.toRadians(dest.lon - this.lon);
+		double lat1 =  Math.toRadians(this.lat);
+		double lat2 =  Math.toRadians(dest.lat);
+
+		double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		
+		return (int)(GameConsts.EARTH_RADIUS * c * 100);
 	}
 	
 	public Set<Integer> getStartedAttacks() 
@@ -382,7 +398,7 @@ public abstract class Gateway
 		}
 		for(Gateway g : list)
 		{
-			Trace tr = new Trace(this,this.getID(),level,this.getName());
+			Trace tr = new Trace(this,this.getID(),level,this.getOwner().getName());
 			g.traces.add(tr);
 		}
 	}

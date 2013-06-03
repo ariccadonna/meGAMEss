@@ -6,7 +6,7 @@ public class GameConsts
 {
 	public static final String USER_TABLE 			= "users";
 	public static final boolean DEBUG 				= false;
-	
+	public static final int EARTH_RADIUS			= 6371;
 	public static final int MONEY_UPDATE_TIME		= 5000;
 	public static final int BONUS_MONEY_PER_REGION	= 10;
 	
