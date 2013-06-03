@@ -228,7 +228,7 @@ public abstract class Gateway
 		/*********************/
 		int difference = difference(from, to);
 		if(difference < 0){
-			if(to.hasSoftware(GameConsts.IDS))
+			if(to.getOwner()!=null && to.hasSoftware(GameConsts.IDS))
 			{
 				Software s = to.getInstalledSoftware(GameConsts.IDS);
 				s.runTriggeredAction(from, to);
