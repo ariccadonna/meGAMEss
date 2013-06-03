@@ -221,33 +221,6 @@ public abstract class Gateway
 		return diff;
 	}
 	
-	public static boolean hack(Gateway from, Gateway to){
-		boolean ret = false;
-		/*********************/
-		/** hack logic here **/
-		/*********************/
-		int difference = difference(from, to);
-		if(difference < 0){
-			
-			if(to.getOwner()!=null && to.hasSoftware(GameConsts.IDS))
-			{
-				Software s = to.getInstalledSoftware(GameConsts.IDS);
-				s.runTriggeredAction(from, to);
-			}
-			if(to.hasSoftware(GameConsts.VIRUS))
-			{
-				Software s = to.getInstalledSoftware(GameConsts.VIRUS);
-				s.runTriggeredAction(from, to);
-			}
-
-			to.setOwner(from.getOwner());
-			ret = true;
-		}else{
-			ret = false;
-		}
-		return ret;
-	}
-	
 	//NON STATIC METHODS
 	synchronized public void installSoftware(String type, Player hacker)
 	{
@@ -414,20 +387,7 @@ public abstract class Gateway
 		}
 	}
 	
-	synchronized public int hackTime(GameWorld game, Gateway to)
-	{
-		int[] datogliere = {15,15,15,15,15,15,15,15,15,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,80,80,80,80,80,80,80,80,80,80};
-		int diff,time,bonus;
-		//calcolo del tempo di hack
-		time = 120;
-		diff = datogliere[difference(this, to)];
-		new TimerHelper(time, this, to);
-		new TimerHelper(diff, this, to);
-		bonus = this.owner.getConqueredGateway(game, GameConsts.SCI_GATEWAY);
-		new TimerHelper(bonus,this,to);
-		time-= diff - bonus;
-		return time;
-	}
+	
 	
 	public void startTimedEvent()
 	{
