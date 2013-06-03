@@ -41,15 +41,7 @@ public class HackEventHandler extends BaseClientRequestHandler{
 			else	//il gateway deve essere conquistato
 			{	
 				int soglia = 30;
-				/*
-				 * 
-				 * 
-				 * //time = from.hackTime(world, to) + soglia;
-				 * 
-				 * 
-				 * 
-				 */
-				success = this.hack(world, from, to);
+				success = this.hack(world, from, to, soglia);
 				trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 			}
 				
@@ -68,6 +60,10 @@ public class HackEventHandler extends BaseClientRequestHandler{
 	}
 	
 	public boolean hack(GameWorld world, Gateway from, Gateway to){
+		return hack(world, from, to, 0);
+	}
+	
+	public boolean hack(GameWorld world, Gateway from, Gateway to, int extraTime){
 		boolean ret = false;
 		int difference = this.difference(from, to);
 		
@@ -75,34 +71,36 @@ public class HackEventHandler extends BaseClientRequestHandler{
 		Software[] defenderSw = to.getInstalledSoftwares();
 		
 		for(Software sw: attackerSw)
-			switch(sw.getType())
-			{
-				case GameConsts.DICTIONARY:
-					sw.runTriggeredAction(from, to);
-					break;
-				default:
-					break;
-			}
+			if(sw!=null)
+				switch(sw.getType())
+				{
+					case GameConsts.DICTIONARY:
+						sw.runTriggeredAction(from, to);
+						break;
+					default:
+						break;
+				}
 		
 		for(Software sw: defenderSw)
-			switch(sw.getType())
-			{
-				case GameConsts.IDS:
-					if(to.getOwner()!=null)
+			if(sw!=null)
+				switch(sw.getType())
+				{
+					case GameConsts.IDS:
+						if(to.getOwner()!=null)
+							sw.runTriggeredAction(from, to);
+						break;
+					case GameConsts.VIRUS:
 						sw.runTriggeredAction(from, to);
-					break;
-				case GameConsts.VIRUS:
-					sw.runTriggeredAction(from, to);
-					break;
-				case GameConsts.DEEPTHROAT:
-					sw.runTriggeredAction(from, to);
-				default:
-					break;
-			}
+						break;
+					case GameConsts.DEEPTHROAT:
+						sw.runTriggeredAction(from, to);
+					default:
+						break;
+				}
 		
 		if(difference > 0)
 		{
-			int waitTime = this.hackTime(world, from, to);
+			int waitTime = this.hackTime(world, from, to) + extraTime;
 			long currentTime = System.currentTimeMillis();
 			long freeTime = currentTime+(waitTime*1000);
 			while(System.currentTimeMillis() != freeTime){/*busy wait*/}
