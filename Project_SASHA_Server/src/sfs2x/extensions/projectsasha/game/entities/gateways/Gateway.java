@@ -228,6 +228,7 @@ public abstract class Gateway
 		/*********************/
 		int difference = difference(from, to);
 		if(difference < 0){
+			
 			if(to.getOwner()!=null && to.hasSoftware(GameConsts.IDS))
 			{
 				Software s = to.getInstalledSoftware(GameConsts.IDS);
@@ -415,14 +416,15 @@ public abstract class Gateway
 	
 	synchronized public int hackTime(GameWorld game, Gateway to)
 	{
-		//int[] datogliere = {};
+		int[] datogliere = {15,15,15,15,15,15,15,15,15,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,80,80,80,80,80,80,80,80,80,80};
 		int diff,time,bonus;
-		diff = difference(this, to);
 		//calcolo del tempo di hack
-		time = 180;
+		time = 120;
+		diff = datogliere[difference(this, to)];
 		new TimerHelper(time, this, to);
 		new TimerHelper(diff, this, to);
 		bonus = this.owner.getConqueredGateway(game, GameConsts.SCI_GATEWAY);
+		new TimerHelper(bonus,this,to);
 		time-= diff - bonus;
 		return time;
 	}
