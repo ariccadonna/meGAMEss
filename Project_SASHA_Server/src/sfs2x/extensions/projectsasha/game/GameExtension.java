@@ -4,6 +4,7 @@ import java.util.Map;
 
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
+import sfs2x.extensions.projectsasha.game.objectives.Objective;
 
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.extensions.SFSExtension;
@@ -13,6 +14,7 @@ public class GameExtension extends SFSExtension
 	private GameWorld world; // Reference to World simulation model
 	private static Thread moneyThread;
 	private static Map<String,Player> players = new Hashtable<String,Player>();
+	private static Objective[] gameObjectives;
 	
 	@Override
 	public void init()
@@ -23,6 +25,9 @@ public class GameExtension extends SFSExtension
 		addRequestHandler("getWorldSetup", WorldSetupHandler.class);
 		trace("WorldSetupHandler	=>		INITIALIZED");
 		addRequestHandler("getNeighborhoods", NeightborhoodHandler.class);
+		trace("NeighborhoodsHandler	=>		INITIALIZED");
+		addRequestHandler("getObjective", ObjectiveHandler.class);
+		trace("ObjectiveSetupHandler=>		INITIALIZED");
 		addRequestHandler("hack", HackEventHandler.class);	
 		trace("HackHandler			=>		INITIALIZED");
 		addRequestHandler("spawnMe", SpawnMeHandler.class);
@@ -49,6 +54,10 @@ public class GameExtension extends SFSExtension
 		trace("WorldSetupHandler	=>		STOPPED");
 		removeRequestHandler("hack");
 		trace("HackHandler			=>		STOPPED");
+		removeRequestHandler("getNeighborhoods");
+		trace("NeighborhoodsHandler	=>		STOPPED");
+		removeRequestHandler("getObjective");
+		trace("ObjectiveSetupHandler=>		STOPPED");
 		removeRequestHandler("SpawnMeHandler");
 		trace("SpawnMeHandler		=>		STOPPED");
 		removeRequestHandler("GetTimeHandler");
@@ -58,9 +67,18 @@ public class GameExtension extends SFSExtension
 		trace("----- GAME EXTENSION STOPPED! -----");
 	}
 	
-	private void WorldInit(){
+	private void WorldInit()
+	{
 		trace("----- WORLD INIT -----");
 		world = new GameWorld(0);
+		
+		gameObjectives[0] = new Objective(world,"Main Target", "Hack 17 gateways", 22, GameConsts.BASE_GATEWAY);
+		gameObjectives[1] = new Objective(world,"Hack.Edu", "Hack 4 academic gateways", 4, GameConsts.EDU_GATEWAY);
+		gameObjectives[2] = new Objective(world,"Cops & Hackers", "Hack 4 military gateways", 4, GameConsts.MIL_GATEWAY);
+		gameObjectives[3] = new Objective(world,"Hacker Impossible", "Hack 4 financial gateways", 4, GameConsts.SCI_GATEWAY);
+		gameObjectives[4] = new Objective(world,"Rating: Hacker", "Hack 4 scientific gateways", 4, GameConsts.BANK_GATEWAY);
+		gameObjectives[5] = new Objective(world,"Hack In Law", "Hack 4 government gateways", 4, GameConsts.GOV_GATEWAY);
+		
 		moneyThread = new Thread(new MoneyThread(world));
 
 		trace("----- WORLD INIT DONE-----");
@@ -85,5 +103,9 @@ public class GameExtension extends SFSExtension
 		return this.world;
 	}
 	
+	public Objective[] getObjectives()
+	{
+		return this.gameObjectives;
+	}
 	
 }

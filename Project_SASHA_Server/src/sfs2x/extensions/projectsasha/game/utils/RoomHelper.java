@@ -7,6 +7,7 @@ import com.smartfoxserver.v2.extensions.SFSExtension;
 import sfs2x.extensions.projectsasha.game.GameExtension;
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
+import sfs2x.extensions.projectsasha.game.objectives.Objective;
 
 
 // Helper methods to easily get current room or zone and precache the link to ExtensionHelper
@@ -33,7 +34,19 @@ public class RoomHelper {
 		return ext.getWorld();
 	}
 	
+	public static Objective[] getObjectives(BaseClientRequestHandler handler) 
+	{
+		GameExtension ext = (GameExtension) handler.getParentExtension();
+		return ext.getObjectives();
+	}
+	
 	public static Player getPlayer(BaseClientRequestHandler handler, String name) 
+	{
+		GameExtension ext = (GameExtension) handler.getParentExtension();
+		return ext.getPlayer(name);
+	}
+	
+	public static Player getPlayer(BaseServerEventHandler handler, String name) 
 	{
 		GameExtension ext = (GameExtension) handler.getParentExtension();
 		return ext.getPlayer(name);

@@ -5,10 +5,11 @@ public class GameConsts
 	public static final String USER_TABLE 			= "users";
 	public static final boolean DEBUG 				= false;
 	public static final int EARTH_RADIUS			= 6371;
+	public static final int EARTH_MAX_DISTANCE		= 20015;
 	public static final int MONEY_UPDATE_TIME		= 5000;
 	public static final int BONUS_MONEY_PER_REGION	= 10;
-	public static final int CONQUER_TIME_TRESHOLD	= 30; //in seconds
-	public static final int FAILTIME				= 10; //in seconds
+	public static final int CONQUER_TIME_TRESHOLD	= 30; //time to add when neutralizing and hacking a gateway in seconds
+	public static final int FAILTIME				= 10; //time to wait if an hack fails in seconds
 	
 	/* Gateway parameters */
 	public static final String[] STARTING_SPOTS		= {
@@ -64,56 +65,66 @@ public class GameConsts
 	public static final int FIREWALL_DEFENCE_LEVEL 		= 10;
 	public static final int FIREWALL_MAX_LEVEL			= 3;
 	public static final boolean FIREWALL_CUMULATIVE		= true;
+	public static final int FIREWALL_PRICE_PERLEVEL		= 10;
 	
 	public static final String IDS						= "IDS";
 	public static final String IDS_NAME 				= "Prelude Detection System";
 	public static final int IDS_DETECTION 				= 100;
 	public static final int IDS_MAX_LEVEL				= 3;
 	public static final boolean IDS_CUMULATIVE			= false;
+	public static final int IDS_PRICE_PERLEVEL			= 10;
 	
 	public static final String LOGCLEANER				= "LOGCLEANER";
 	public static final String LOGCLEANER_NAME 			= "LCleaner";
 	public static final int LOGCLEANER_MAX_LEVEL		= 3;
 	public static final boolean LOGCLEANER_CUMULATIVE	= false;
+	public static final int LOGCLEANER_PRICE_PERLEVEL	= 10;
 	
 	public static final String ANTIVIRUS				= "ANTIVIRUS";
 	public static final String ANTIVIRUS_NAME 			= "Morton Antivirus";
 	public static final int ANTIVIRUS_MAX_LEVEL			= 3;
 	public static final boolean ANTIVIRUS_CUMULATIVE	= false;
+	public static final int ANTIVIRUS_PRICE_PERLEVEL	= 10;
 	
 	public static final String VIRUS					= "VIRUS";
 	public static final String VIRUS_NAME 				= "Blaster";
 	public static final int VIRUS_MAX_LEVEL				= 3;
 	public static final boolean VIRUS_CUMULATIVE		= false;
+	public static final int VIRUS_PRICE_PERLEVEL		= 10;
 	
 	public static final String DEEPTHROAT				= "DEEPTHROAT";
 	public static final String DEEPTHROAT_NAME 			= "Deep Throat";
 	public static final int DEEPTHROAT_MAX_LEVEL		= 1;
 	public static final boolean DEEPTHROAT_CUMULATIVE	= false;
+	public static final int DEEPTHROAT_PRICE_PERLEVEL	= 10;
 	
 	/* Offensive Software */
 	public static final String SNIFFER					= "SNIFFER";
 	public static final String SNIFFER_NAME 			= "WireBass";
 	public static final int SNIFFER_MAX_LEVEL			= 3;
 	public static final boolean SNIFFER_CUMULATIVE		= false;
+	public static final int SNIFFER_PRICE_PERLEVEL		= 10;
 	
 	public static final String BRUTEFORCER				= "BRUTEFORCER";
 	public static final String BRUTEFORCER_NAME 		= "Brutus";
 	public static final int BRUTEFORCER_ATTACK_LEVEL	= 10;
 	public static final int BRUTEFORCER_MAX_LEVEL		= 3;
 	public static final boolean BRUTEFORCER_CUMULATIVE	= true;
+	public static final int BRUTEFORCER_PRICE_PERLEVEL	= 10;
 	
 	public static final String DICTIONARY				= "DICTIONARY";
 	public static final String DICTIONARY_NAME 			= "John The Rapper";
 	public static final int DICTIONARY_ATTACK_LEVEL		= 10;
 	public static final int DICTIONARY_MAX_LEVEL		= 3;
 	public static final boolean DICTIONARY_CUMULATIVE	= true;
+	public static final int DICTIONARY_PRICE_PERLEVEL	= 10;
 	
 	public static final String PROXY					= "PROXY";
 	public static final String PROXY_NAME 				= "Thor Garlic Proxy";
 	public static final int PROXY_ATTACK_LEVEL			= 10;
 	public static final int PROXY_MAX_LEVEL				= 3;
 	public static final boolean PROXY_CUMULATIVE		= false;
+	public static final int PROXY_PRICE_PERLEVEL		= 10;
 	
 	//***********************//
 	

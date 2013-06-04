@@ -118,7 +118,7 @@ public abstract class Gateway
 		double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 		
-		return (int)(GameConsts.EARTH_RADIUS * c * 100);
+		return (int)(GameConsts.EARTH_RADIUS * c * 100 / GameConsts.EARTH_MAX_DISTANCE);
 	}
 	
 	public Set<Integer> getStartedAttacks() 
