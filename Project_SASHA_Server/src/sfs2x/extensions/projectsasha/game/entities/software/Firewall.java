@@ -12,6 +12,8 @@ public class Firewall extends Software
 		super(GameConsts.FIREWALL_NAME, 1);
 		setCumulative(GameConsts.FIREWALL_CUMULATIVE);
 		setType(GameConsts.FIREWALL);
+		setDescription(GameConsts.FIREWALL_DESCRIPTION);
+
 	}
 	
 	
@@ -20,6 +22,8 @@ public class Firewall extends Software
 		super(GameConsts.FIREWALL_NAME, version);
 		setCumulative(GameConsts.FIREWALL_CUMULATIVE);
 		setType(GameConsts.FIREWALL);
+		setDescription(GameConsts.FIREWALL_DESCRIPTION);
+
 	}
 	
 	@Override
