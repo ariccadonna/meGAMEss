@@ -13,6 +13,8 @@ public class Virus extends Software
 		super(GameConsts.VIRUS_NAME, 1);
 		setCumulative(GameConsts.VIRUS_CUMULATIVE);
 		setType(GameConsts.VIRUS);
+		setDescription(GameConsts.VIRUS_DESCRIPTION);
+
 	}
 	
 	
@@ -21,6 +23,8 @@ public class Virus extends Software
 		super(GameConsts.VIRUS_NAME, version);
 		setCumulative(GameConsts.VIRUS_CUMULATIVE);
 		setType(GameConsts.VIRUS);
+		setDescription(GameConsts.VIRUS_DESCRIPTION);
+
 	}
 	
 	@Override
