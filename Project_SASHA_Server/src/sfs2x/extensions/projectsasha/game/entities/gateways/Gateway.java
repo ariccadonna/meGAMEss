@@ -9,13 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import com.smartfoxserver.v2.entities.data.SFSObject;
-
 import sfs2x.extensions.projectsasha.game.GameConsts;
-import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.ia.Trace;
-import sfs2x.extensions.projectsasha.game.utils.TimerHelper;
 import sfs2x.extensions.projectsasha.game.entities.software.Software;
 import sfs2x.extensions.projectsasha.game.entities.software.SoftwareFactory;
 
@@ -34,6 +30,21 @@ public abstract class Gateway
 	private double lat, lon;
 	private Set<Integer> startedAttacks = Collections.synchronizedSet(new HashSet<Integer>());
 
+	public Gateway(Player owner, String name, String state, int x, int y)
+	{
+		this.owner = owner;
+		this.name = name;
+		this.state = state;
+		this.id = getNewID();
+		this.traces = new Vector<Trace>();
+		this.installedSoftware = new Software[GameConsts.MAX_SOFTWARE_INSTALLED];
+		this.x = x;
+		this.y = y;
+		this.lat = 0.0f;
+		this.lon = 0.0f;
+
+	}
+	
 	public Gateway(Player owner, String name, String state, int x, int y, float lat, float lon)
 	{
 		this.owner = owner;
@@ -267,7 +278,6 @@ public abstract class Gateway
 	
 	synchronized public void uninstallSoftware(String type, Player hacker, int slot)
 	{
-		Software newSoftware = SoftwareFactory.makeSoftware(type);
 		
 		if(this.owner!=hacker)
 			return;
@@ -343,8 +353,6 @@ public abstract class Gateway
 	
 	synchronized public void downgradeSoftware(String type, Player hacker){
 		
-		Software newSoftware = SoftwareFactory.makeSoftware(type);
-		
 		if(this.owner!=hacker)
 			return;
 		
@@ -355,8 +363,6 @@ public abstract class Gateway
 		}
 	
 	synchronized public void downgradeSoftware(String type, Player hacker, int slot){
-		
-		Software newSoftware = SoftwareFactory.makeSoftware(type);
 		
 		if(this.owner!=hacker)
 			return;

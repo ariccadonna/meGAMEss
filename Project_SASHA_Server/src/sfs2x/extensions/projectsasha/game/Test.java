@@ -32,8 +32,6 @@ public class Test
 		moneyThread = new Thread(new MoneyThread(world));
 		startingTime = System.currentTimeMillis();
 		
-		//JSONObject GatewayJSON = new JSONObject(world.gateways);//troppa roba
-		//System.out.println(json());
 		u = new User("TestUser");
 		p = new Player(u);
 		
@@ -102,7 +100,7 @@ public class Test
 				target_gateway.setOwner(p2);
 				target_gateway.installSoftware(GameConsts.IDS, p2);
 				//target_gateway.upgradeSoftware(GameConsts.IDS, p2);
-				Gateway.hack(starting_gateway, target_gateway);
+				//Gateway.hack(starting_gateway, target_gateway);
 				System.out.println("-------- Players info --------");
 				//Gateway.hack(starting_gateway_u2, target_gateway);
 				

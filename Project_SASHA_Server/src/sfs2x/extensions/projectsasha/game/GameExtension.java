@@ -14,21 +14,6 @@ public class GameExtension extends SFSExtension
 	private static Thread moneyThread;
 	private static Map<String,Player> players = new Hashtable<String,Player>();
 	
-	public Player getPlayer(String name) 
-	{
-		return players.get(name);
-	}
-	
-	public void putPlayer(Player p)
-	{
-		players.put(p.getName(), p);
-	}
-	
-	public GameWorld getWorld() 
-	{
-		return this.world;
-	}
-		
 	@Override
 	public void init()
 	{
@@ -83,6 +68,21 @@ public class GameExtension extends SFSExtension
 	
 	private static void produceMoney() {
 		moneyThread.start();
+	}
+	
+	public Player getPlayer(String name) 
+	{
+		return players.get(name);
+	}
+	
+	public void putPlayer(Player p)
+	{
+		players.put(p.getName(), p);
+	}
+	
+	public GameWorld getWorld() 
+	{
+		return this.world;
 	}
 	
 	

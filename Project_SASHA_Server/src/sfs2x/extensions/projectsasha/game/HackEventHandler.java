@@ -4,7 +4,6 @@ import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.entities.gateways.*;
 import sfs2x.extensions.projectsasha.game.entities.software.*;
 import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
-import sfs2x.extensions.projectsasha.game.utils.TimerHelper;
 
 
 import com.smartfoxserver.v2.entities.User;
@@ -33,8 +32,8 @@ public class HackEventHandler extends BaseClientRequestHandler
 			{
 				if(neutralize == true)
 				{
-					success = this.hack(world, from, to);
-					trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
+					success = this.neutralize(world, from, to);
+					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 					
 					if(success == true)
 					{
@@ -44,19 +43,19 @@ public class HackEventHandler extends BaseClientRequestHandler
 				else	//il gateway deve essere conquistato
 				{	
 					success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD);
-					trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
+					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 				}
 			}
 			else
 			{
 				success = this.hack(world, from, to);
-				trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
+				trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 			}
 		}
 		else
 		{
 			//hack is disabled, we should return an error
-			trace("Hack requesto from " + p.getUserName() + ": FAILED since the hack is disabled for this player");
+			trace("Hack request from " + p.getUserName() + ": FAILED since the hack is disabled for this player");
 			success = false;
 		}
 		ISFSObject reback = SFSObject.newInstance();
@@ -147,6 +146,82 @@ public class HackEventHandler extends BaseClientRequestHandler
 		return ret;
 	}
 	
+	public boolean neutralize(GameWorld world, Gateway from, Gateway to)
+	{
+		boolean ret = false;
+		long startTime, endTime;
+		int difference = this.powerDifference(from, to);
+		
+		Software[] attackerSw = from.getInstalledSoftwares();
+		Software[] defenderSw = to.getInstalledSoftwares();
+		
+		for(Software sw: attackerSw)
+			if(sw!=null)
+				switch(sw.getType())
+				{
+					case GameConsts.DICTIONARY:
+						sw.runTriggeredAction(from, to);
+						break;
+					default:
+						break;
+				}
+		
+		for(Software sw: defenderSw)
+			if(sw!=null)
+				switch(sw.getType())
+				{
+					case GameConsts.IDS:
+						if(to.getOwner()!=null)
+							sw.runTriggeredAction(from, to);
+						break;
+					case GameConsts.VIRUS:
+						sw.runTriggeredAction(from, to);
+						break;
+					case GameConsts.DEEPTHROAT:
+						sw.runTriggeredAction(from, to);
+					default:
+						break;
+				}
+
+		if(difference > 0)
+		{
+			int waitTime = this.hackTime(world, from, to);
+			startTime = System.currentTimeMillis();
+			endTime = startTime+(waitTime*1000);
+			from.getOwner().setCanHack(false);//disable hack for the following seconds
+
+			while(System.currentTimeMillis() != endTime)
+			{
+				/*BUSY WAIT*/
+				//currentTick = System.currentTimeMillis()-starTime;
+				//	if(currentTick%1000==0)
+				//		send a countdown to the player for remaining hack time??
+			}
+
+			from.getOwner().setCanHack(true);
+			
+			ret = true;
+		}
+		else
+		{
+			startTime = System.currentTimeMillis();
+			endTime = startTime+(GameConsts.FAILTIME*1000);
+			from.getOwner().setCanHack(false); //disable hack for the following seconds
+			
+			while(System.currentTimeMillis() != endTime)
+			{
+				/*BUSY WAIT*/
+				//currentTick = System.currentTimeMillis()-starTime;
+				//	if(currentTick%1000==0)
+				//		send a countdown to the player??
+			}
+			
+			from.getOwner().setCanHack(true);
+			ret = false;
+		}
+		return ret;
+	}
+	
 	public int powerDifference(Gateway from, Gateway to)
 	{
 		return from.getAttackLevel()-to.getDefenceLevel();
@@ -170,8 +245,10 @@ public class HackEventHandler extends BaseClientRequestHandler
 						80,80,80,80,80,80,80,80,80,80	//85-94
 						};
 		
-		bonus = 10*from.getOwner().getConqueredGateway(world, GameConsts.SCI_GATEWAY);
+		bonus = GameConsts.SCI_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.SCI_GATEWAY)+
+				GameConsts.MIL_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.MIL_GATEWAY)-
+				GameConsts.GOV_BONUS_MULTIPLIER * to.getOwner().getConqueredGateway(world, GameConsts.GOV_GATEWAY);
 		
-		return 120 - timeToLeave[diff] - bonus;
+		return 120 - timeToLeave[diff-1] - bonus;
 	}
 }

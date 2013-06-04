@@ -1,8 +1,6 @@
 package sfs2x.extensions.projectsasha.game.entities.software;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
-import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
-
 
 public class Proxy extends Software
 {

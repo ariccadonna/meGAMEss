@@ -10,7 +10,6 @@ import sfs2x.extensions.projectsasha.game.GameConsts;
 public class MoneyThread implements Runnable
 {
 	private GameWorld world;
-	private Gateway[] gateways;
 	
 	public MoneyThread(GameWorld world) {
         this.world = world;
@@ -50,7 +49,9 @@ public class MoneyThread implements Runnable
 						}
 					}
 					if(giveBonusMoney)
-						prevOwner.addMoney(size*GameConsts.BONUS_MONEY_PER_REGION);
+						prevOwner.addMoney(size*GameConsts.BONUS_MONEY_PER_REGION +
+								 		  prevOwner.getConqueredGateway(world, GameConsts.BANK_GATEWAY) * 
+								 		  GameConsts.BANK_BONUS_MULTIPLIER);
 				}
 				 while (iterator.hasNext()) 
 			        {
@@ -62,11 +63,7 @@ public class MoneyThread implements Runnable
 			            	currentGateway.getOwner().addMoney(currentGateway.getPaymentAmount());
 			        }		 
 		 	} 
-			catch (InterruptedException e) 
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			catch (InterruptedException e){e.printStackTrace();}
 		}
 	}
 }

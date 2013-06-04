@@ -1,8 +1,5 @@
 package sfs2x.extensions.projectsasha.game.entities.software;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 import sfs2x.extensions.projectsasha.game.utils.TimerHelper;

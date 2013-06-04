@@ -16,11 +16,13 @@ public class Police
 	private Gateway currGateway;
 	private Random rand;
 	private String[] gatewayStates;
+	private GameWorld currentWorld;
 	
 	public Police(GameWorld currentWorld)
 	{
 		this.rand = new Random();
-		this.gatewayStates = (String[]) Arrays.asList(GameWorld.gateways.keySet()).toArray();
+		this.currentWorld = currentWorld;
+		this.gatewayStates = (String[]) Arrays.asList(currentWorld.gateways.keySet()).toArray();
 		this.currGateway = currentWorld.gateways.get(this.gatewayStates[this.rand.nextInt(42)]);
 	}
 	
@@ -99,7 +101,7 @@ public class Police
 					this.arrestPlayer(currTrace.player);
 					this.currTrace = null;
 					this.prevGateway = null;
-					this.currGateway = GameWorld.gateways.get(this.gatewayStates[this.rand.nextInt(42)]);
+					this.currGateway = currentWorld.gateways.get(this.gatewayStates[this.rand.nextInt(42)]);
 				
 			}
 			else if(this.currGateway == null)

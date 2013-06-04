@@ -2,7 +2,6 @@ package sfs2x.extensions.projectsasha.game.entities;
 
 import java.util.Iterator;
 
-import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 
