@@ -34,20 +34,6 @@ public abstract class Gateway
 	private double lat, lon;
 	private Set<Integer> startedAttacks = Collections.synchronizedSet(new HashSet<Integer>());
 
-	public Gateway(Player owner, String name, String state, int x, int y)
-	{
-		this.owner = owner;
-		this.name = name;
-		this.state = state;
-		this.id = getNewID();
-		this.traces = new Vector<Trace>();
-		this.installedSoftware = new Software[GameConsts.MAX_SOFTWARE_INSTALLED];
-		this.x = x;
-		this.y = y;
-		this.lat = 0.0f;
-		this.lon = 0.0f;
-
-	}
 	
 	public Gateway(Player owner, String name, String state, int x, int y, float lat, float lon)
 	{
