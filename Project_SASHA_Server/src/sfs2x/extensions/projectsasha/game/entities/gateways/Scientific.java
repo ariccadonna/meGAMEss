@@ -6,9 +6,9 @@ import sfs2x.extensions.projectsasha.game.entities.Player;
 public class Scientific extends Gateway
 {
 	
-	public Scientific(Player owner, String name, String state, int x, int y) 
+	public Scientific(Player owner, String name, String state, int x, int y, float lat, float lon) 
 	{
-		super(owner, name, state, x, y);
+		super(owner, name, state, x, y, lat, lon);
 	}
 
 	
