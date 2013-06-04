@@ -12,6 +12,7 @@ public class BruteForcer extends Software
 		super(GameConsts.BRUTEFORCER_NAME, 1);
 		setCumulative(GameConsts.BRUTEFORCER_CUMULATIVE);
 		setType(GameConsts.BRUTEFORCER);
+		setDescription(GameConsts.BRUTEFORCER_DESCRIPTION);
 	}
 	
 	public BruteForcer(int version) 
@@ -19,6 +20,8 @@ public class BruteForcer extends Software
 		super(GameConsts.BRUTEFORCER_NAME, version);
 		setCumulative(GameConsts.BRUTEFORCER_CUMULATIVE);
 		setType(GameConsts.BRUTEFORCER);
+		setDescription(GameConsts.BRUTEFORCER_DESCRIPTION);
+
 	}
 	
 	@Override
