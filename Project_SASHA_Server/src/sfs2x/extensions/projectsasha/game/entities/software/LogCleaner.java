@@ -12,6 +12,8 @@ public class LogCleaner extends Software
 		super(GameConsts.LOGCLEANER_NAME, 1);
 		setCumulative(GameConsts.LOGCLEANER_CUMULATIVE);
 		setType(GameConsts.LOGCLEANER);
+		setDescription(GameConsts.LOGCLEANER_DESCRIPTION);
+
 	}
 	
 	
@@ -20,6 +22,8 @@ public class LogCleaner extends Software
 		super(GameConsts.LOGCLEANER_NAME, version);
 		setCumulative(GameConsts.LOGCLEANER_CUMULATIVE);
 		setType(GameConsts.LOGCLEANER);
+		setDescription(GameConsts.LOGCLEANER_DESCRIPTION);
+
 	}
 	
 	@Override
