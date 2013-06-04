@@ -34,7 +34,7 @@ public class Proxy extends Software
 	
 	public int getRange()
 	{
-		return GameConsts.PROXY_ATTACK_LEVEL * this.version;
+		return this.getVersion()<3?GameConsts.PROXY_LEV_1_2_MAX_HOPS:GameConsts.PROXY_LEV_3_MAX_HOPS;
 	}
 }
 
