@@ -16,7 +16,7 @@ public class Player
 	private User sfsUser; // SFS user that corresponds to this player
 	private String name;
 	private int money;
-
+	private boolean canHack;
 	
 	
 	public Player(User sfsUser) 
@@ -24,6 +24,7 @@ public class Player
 		this.sfsUser = sfsUser;
 		this.name = sfsUser.getName();
 		this.money = 0;
+		this.canHack = true;
 	}
 
 
@@ -74,6 +75,16 @@ public class Player
 	public int getMoney()
 	{
 		return this.money;
+	}
+	
+	public void setCanHack(boolean value)
+	{
+		this.canHack = value;
+	}
+	
+	public boolean canHack()
+	{
+		return this.canHack;
 	}
 	
 	public int getConqueredGateway(GameWorld world)

@@ -14,15 +14,19 @@ import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 
-public class WorldSetupHandler extends BaseClientRequestHandler{
-	public void handleClientRequest(User sender, ISFSObject params){
+public class WorldSetupHandler extends BaseClientRequestHandler
+{
+	public void handleClientRequest(User sender, ISFSObject params)
+	{
 		
 		GameWorld world = RoomHelper.getWorld(this);
 		
 		List<User> userList = RoomHelper.getCurrentRoom(this).getUserList();
 		int i=0;
-		for(User u : userList){
+		for(User u : userList)
+		{
 			Player p = new Player(u);
+			RoomHelper.putPlayer(this, p);
 			world.gateways.get(GameConsts.STARTING_SPOT[i]).setOwner(p);	
 			i++;
 		}
@@ -36,7 +40,8 @@ public class WorldSetupHandler extends BaseClientRequestHandler{
 		
 		//JSON composition
 		JSONString  = "{";
-		while (itr.hasNext()) {
+		while (itr.hasNext())
+		{
 			str = itr.next();
 			currentGW = world.gateways.get(str);
 			String GWOwner = currentGW.getOwner()!=null?currentGW.getOwner().getName():"Neutral";

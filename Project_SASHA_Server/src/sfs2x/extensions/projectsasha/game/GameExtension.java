@@ -1,5 +1,9 @@
 package sfs2x.extensions.projectsasha.game;
+import java.util.Hashtable;
+import java.util.Map;
+
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
+import sfs2x.extensions.projectsasha.game.entities.Player;
 
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.extensions.SFSExtension;
@@ -8,6 +12,17 @@ public class GameExtension extends SFSExtension
 {
 	private GameWorld world; // Reference to World simulation model
 	private static Thread moneyThread;
+	private static Map<String,Player> players = new Hashtable<String,Player>();
+	
+	public Player getPlayer(String name) 
+	{
+		return players.get(name);
+	}
+	
+	public void putPlayer(Player p)
+	{
+		players.put(p.getName(), p);
+	}
 	
 	public GameWorld getWorld() 
 	{

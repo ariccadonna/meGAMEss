@@ -13,42 +13,51 @@ import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 
-public class HackEventHandler extends BaseClientRequestHandler{
-	public void handleClientRequest(User sender, ISFSObject params){
-		int time;
+public class HackEventHandler extends BaseClientRequestHandler
+{
+	public void handleClientRequest(User sender, ISFSObject params)
+	{
 		boolean neutralize;
 		boolean success = false;
 		GameWorld world = RoomHelper.getWorld(this);
-		Player p = new Player(sender);
+		Player p = RoomHelper.getPlayer(this, sender.getName());
 		
 		
 		Gateway from = world.gateways.get(params.getUtfString("gatewayFrom"));
 		Gateway to = world.gateways.get(params.getUtfString("gatewayTo"));
 		neutralize = params.getBool("neutralize");
-
-		if(to.getOwner()!=null)
+		
+		if(from.getOwner().canHack() == true)
 		{
-			if(neutralize == true)
+			if(to.getOwner()!=null && to.getOwner()!=p)
+			{
+				if(neutralize == true)
+				{
+					success = this.hack(world, from, to);
+					trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
+					
+					if(success == true)
+					{
+						// to è da neutralizzare per 60 secondi
+					}
+				}
+				else	//il gateway deve essere conquistato
+				{	
+					success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD);
+					trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
+				}
+			}
+			else
 			{
 				success = this.hack(world, from, to);
 				trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
-				
-				if(success == true)
-				{
-					// to è da neutralizzare per 60 secondi
-				}
 			}
-			else	//il gateway deve essere conquistato
-			{	
-				success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD);
-				trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
-			}
-				
 		}
 		else
 		{
-			success = this.hack(world, from, to);
-			trace("Hack requesto from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
+			//hack is disabled, we should return an error
+			trace("Hack requesto from " + p.getUserName() + ": FAILED since the hack is disabled for this player");
+			success = false;
 		}
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", success);
@@ -56,11 +65,13 @@ public class HackEventHandler extends BaseClientRequestHandler{
 		
 	}
 	
-	public boolean hack(GameWorld world, Gateway from, Gateway to){
+	public boolean hack(GameWorld world, Gateway from, Gateway to)
+	{
 		return hack(world, from, to, 0);
 	}
 	
-	public boolean hack(GameWorld world, Gateway from, Gateway to, int extraTime){
+	public boolean hack(GameWorld world, Gateway from, Gateway to, int extraTime)
+	{
 		boolean ret = false;
 		long startTime, endTime;
 		int difference = this.powerDifference(from, to);
@@ -95,12 +106,14 @@ public class HackEventHandler extends BaseClientRequestHandler{
 					default:
 						break;
 				}
-		
+
 		if(difference > 0)
 		{
 			int waitTime = this.hackTime(world, from, to) + extraTime;
 			startTime = System.currentTimeMillis();
 			endTime = startTime+(waitTime*1000);
+			from.getOwner().setCanHack(false);//disable hack for the following seconds
+
 			while(System.currentTimeMillis() != endTime)
 			{
 				/*BUSY WAIT*/
@@ -108,13 +121,18 @@ public class HackEventHandler extends BaseClientRequestHandler{
 				//	if(currentTick%1000==0)
 				//		send a countdown to the player for remaining hack time??
 			}
+
+			from.getOwner().setCanHack(true);
 			to.setOwner(from.getOwner());
+			
 			ret = true;
 		}
 		else
 		{
 			startTime = System.currentTimeMillis();
 			endTime = startTime+(GameConsts.FAILTIME*1000);
+			from.getOwner().setCanHack(false); //disable hack for the following seconds
+			
 			while(System.currentTimeMillis() != endTime)
 			{
 				/*BUSY WAIT*/
@@ -122,6 +140,8 @@ public class HackEventHandler extends BaseClientRequestHandler{
 				//	if(currentTick%1000==0)
 				//		send a countdown to the player??
 			}
+			
+			from.getOwner().setCanHack(true);
 			ret = false;
 		}
 		return ret;
@@ -129,7 +149,7 @@ public class HackEventHandler extends BaseClientRequestHandler{
 	
 	public int powerDifference(Gateway from, Gateway to)
 	{
-		return to.getAttackLevel()-from.getDefenceLevel();
+		return from.getAttackLevel()-to.getDefenceLevel();
 	}
 	
 	public int hackTime(GameWorld world, Gateway from, Gateway to)
