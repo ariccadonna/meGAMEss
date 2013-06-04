@@ -13,6 +13,8 @@ public class DeepThroat extends Software
 		super(GameConsts.DEEPTHROAT_NAME, 1);
 		setCumulative(GameConsts.DEEPTHROAT_CUMULATIVE);
 		setType(GameConsts.DEEPTHROAT);
+		setDescription(GameConsts.DEEPTHROAT_DESCRIPTION);
+
 	}
 	
 	
@@ -21,6 +23,8 @@ public class DeepThroat extends Software
 		super(GameConsts.DEEPTHROAT_NAME, version);
 		setCumulative(GameConsts.DEEPTHROAT_CUMULATIVE);
 		setType(GameConsts.DEEPTHROAT);
+		setDescription(GameConsts.DEEPTHROAT_DESCRIPTION);
+
 	}
 	
 	@Override
