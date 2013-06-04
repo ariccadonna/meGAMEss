@@ -13,6 +13,7 @@ public class Antivirus extends Software
 		super(GameConsts.ANTIVIRUS_NAME, 1);
 		setCumulative(GameConsts.ANTIVIRUS_CUMULATIVE);
 		setType(GameConsts.ANTIVIRUS);
+		setDescription(GameConsts.ANTIVIRUS_DESCRIPTION);
 	}
 	
 	
@@ -21,6 +22,8 @@ public class Antivirus extends Software
 		super(GameConsts.ANTIVIRUS_NAME, version);
 		setCumulative(GameConsts.ANTIVIRUS_CUMULATIVE);
 		setType(GameConsts.ANTIVIRUS);
+		setDescription(GameConsts.ANTIVIRUS_DESCRIPTION);
+
 	}
 	
 	@Override
