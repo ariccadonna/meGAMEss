@@ -10,6 +10,7 @@ public abstract class Software
 	protected boolean cumulative;
 	protected String type;
 	protected boolean hasTriggeredAction;
+	protected String description;
 	
 	
 	//CONSTRUCTORS
@@ -21,6 +22,7 @@ public abstract class Software
 		this.cumulative = false;
 		this.type = "SOFTWARE";
 		this.hasTriggeredAction = false;
+		this.description=description;
 	}
 	
 	
