@@ -1,4 +1,7 @@
 package sfs2x.extensions.projectsasha.game;
+import java.util.ArrayList;
+import java.util.List;
+
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.entities.gateways.*;
@@ -18,18 +21,24 @@ public class HackEventHandler extends BaseClientRequestHandler
 	{
 		boolean neutralize;
 		boolean success = false;
+		int attackRelevance;
+		List<Gateway> hackingPath;
 		GameWorld world = RoomHelper.getWorld(this);
 		Player p = RoomHelper.getPlayer(this, sender.getName());
 		
 		
 		Gateway from = world.gateways.get(params.getUtfString("gatewayFrom"));
 		Gateway to = world.gateways.get(params.getUtfString("gatewayTo"));
+		
 		neutralize = params.getBool("neutralize");
 		
 		if(from.getOwner().canHack() == true)
 		{
 			if(to.getOwner()!=null && to.getOwner()!=p)
 			{
+				attackRelevance = this.getAttackRelevance(from, to);
+				hackingPath = from.tracePath(to, attackRelevance);
+				
 				if(neutralize == true)
 				{
 					success = this.neutralize(world, from, to);
@@ -45,6 +54,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 					success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD);
 					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 				}
+				from.setTrace(hackingPath, attackRelevance);
 			}
 			else
 			{
@@ -58,6 +68,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 			trace("Hack request from " + p.getUserName() + ": FAILED since the hack is disabled for this player");
 			success = false;
 		}
+		
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", success);
 		send("hack", reback, sender);
@@ -227,10 +238,18 @@ public class HackEventHandler extends BaseClientRequestHandler
 		return from.getAttackLevel()-to.getDefenceLevel();
 	}
 	
+	public int getAttackRelevance(Gateway from, Gateway to)
+	{
+		return ((from.getAttackLevel() + to.getDefenceLevel()) / 200) *10;
+	}
+	
+	
 	public int hackTime(GameWorld world, Gateway from, Gateway to)
 	{
 		int bonus;
-		int diff = this.powerDifference(from, to);
+		int diff = this.powerDifference(from, to)+
+				GameConsts.MIL_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.MIL_GATEWAY)-
+				GameConsts.GOV_BONUS_MULTIPLIER * to.getOwner().getConqueredGateway(world, GameConsts.GOV_GATEWAY);
 		
 		int[] timeToLeave = {
 						15,15,15,15,15,15,15,15,15, 	// 1-9
@@ -245,9 +264,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 						80,80,80,80,80,80,80,80,80,80	//85-94
 						};
 		
-		bonus = GameConsts.SCI_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.SCI_GATEWAY)+
-				GameConsts.MIL_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.MIL_GATEWAY)-
-				GameConsts.GOV_BONUS_MULTIPLIER * to.getOwner().getConqueredGateway(world, GameConsts.GOV_GATEWAY);
+		bonus = GameConsts.SCI_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.SCI_GATEWAY);
 		
 		return 120 - timeToLeave[diff-1] - bonus;
 	}

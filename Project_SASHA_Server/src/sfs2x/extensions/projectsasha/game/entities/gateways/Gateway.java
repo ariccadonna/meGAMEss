@@ -1,11 +1,15 @@
 package sfs2x.extensions.projectsasha.game.entities.gateways;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Vector;
 
@@ -414,5 +418,112 @@ public abstract class Gateway
 	public void startTimedEvent()
 	{
 		//timed event here
+	}
+	
+	private Map<String,Integer> costsSoFar = new Hashtable<String,Integer>();
+
+	
+	public List<Gateway> tracePath(final Gateway destination, final int relevance )
+	{
+		
+		
+		// lista contenente il percorso trovato
+		List<Gateway> path = new ArrayList<Gateway>();
+		
+		// la sorgente viene aggiunta a path
+		path.add(this);
+		
+		// l'insieme aperto è una coda di priorità, istruita da un comparator che effettua il confronto
+		// sulla rilevanza dell'attacco
+		// TODO: BISOGNA PREVEDERE UN COMPARATOR ANCHE PER LA DISTANZA (PROXY LEV. 1)
+		Queue<Gateway> openSet = new PriorityQueue<Gateway>(4, new Comparator<Gateway>(){
+			@Override
+			public int compare(Gateway o1, Gateway o2)
+			{
+				// (o1.g + o1.h) - (o2.g + o2.h)
+				return (o1.getWeightByRelevance(relevance) + o1.distanceFrom(destination)) - (o2.getWeightByRelevance(relevance) + o2.distanceFrom(destination));
+			}
+		 });
+		
+		Set<Gateway> closedSet = new HashSet<Gateway>();
+		
+		// inserisco inizialmente il nodo di partenza negli aperti
+		openSet.add(this);
+		
+		// fino a quando non ho più nodi da valutare nell'insieme degli aperti
+		while(!openSet.isEmpty())
+		{
+			// poll preleva l'elemento "minore" a seconda della modalità istruita dal comparator
+			Gateway currentGateway = openSet.poll();
+			
+			// se sono già arrivato a destinazione, esco
+			if(currentGateway.getID() == destination.getID())
+			{
+				path.add(currentGateway);
+				return path; //oppure chiama una funzione per ricostruire il path partendo da current alla rovescia
+			}
+			
+			// acquisisco i vicini
+			Gateway[] neighboors = currentGateway.getNeighboors();
+			
+			for(int i=0; i<neighboors.length; i++ )
+			{
+				Gateway currentNeighboor = neighboors[i];
+				boolean inOpenSet;
+				
+				// se il vicino in analisi è già nell'insieme dei chiusi, salto alla successiva iterazione
+				if(closedSet.contains(currentNeighboor))
+					continue;
+				
+				// perchè tutto sto casino per vedere se currentNeighboor è in coda? storie di riferimenti?
+				Gateway discSuccessorNode = null;
+				for (Gateway gw : openSet)
+				{
+					if(gw.equals(currentNeighboor)) 
+						discSuccessorNode = gw;
+				}
+				
+				if(discSuccessorNode != null)
+				{
+					currentNeighboor = discSuccessorNode;
+					inOpenSet = true;
+				}
+				else
+					inOpenSet = false;
+				
+				//TODO: CHECK DEL LIVELLO DI PROXY
+				//se liv.1: considero solo la distanza (?)
+				//se liv.2: considero il peso in base alla rilevanza (l'euristica viene valutata a livello di 
+				// 			coda di priorità durante il poll iniziale
+				String sourceOwner = this.getOwner().getUserName();
+				
+				int tentativeG = currentGateway.costsSoFar.get(sourceOwner) + currentGateway.getWeightByRelevance(relevance);
+				
+				if(inOpenSet && tentativeG >= currentNeighboor.costsSoFar.get(sourceOwner))
+					continue;
+				
+				path.add(currentNeighboor);
+				
+				if(inOpenSet)
+				{
+					openSet.remove(currentNeighboor);
+					currentNeighboor.costsSoFar.put(sourceOwner, tentativeG);
+					openSet.add(currentNeighboor);
+				}
+				else
+				{
+					currentNeighboor.costsSoFar.put(sourceOwner, tentativeG);
+					openSet.add(currentNeighboor);
+				}
+				
+				closedSet.add(currentGateway);
+				
+			}
+		}
+		
+		// TODO: RESETTARE I VALORI DI COSTSSOFAR PER I GATEWAY INCLUSI IN OPENSET, CLOSEDSET E PATH
+		
+		// se dovesse andare male (ma può davvero essere?)
+		return null;
 	}
 }
