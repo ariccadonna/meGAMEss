@@ -12,6 +12,8 @@ public class DictionaryAttacker extends Software
 		super(GameConsts.DICTIONARY_NAME, 1);
 		setCumulative(GameConsts.DICTIONARY_CUMULATIVE);
 		setType(GameConsts.DICTIONARY);
+		setDescription(GameConsts.DICTIONARY_DESCRIPTION);
+
 	}
 	
 	
@@ -20,6 +22,8 @@ public class DictionaryAttacker extends Software
 		super(GameConsts.DICTIONARY_NAME, version);
 		setCumulative(GameConsts.DICTIONARY_CUMULATIVE);
 		setType(GameConsts.DICTIONARY);
+		setDescription(GameConsts.DICTIONARY_DESCRIPTION);
+
 	}
 	
 	@Override
