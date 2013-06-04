@@ -14,6 +14,8 @@ public class IDS extends Software
 		super(GameConsts.IDS_NAME, 1);
 		setCumulative(GameConsts.IDS_CUMULATIVE);
 		setType(GameConsts.IDS);
+		setDescription(GameConsts.IDS_DESCRIPTION);
+
 	}
 	
 	
@@ -22,6 +24,8 @@ public class IDS extends Software
 		super(GameConsts.IDS_NAME, version);
 		setCumulative(GameConsts.IDS_CUMULATIVE);
 		setType(GameConsts.IDS);
+		setDescription(GameConsts.IDS_DESCRIPTION);
+
 	}
 	
 	@Override
