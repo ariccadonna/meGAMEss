@@ -22,7 +22,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 		boolean neutralize;
 		boolean success = false;
 		int attackRelevance;
-		List<Gateway> hackingPath;
+		List<Gateway> hackingPath = null;
 		GameWorld world = RoomHelper.getWorld(this);
 		Player p = RoomHelper.getPlayer(this, sender.getName());
 		
@@ -32,19 +32,48 @@ public class HackEventHandler extends BaseClientRequestHandler
 		
 		neutralize = params.getBool("neutralize");
 		
-		if(from.getOwner().canHack() == true)
+		if(from.getOwner().canHack())
 		{
 			if(to.getOwner()!=null && to.getOwner()!=p)
 			{
 				attackRelevance = this.getAttackRelevance(from, to);
-				hackingPath = from.tracePath(to, attackRelevance);
 				
-				if(neutralize == true)
+				
+				if(from.getInstalledSoftware(GameConsts.PROXY) == null)
+				{
+					for(Gateway g : from.getNeighboors())
+					{
+						if(g == to)
+						{
+							hackingPath = new ArrayList<Gateway>();
+							hackingPath.add(from);
+							hackingPath.add(to);
+							break;
+						}
+					}							
+				}
+				else
+				{
+					hackingPath = from.tracePath(to, attackRelevance);					
+				}
+				
+				if(hackingPath == null)
+				{
+					ISFSObject reback = SFSObject.newInstance();
+					reback.putBool("success", false);
+					// TODO: REFINE MESSAGE
+					reback.putUtfString("error", "No path available");
+					send("hack", reback, sender);	
+					return;
+				}
+				
+				
+				if(neutralize)
 				{
 					success = this.neutralize(world, from, to);
 					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 					
-					if(success == true)
+					if(success)
 					{
 						// to è da neutralizzare per 60 secondi
 					}

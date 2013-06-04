@@ -17,6 +17,7 @@ import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.ia.Trace;
 import sfs2x.extensions.projectsasha.game.entities.software.Software;
+import sfs2x.extensions.projectsasha.game.entities.software.Proxy;
 import sfs2x.extensions.projectsasha.game.entities.software.SoftwareFactory;
 
 public abstract class Gateway 
@@ -27,7 +28,7 @@ public abstract class Gateway
 	private List<Trace> traces;
 	private Software[] installedSoftware;
 	private Gateway[] neighboors;
-	private Map<String,Integer> distanceFromAttackGateway = new Hashtable<String,Integer>();
+	private Map<String,Integer> costsSoFar = new Hashtable<String,Integer>();
 	private Player owner;
 	private String name, state;
 	private int id, x, y;
@@ -47,6 +48,7 @@ public abstract class Gateway
 		this.y = y;
 		this.lat = lat;
 		this.lon = lon;
+		this.costsSoFar.put(this.owner.getUserName(), 0);
 	}	
 	
 	
@@ -92,22 +94,6 @@ public abstract class Gateway
 		return (int)((1/(1+traceCount))*100);
 	}
 	
-	public int getWeightByDistance(String playerName)
-	{
-		return distanceFromAttackGateway.get(playerName);
-	}
-	
-	public int getDistance(Gateway to)
-	{
-		return (int)Math.sqrt(Math.pow(to.getX()-this.getX(), 2)+Math.pow(to.getY()-this.getY(), 2));
-		
-	}
-	
-	public void setWeightByDistance(String playerName, int weight)
-	{
-		distanceFromAttackGateway.put(playerName, weight);
-	}
-	
 	public int distanceFrom(Gateway dest)
 	{
 		double dLat = Math.toRadians(dest.lat - this.lat);
@@ -147,11 +133,6 @@ public abstract class Gateway
 		this.installedSoftware = new Software[GameConsts.MAX_SOFTWARE_INSTALLED];
 		this.owner = null;
 		this.startedAttacks.clear();	
-	}
-	
-	public void resetWeightByDistance(String playerName)
-	{
-		setWeightByDistance(playerName, 0);
 	}	
 	
 	synchronized public int getDefenceLevel()
@@ -406,50 +387,60 @@ public abstract class Gateway
 		//timed event here
 	}
 	
-	private Map<String,Integer> costsSoFar = new Hashtable<String,Integer>();
-
-	
-	public List<Gateway> tracePath(final Gateway destination, final int relevance )
+	synchronized public List<Gateway> tracePath(final Gateway destination, final int relevance )
 	{
-		
-		
-		// lista contenente il percorso trovato
+		Queue<Gateway> openSet = null;
+		int numSearchSteps = 0;
+		String sourceOwner = this.getOwner().getUserName();
+		int maxSteps = ((Proxy) this.getInstalledSoftware(GameConsts.PROXY)).getRange();
 		List<Gateway> path = new ArrayList<Gateway>();
 		
-		// la sorgente viene aggiunta a path
 		path.add(this);
 		
-		// l'insieme aperto è una coda di priorità, istruita da un comparator che effettua il confronto
-		// sulla rilevanza dell'attacco
-		// TODO: BISOGNA PREVEDERE UN COMPARATOR ANCHE PER LA DISTANZA (PROXY LEV. 1)
-		Queue<Gateway> openSet = new PriorityQueue<Gateway>(4, new Comparator<Gateway>(){
-			@Override
-			public int compare(Gateway o1, Gateway o2)
+		if (this.getInstalledSoftware(GameConsts.PROXY).getVersion() == 1)
+		{
+			openSet = new PriorityQueue<Gateway>(4, new Comparator<Gateway>()
 			{
-				// (o1.g + o1.h) - (o2.g + o2.h)
-				return (o1.getWeightByRelevance(relevance) + o1.distanceFrom(destination)) - (o2.getWeightByRelevance(relevance) + o2.distanceFrom(destination));
-			}
-		 });
+				@Override
+				public int compare(Gateway o1, Gateway o2)
+				{
+					return (o1.distanceFrom(destination) - o2.distanceFrom(destination));
+				}
+			 });
+		}
+		else if(this.getInstalledSoftware(GameConsts.PROXY).getVersion() >= 2)
+		{
+			openSet = new PriorityQueue<Gateway>(4, new Comparator<Gateway>()
+			{
+				@Override
+				public int compare(Gateway o1, Gateway o2)
+				{
+					return (o1.costsSoFar.get(o1.getOwner().getUserName()) + o1.distanceFrom(destination)) - (o2.costsSoFar.get(getOwner().getUserName()) + o2.distanceFrom(destination));
+				}
+			 });	
+		}
 		
 		Set<Gateway> closedSet = new HashSet<Gateway>();
 		
-		// inserisco inizialmente il nodo di partenza negli aperti
 		openSet.add(this);
 		
-		// fino a quando non ho più nodi da valutare nell'insieme degli aperti
-		while(!openSet.isEmpty())
+		while(!openSet.isEmpty()  && (numSearchSteps <= maxSteps))
 		{
-			// poll preleva l'elemento "minore" a seconda della modalità istruita dal comparator
 			Gateway currentGateway = openSet.poll();
 			
-			// se sono già arrivato a destinazione, esco
 			if(currentGateway.getID() == destination.getID())
 			{
 				path.add(currentGateway);
-				return path; //oppure chiama una funzione per ricostruire il path partendo da current alla rovescia
+				
+				for(Gateway gw :openSet)
+					gw.costsSoFar.put(sourceOwner, 0);
+				
+				for(Gateway gw :closedSet)
+					gw.costsSoFar.put(sourceOwner, 0);
+				
+				return path; 
 			}
 			
-			// acquisisco i vicini
 			Gateway[] neighboors = currentGateway.getNeighboors();
 			
 			for(int i=0; i<neighboors.length; i++ )
@@ -457,11 +448,9 @@ public abstract class Gateway
 				Gateway currentNeighboor = neighboors[i];
 				boolean inOpenSet;
 				
-				// se il vicino in analisi è già nell'insieme dei chiusi, salto alla successiva iterazione
 				if(closedSet.contains(currentNeighboor))
 					continue;
 				
-				// perchè tutto sto casino per vedere se currentNeighboor è in coda? storie di riferimenti?
 				Gateway discSuccessorNode = null;
 				for (Gateway gw : openSet)
 				{
@@ -477,11 +466,6 @@ public abstract class Gateway
 				else
 					inOpenSet = false;
 				
-				//TODO: CHECK DEL LIVELLO DI PROXY
-				//se liv.1: considero solo la distanza (?)
-				//se liv.2: considero il peso in base alla rilevanza (l'euristica viene valutata a livello di 
-				// 			coda di priorità durante il poll iniziale
-				String sourceOwner = this.getOwner().getUserName();
 				
 				int tentativeG = currentGateway.costsSoFar.get(sourceOwner) + currentGateway.getWeightByRelevance(relevance);
 				
@@ -503,13 +487,16 @@ public abstract class Gateway
 				}
 				
 				closedSet.add(currentGateway);
-				
+				numSearchSteps++;
 			}
 		}
+
+		for(Gateway gw :openSet)
+			gw.costsSoFar.put(sourceOwner, 0);
 		
-		// TODO: RESETTARE I VALORI DI COSTSSOFAR PER I GATEWAY INCLUSI IN OPENSET, CLOSEDSET E PATH
+		for(Gateway gw :closedSet)
+			gw.costsSoFar.put(sourceOwner, 0);
 		
-		// se dovesse andare male (ma può davvero essere?)
 		return null;
 	}
 }
