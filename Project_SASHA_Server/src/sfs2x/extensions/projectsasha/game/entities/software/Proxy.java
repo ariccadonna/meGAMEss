@@ -11,6 +11,8 @@ public class Proxy extends Software
 		super(GameConsts.PROXY_NAME, 1);
 		setCumulative(GameConsts.PROXY_CUMULATIVE);
 		setType(GameConsts.PROXY);
+		setDescription(GameConsts.PROXY_DESCRIPTION);
+
 	}
 	
 	
@@ -19,6 +21,8 @@ public class Proxy extends Software
 		super(GameConsts.PROXY_NAME, version);
 		setCumulative(GameConsts.PROXY_CUMULATIVE);
 		setType(GameConsts.PROXY);
+		setDescription(GameConsts.PROXY_DESCRIPTION);
+
 	}
 	
 	@Override
