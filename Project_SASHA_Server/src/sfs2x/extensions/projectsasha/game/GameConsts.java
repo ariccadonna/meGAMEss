@@ -130,7 +130,7 @@ public class GameConsts
 	public static final int DICTIONARY_MAX_LEVEL		= 3;
 	public static final boolean DICTIONARY_CUMULATIVE	= true;
 	public static final int DICTIONARY_PRICE_PERLEVEL	= 10;
-	public static final String DICTIONARY_DESCRIPTION 		= "";
+	public static final String DICTIONARY_DESCRIPTION 		= "As the Bruteforcer, it adds a a value to attack of gateway, but it will leaves less relevance and increase the hakcing time";
 	
 	public static final String PROXY					= "PROXY";
 	public static final String PROXY_NAME 				= "Thor Garlic Proxy";
