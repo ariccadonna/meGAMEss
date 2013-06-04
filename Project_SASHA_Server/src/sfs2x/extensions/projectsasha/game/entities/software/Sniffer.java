@@ -13,6 +13,8 @@ public class Sniffer extends Software
 		super(GameConsts.SNIFFER_NAME, 1);
 		setCumulative(GameConsts.SNIFFER_CUMULATIVE);
 		setType(GameConsts.SNIFFER);
+		setDescription(GameConsts.SNIFFER_DESCRIPTION);
+
 	}
 	
 	
@@ -21,6 +23,8 @@ public class Sniffer extends Software
 		super(GameConsts.SNIFFER_NAME, version);
 		setCumulative(GameConsts.SNIFFER_CUMULATIVE);
 		setType(GameConsts.SNIFFER);
+		setDescription(GameConsts.SNIFFER_DESCRIPTION);
+
 	}
 	
 	@Override
