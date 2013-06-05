@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -28,7 +28,8 @@ public abstract class Gateway
 	private List<Trace> traces;
 	private Software[] installedSoftware;
 	private Gateway[] neighboors;
-	private Map<String,Integer> costsSoFar = new Hashtable<String,Integer>();
+	private Map<String,Integer> costsSoFar = new HashMap<String,Integer>();
+	private Map<String, Gateway> parentForPath = new HashMap<String, Gateway>();
 	private Player owner;
 	private String name, state;
 	private int id, x, y;
@@ -48,7 +49,8 @@ public abstract class Gateway
 		this.y = y;
 		this.lat = lat;
 		this.lon = lon;
-		this.costsSoFar.put(this.owner.getUserName(), 0);
+		this.costsSoFar = null;
+		this.parentForPath = null;
 	}	
 	
 	
@@ -94,6 +96,11 @@ public abstract class Gateway
 		return (int)((1/(1+traceCount))*100);
 	}
 	
+	public int getWeightByDistance(Gateway destination)
+	{
+		return this.distanceFrom(destination);
+	}
+	
 	public int distanceFrom(Gateway dest)
 	{
 		double dLat = Math.toRadians(dest.lat - this.lat);
@@ -105,6 +112,16 @@ public abstract class Gateway
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 		
 		return (int)(GameConsts.EARTH_RADIUS * c * 100 / GameConsts.EARTH_MAX_DISTANCE);
+	}
+	
+	public Map<String, Integer> getCostsSoFar()
+	{
+		return this.costsSoFar;
+	}
+	
+	public void setCostsSoFar(String user, Integer cost)
+	{
+		this.costsSoFar.put(user, cost);
 	}
 	
 	public Set<Integer> getStartedAttacks() 
@@ -158,6 +175,7 @@ public abstract class Gateway
 		}
 		return dl;
 	}
+	
 	
 	synchronized public Software[] getInstalledSoftwares()
 	{
@@ -391,39 +409,28 @@ public abstract class Gateway
 	{
 		Queue<Gateway> openSet = null;
 		int numSearchSteps = 0;
-		String sourceOwner = this.getOwner().getUserName();
+		final String sourceOwner = this.getOwner().getUserName();
 		int maxSteps = ((Proxy) this.getInstalledSoftware(GameConsts.PROXY)).getRange();
 		List<Gateway> path = new ArrayList<Gateway>();
+		int proxyLevel = this.getInstalledSoftware(GameConsts.PROXY).getVersion();
+		int tentativeG = 0 ;
 		
-		path.add(this);
 		
-		if (this.getInstalledSoftware(GameConsts.PROXY).getVersion() == 1)
+		openSet = new PriorityQueue<Gateway>(4, new Comparator<Gateway>()
 		{
-			openSet = new PriorityQueue<Gateway>(4, new Comparator<Gateway>()
+			@Override
+			public int compare(Gateway o1, Gateway o2)
 			{
-				@Override
-				public int compare(Gateway o1, Gateway o2)
-				{
-					return (o1.distanceFrom(destination) - o2.distanceFrom(destination));
-				}
-			 });
-		}
-		else if(this.getInstalledSoftware(GameConsts.PROXY).getVersion() >= 2)
-		{
-			openSet = new PriorityQueue<Gateway>(4, new Comparator<Gateway>()
-			{
-				@Override
-				public int compare(Gateway o1, Gateway o2)
-				{
-					return (o1.costsSoFar.get(o1.getOwner().getUserName()) + o1.distanceFrom(destination)) - (o2.costsSoFar.get(getOwner().getUserName()) + o2.distanceFrom(destination));
-				}
-			 });	
-		}
+				return (o1.costsSoFar.get(sourceOwner) + o1.distanceFrom(destination)) - (o2.costsSoFar.get(sourceOwner) + o2.distanceFrom(destination));
+			}
+		 });	
 		
 		Set<Gateway> closedSet = new HashSet<Gateway>();
 		
 		openSet.add(this);
 		
+		//DEBUG ONLY!
+		maxSteps = 99;
 		while(!openSet.isEmpty()  && (numSearchSteps <= maxSteps))
 		{
 			Gateway currentGateway = openSet.poll();
@@ -431,12 +438,24 @@ public abstract class Gateway
 			if(currentGateway.getID() == destination.getID())
 			{
 				path.add(currentGateway);
+				Gateway parent = currentGateway.parentForPath.get(sourceOwner);
+				while(parent != null)
+				{
+					path.add(0, parent);
+					parent = parent.parentForPath.get(sourceOwner);
+				}
 				
 				for(Gateway gw :openSet)
+				{
 					gw.costsSoFar.put(sourceOwner, 0);
+					gw.parentForPath.put(sourceOwner, null);
+				}
 				
 				for(Gateway gw :closedSet)
+				{
 					gw.costsSoFar.put(sourceOwner, 0);
+					gw.parentForPath.put(sourceOwner, null);
+				}
 				
 				return path; 
 			}
@@ -466,13 +485,15 @@ public abstract class Gateway
 				else
 					inOpenSet = false;
 				
-				
-				int tentativeG = currentGateway.costsSoFar.get(sourceOwner) + currentGateway.getWeightByRelevance(relevance);
+				if(proxyLevel == 1)
+					tentativeG = currentGateway.costsSoFar.get(sourceOwner) + currentGateway.getWeightByDistance(currentNeighboor);
+				else if (proxyLevel >= 2)
+					tentativeG = currentGateway.costsSoFar.get(sourceOwner) + currentGateway.getWeightByRelevance(relevance);
 				
 				if(inOpenSet && tentativeG >= currentNeighboor.costsSoFar.get(sourceOwner))
 					continue;
 				
-				path.add(currentNeighboor);
+				currentNeighboor.parentForPath.put(sourceOwner, currentGateway);
 				
 				if(inOpenSet)
 				{
@@ -492,11 +513,16 @@ public abstract class Gateway
 		}
 
 		for(Gateway gw :openSet)
+		{
 			gw.costsSoFar.put(sourceOwner, 0);
+			gw.parentForPath.put(sourceOwner, null);
+		}
 		
 		for(Gateway gw :closedSet)
+		{
 			gw.costsSoFar.put(sourceOwner, 0);
-		
+			gw.parentForPath.put(sourceOwner, null);
+		}
 		return null;
 	}
 }
