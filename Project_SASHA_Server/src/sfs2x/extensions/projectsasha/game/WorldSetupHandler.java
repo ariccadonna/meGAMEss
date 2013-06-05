@@ -29,6 +29,7 @@ public class WorldSetupHandler extends BaseClientRequestHandler
 			RoomHelper.putPlayer(this, p);
 			world.gateways.get(GameConsts.STARTING_SPOTS[i]).setOwner(p);	
 			world.gateways.get(GameConsts.STARTING_SPOTS[i]).setCostsSoFar(p.getUserName(), 0);
+			world.gateways.get(GameConsts.STARTING_SPOTS[i]).setParentForPath(p.getUserName(), null);
 			i++;
 		}
 		
