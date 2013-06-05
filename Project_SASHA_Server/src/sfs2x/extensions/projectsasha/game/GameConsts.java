@@ -149,4 +149,15 @@ public class GameConsts
 	public static final int IA_THREAD_SLEEP_TIME 			= 50;
 	public static final int DEFAULT_POLICE_RELEVANCE_THRS	= 4;
 	public static final int POLICE_SLEEP_TIME				= 10*20;
+
+	//**********************//
+	
+	/* Quests constants */
+	public static final String QUEST_TYPE1 					= "CONQUISTA";
+	public static final String QUEST_TYPE2					= "RUBA";
+
+	
+
+
+
 }
