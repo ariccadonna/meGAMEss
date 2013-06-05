@@ -2,7 +2,9 @@ package sfs2x.extensions.projectsasha.game.entities;
 
 import java.util.Iterator;
 
+import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
+import sfs2x.extensions.projectsasha.game.entities.software.Software;
 
 
 import com.smartfoxserver.v2.entities.User;
@@ -16,6 +18,7 @@ public class Player
 	private String name;
 	private int money;
 	private boolean canHack;
+	private Software[] inventory;
 	
 	
 	public Player(User sfsUser) 
@@ -24,6 +27,7 @@ public class Player
 		this.name = sfsUser.getName();
 		this.money = 0;
 		this.canHack = true;
+		this.inventory = new Software[GameConsts.INVENTORY_SIZE];
 	}
 
 
@@ -66,6 +70,11 @@ public class Player
 			this.money += value;
 	}
 	
+	public Software[] getInventory()
+	{
+		return inventory;
+	}
+	
 	public void removeMoney(int value)
 	{
 		this.money -= value;
@@ -79,6 +88,21 @@ public class Player
 	public void setCanHack(boolean value)
 	{
 		this.canHack = value;
+	}
+	
+	public int getNextInventorySlotAvailable()
+	{
+		int slot = 0;
+		for(Software s : inventory)
+			if(s != null)
+				slot++;
+		
+		return slot;
+	}
+	
+	public void setInventory(Software s)
+	{
+		inventory[this.getNextInventorySlotAvailable()] = s;
 	}
 	
 	public boolean canHack()
