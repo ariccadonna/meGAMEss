@@ -155,8 +155,8 @@ public class GameConsts
 	/* Quests constants */
 	public static final String QUEST_TYPE1 					= "CONQUISTA";
 	public static final String QUEST_TYPE2					= "RUBA";
-
-	
+	public static final int QUEST1_REWARD					= 2;
+	public static final int QUEST2_REWARD					= 3;
 
 
 

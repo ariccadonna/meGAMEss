@@ -248,7 +248,7 @@ public abstract class Gateway
 	}
 	
 	//NON STATIC METHODS
-	synchronized public void installSoftware(int type, Player hacker)
+	synchronized public void installSoftware(String type, Player hacker)
 	{
 		Software newSoftware = SoftwareFactory.makeSoftware(type);
 		if(this.owner!=hacker)
