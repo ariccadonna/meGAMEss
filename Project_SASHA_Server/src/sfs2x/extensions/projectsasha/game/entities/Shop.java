@@ -1,26 +1,22 @@
 package sfs2x.extensions.projectsasha.game.entities;
 
-import java.util.Hashtable;
-import java.util.Map;
-
-import sfs2x.extensions.projectsasha.game.entities.software.Software;
-
 public class Shop 
 {
-	protected Map<Software, Integer> items = new Hashtable<Software,Integer>();
+	protected String[] items;
 
 	//COSTRUCTOR
 	
 	public Shop()
 	{
-		
+		items = new String[8];
 	}
 	
 	//METHODS
 	
-	
-
-
+	public String getItems(int position)
+	{
+		return items[position].toString();
+	}
 
 
 

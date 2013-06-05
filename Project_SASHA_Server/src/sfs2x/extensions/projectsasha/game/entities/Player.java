@@ -75,6 +75,14 @@ public class Player
 		return inventory;
 	}
 	
+	public boolean hasItems(String type)
+	{
+		for(Software s : this.inventory)
+			if(s!=null && type == s.getType())
+				return true;
+		return false;
+	}
+	
 	public void removeMoney(int value)
 	{
 		this.money -= value;

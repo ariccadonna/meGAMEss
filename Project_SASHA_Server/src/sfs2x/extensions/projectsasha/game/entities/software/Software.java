@@ -94,7 +94,7 @@ public abstract class Software
 	
 	public void setDescription(String Description)
 	{
-		this.Description = Description;
+		this.description = Description;
 	}
 	
 	public void setTriggeredAction(boolean hasTriggeredAction)
