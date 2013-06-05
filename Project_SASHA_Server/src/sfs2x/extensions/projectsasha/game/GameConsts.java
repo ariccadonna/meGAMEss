@@ -11,6 +11,8 @@ public class GameConsts
 	public static final int CONQUER_TIME_TRESHOLD	= 30; //time to add when neutralizing and hacking a gateway in seconds
 	public static final int FAILTIME				= 10; //time to wait if an hack fails in seconds
 	
+	public static final int INVENTORY_SIZE			= 10;
+
 	/* Gateway parameters */
 	public static final String[] STARTING_SPOTS		= {
 														"north west territory",	//starting spot p1
