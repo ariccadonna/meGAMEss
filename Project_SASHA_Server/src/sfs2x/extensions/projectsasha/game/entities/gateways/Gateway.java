@@ -28,8 +28,8 @@ public abstract class Gateway
 	private List<Trace> traces;
 	private Software[] installedSoftware;
 	private Gateway[] neighboors;
-	private Map<String,Integer> costsSoFar = new HashMap<String,Integer>();
-	private Map<String, Gateway> parentForPath = new HashMap<String, Gateway>();
+	private Map<String,Integer> costsSoFar;
+	private Map<String, Gateway> parentForPath;
 	private Player owner;
 	private String name, state;
 	private int id, x, y;
@@ -49,8 +49,8 @@ public abstract class Gateway
 		this.y = y;
 		this.lat = lat;
 		this.lon = lon;
-		this.costsSoFar = null;
-		this.parentForPath = null;
+		this.costsSoFar = new HashMap<String,Integer>();
+		this.parentForPath = new HashMap<String, Gateway>();
 	}	
 	
 	
@@ -88,7 +88,7 @@ public abstract class Gateway
 	
 	public int getWeightByRelevance(int attackRelevance)
 	{
-		float traceCount=0;
+		int traceCount=0;
 		
 		for(Trace t : traces)
 			if(t.relevance == attackRelevance)
@@ -117,6 +117,16 @@ public abstract class Gateway
 	public Map<String, Integer> getCostsSoFar()
 	{
 		return this.costsSoFar;
+	}
+	
+	public void setParentForPath(String user, Gateway gw)
+	{
+		this.parentForPath.put(user, gw);
+	}
+	
+	public Map<String, Gateway> getParentForPath()
+	{
+		return this.parentForPath;
 	}
 	
 	public void setCostsSoFar(String user, Integer cost)
@@ -238,7 +248,7 @@ public abstract class Gateway
 	}
 	
 	//NON STATIC METHODS
-	synchronized public void installSoftware(String type, Player hacker)
+	synchronized public void installSoftware(int type, Player hacker)
 	{
 		Software newSoftware = SoftwareFactory.makeSoftware(type);
 		if(this.owner!=hacker)
@@ -395,6 +405,7 @@ public abstract class Gateway
 		{
 			Trace tr = new Trace(this,this.getID(),level,this.getOwner().getName());
 			g.traces.add(tr);
+
 		}
 	}
 	
@@ -414,7 +425,7 @@ public abstract class Gateway
 		List<Gateway> path = new ArrayList<Gateway>();
 		int proxyLevel = this.getInstalledSoftware(GameConsts.PROXY).getVersion();
 		int tentativeG = 0 ;
-		
+		Set<Gateway> bucket = new HashSet<Gateway>();
 		
 		openSet = new PriorityQueue<Gateway>(4, new Comparator<Gateway>()
 		{
@@ -428,13 +439,13 @@ public abstract class Gateway
 		Set<Gateway> closedSet = new HashSet<Gateway>();
 		
 		openSet.add(this);
-		
+		bucket.add(this);
 		//DEBUG ONLY!
 		maxSteps = 99;
 		while(!openSet.isEmpty()  && (numSearchSteps <= maxSteps))
 		{
 			Gateway currentGateway = openSet.poll();
-			
+			bucket.add(currentGateway);
 			if(currentGateway.getID() == destination.getID())
 			{
 				path.add(currentGateway);
@@ -445,18 +456,11 @@ public abstract class Gateway
 					parent = parent.parentForPath.get(sourceOwner);
 				}
 				
-				for(Gateway gw :openSet)
+				for(Gateway g: bucket)
 				{
-					gw.costsSoFar.put(sourceOwner, 0);
-					gw.parentForPath.put(sourceOwner, null);
+					g.setParentForPath(sourceOwner, null);
+					g.setCostsSoFar(sourceOwner, 0);
 				}
-				
-				for(Gateway gw :closedSet)
-				{
-					gw.costsSoFar.put(sourceOwner, 0);
-					gw.parentForPath.put(sourceOwner, null);
-				}
-				
 				return path; 
 			}
 			
@@ -464,7 +468,9 @@ public abstract class Gateway
 			
 			for(int i=0; i<neighboors.length; i++ )
 			{
+				
 				Gateway currentNeighboor = neighboors[i];
+				bucket.add(currentNeighboor);
 				boolean inOpenSet;
 				
 				if(closedSet.contains(currentNeighboor))
@@ -512,17 +518,13 @@ public abstract class Gateway
 			}
 		}
 
-		for(Gateway gw :openSet)
+		
+		for(Gateway g: bucket)
 		{
-			gw.costsSoFar.put(sourceOwner, 0);
-			gw.parentForPath.put(sourceOwner, null);
+			g.setParentForPath(sourceOwner, null);
+			g.setCostsSoFar(sourceOwner, 0);
 		}
 		
-		for(Gateway gw :closedSet)
-		{
-			gw.costsSoFar.put(sourceOwner, 0);
-			gw.parentForPath.put(sourceOwner, null);
-		}
 		return null;
 	}
 }

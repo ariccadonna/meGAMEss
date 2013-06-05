@@ -1,10 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities;
 
-
-
 import java.util.Hashtable;
 import java.util.Map;
-
 import sfs2x.extensions.projectsasha.game.entities.gateways.*;
 
 public class GameWorld 
@@ -12,7 +9,6 @@ public class GameWorld
 	public int id;
 	public Region[] regions;
 	public Map<String,Gateway> gateways = new Hashtable<String,Gateway>();
-	public long startingTime;
 	
 	public GameWorld(int id)
 	{
@@ -25,7 +21,7 @@ public class GameWorld
 		gateways.put("ukraine", 			new Base(null, "nome", "Ukraine", 288, 58, 48.379433f, 31.165580f));
 		gateways.put("western europe",		new Educational(null, "nome", "Western Europe", 136, -37, 40.463667f, -3.749220f));
 		gateways.put("southern europe",		new Base(null, "nome", "Southern Europe", 219, -14, 41.608635f, 21.745275f));
-		gateways.put("north africa",		new Base(null, "nome", "Northern Europe", 154, -138, 21.007890f, -10.940835f));
+		gateways.put("north africa",		new Base(null, "nome", "North Africa", 154, -138, 21.007890f, -10.940835f));
 		gateways.put("egypt",				new Military(null, "nome", "Egypt", 238, -100, 26.820553f, 30.802498f));
 		gateways.put("east africa",			new Base(null, "nome", "East Africa", 266, -159, -0.023559f, 37.906193f));
 		gateways.put("congo",				new Base(null, "nome", "Congo", 227, -219, -0.228021f, 15.827659f));
@@ -343,7 +339,8 @@ public class GameWorld
 		{
 			gateways.get("venezuela"), 
 			gateways.get("peru"),
-			gateways.get("argentina")
+			gateways.get("argentina"),
+			gateways.get("north africa")
 		});
 		gateways.get("argentina").setNeighborhoods(new Gateway[]
 		{
@@ -447,8 +444,4 @@ public class GameWorld
 			};
 	}
 	
-	public void setStartingTime(long time)
-	{
-		startingTime = System.currentTimeMillis();
-	}
 }
