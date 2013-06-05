@@ -22,7 +22,7 @@ public abstract class Software
 		this.cumulative = false;
 		this.type = "SOFTWARE";
 		this.hasTriggeredAction = false;
-		this.description=description;
+		this.description = "";
 	}
 	
 	
@@ -92,9 +92,9 @@ public abstract class Software
 	}
 	
 	
-	public void setDescription(String Description)
+	public void setDescription(String description)
 	{
-		this.description = Description;
+		this.description = description;
 	}
 	
 	public void setTriggeredAction(boolean hasTriggeredAction)

@@ -24,9 +24,9 @@ public class ObjectiveHandler extends BaseClientRequestHandler{
 		for(Objective o : gameObjectives)
 		{
 			JSONString += "\""+o.getName()+"\":{"+
-					"\"TYPE\":"+o.getGatewayType()+","+
+					"\"TYPE\":\""+o.getGatewayType()+"\","+
 					"\"SPOTCONQUERED\":"+p.getConqueredGateway(world, o.getGatewayType())+","+
-					"\"SPOTREQUIRED\":\""+o.getRequiredGateways()+"\""+
+					"\"SPOTREQUIRED\":"+o.getRequiredGateways()+
 					"},";
 		}
 		

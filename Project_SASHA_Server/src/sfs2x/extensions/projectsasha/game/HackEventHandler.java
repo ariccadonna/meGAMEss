@@ -6,6 +6,7 @@ import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.entities.gateways.*;
 import sfs2x.extensions.projectsasha.game.entities.software.*;
+import sfs2x.extensions.projectsasha.game.objectives.Objective;
 import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
 
 
@@ -19,8 +20,9 @@ public class HackEventHandler extends BaseClientRequestHandler
 {
 	public void handleClientRequest(User sender, ISFSObject params)
 	{
-		boolean neutralize;
+		boolean neutralize = false;
 		boolean success = false;
+		boolean isVictoryReached = false;
 		int attackRelevance;
 		List<Gateway> hackingPath = null;
 		GameWorld world = RoomHelper.getWorld(this);
@@ -98,8 +100,10 @@ public class HackEventHandler extends BaseClientRequestHandler
 			success = false;
 		}
 		
+		isVictoryReached = checkVictoryConditions(world, p);
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", success);
+		reback.putBool("victoryReached", isVictoryReached);
 		send("hack", reback, sender);
 		
 	}
@@ -272,7 +276,6 @@ public class HackEventHandler extends BaseClientRequestHandler
 		return ((from.getAttackLevel() + to.getDefenceLevel()) / 200) *10;
 	}
 	
-	
 	public int hackTime(GameWorld world, Gateway from, Gateway to)
 	{
 		int bonus;
@@ -296,5 +299,16 @@ public class HackEventHandler extends BaseClientRequestHandler
 		bonus = GameConsts.SCI_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.SCI_GATEWAY);
 		
 		return 120 - timeToLeave[diff-1] - bonus;
+	}
+	
+	public boolean checkVictoryConditions(GameWorld world, Player p)
+	{
+		Objective[] objectives = RoomHelper.getObjectives(this);
+		for(Objective o : objectives)
+		{
+			if(o.isObjectiveReached(o, p))
+				return true;
+		}
+		return false;
 	}
 }
