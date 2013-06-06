@@ -401,11 +401,14 @@ public abstract class Gateway
 			Software s = this.getInstalledSoftware(GameConsts.LOGCLEANER); 
 			level-=s.getVersion();
 		}
+		
+		Trace tr = new Trace(this,this.getID(),level,this.getOwner().getName());
+		
+		list.get(0).startedAttacks.add(tr.attackID);
+				
 		for(Gateway g : list)
 		{
-			Trace tr = new Trace(this,this.getID(),level,this.getOwner().getName());
 			g.traces.add(tr);
-
 		}
 	}
 	
