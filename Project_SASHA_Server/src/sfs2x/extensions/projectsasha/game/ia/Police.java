@@ -55,8 +55,7 @@ public class Police
 		if(gateways.size() == 0)
 		{
 			System.out.println("asd");
-			this.isFollowingTrace = false;
-			return this.currGateway;
+			return teleportPolice();
 		}
 		
 		//Looking for the gateway which actually contains the right trace considering the attack id
@@ -71,7 +70,7 @@ public class Police
 			{
 				if(t.attackID == currTrace.attackID)
 				{
-					System.out.println("FOUND RIGHT ID");
+					System.out.println("FOUND RIGHT ID: "+t.attackID);
 					rightGateway = g;
 					break;
 				}
@@ -81,9 +80,9 @@ public class Police
 		//We found or the starting Gateway or the target one
 		if(rightGateway == null)
 		{
-			System.out.println("lol");
-			return this.currGateway;
-			
+			System.out.println("sono arrivato dalla parte dell'attaccato");
+			this.isFollowingTrace = false;
+			return this.currGateway.getNeighboors()[this.rand.nextInt(this.currGateway.getNeighboors().length)];		
 		}
 		//The more traces with the same relevance are found, the more the police can get confused and can follow a trace with the same relevance but different id
 		if(rand.nextFloat() <= 1/gateways.size())
@@ -127,10 +126,7 @@ public class Police
 	public void followNextTrace()
 	{
 		if(this.isFollowingTrace || this.findNewTrace())
-		{
-			this.currGateway = this.getBiasedGateway();
-			System.out.println("Following trace in gw: "+this.currGateway.getState()); //REMOVE ME
-			
+		{			
 			if(this.currGateway.hasStartedAttack(currTrace.attackID))
 			{
 					System.out.println(this.currGateway.getState()+" arrested"); //REMOVE ME
@@ -142,6 +138,9 @@ public class Police
 				System.out.println("Trace lost"); //REMOVE ME
 				this.currGateway = teleportPolice();
 			}
+			
+			this.currGateway = this.getBiasedGateway();
+			System.out.println("Following trace in gw: "+this.currGateway.getState()); //REMOVE ME
 		}
 		else
 		{	
@@ -169,20 +168,15 @@ public class Police
 	private void clearRemainingTraces()
 	{
 		Gateway gateway = this.currGateway;
+		List<Trace> startTraces = new ArrayList<Trace>();
 		
-		while(gateway != null)
-		{
-			gateway = null;
-			for(Gateway g : this.currGateway.getNeighboors())
-			{
-				if(g.getTraces().contains(this.currTrace))
-				{
-					g.getTraces().remove(this.currTrace);
-					gateway = g;
-					break;
-				}
-			}
-		}
+		for(Trace t : gateway.getTraces())
+			if(gateway.getStartedAttacks().contains(t.attackID))
+				startTraces.add(t);
+		
+		for(Gateway g : this.currentWorld.gateways.values())
+			for(Trace t: startTraces)
+				g.getTraces().remove(t);
 	}
 	
 	private void arrestPlayer(String player) 

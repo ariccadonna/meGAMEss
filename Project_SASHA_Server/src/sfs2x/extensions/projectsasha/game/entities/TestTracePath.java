@@ -57,17 +57,17 @@ public long startingTime;
 		//g2.upgradeSoftware(GameConsts.PROXY, p1);
 		//g3.upgradeSoftware(GameConsts.PROXY, p1);
 		
-		mypath = g1.tracePath(g2, 5);
+		mypath = g1.tracePath(g2, 6);
 
-		g1.setTrace(mypath, 5);
+		g1.setTrace(mypath, 6);
 		
 		mypath = g2.tracePath(g3, 5);
 
 		g2.setTrace(mypath, 5);
 
-		mypath = g3.tracePath(g4, 5);
+		mypath = g3.tracePath(g4, 6);
 
-		g3.setTrace(mypath, 5);
+		g3.setTrace(mypath, 6);
 		
 		
 		g1.upgradeSoftware(GameConsts.PROXY, p1);

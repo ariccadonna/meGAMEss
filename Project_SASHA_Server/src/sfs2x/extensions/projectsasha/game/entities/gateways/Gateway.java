@@ -156,7 +156,6 @@ public abstract class Gateway
 	
 	synchronized public void confiscate()
 	{
-		this.traces.clear();
 		this.installedSoftware = new Software[GameConsts.MAX_SOFTWARE_INSTALLED];
 		this.owner = null;
 		this.startedAttacks.clear();	
