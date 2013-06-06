@@ -14,7 +14,7 @@ import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 
-public class WorldSetupHandler extends BaseClientRequestHandler
+public class SyncHandler extends BaseClientRequestHandler
 {
 	public void handleClientRequest(User sender, ISFSObject params)
 	{
@@ -22,31 +22,7 @@ public class WorldSetupHandler extends BaseClientRequestHandler
 		GameWorld world = RoomHelper.getWorld(this);
 		
 		List<User> userList = RoomHelper.getCurrentRoom(this).getUserList();
-		int i = 0;
-		for(User u : userList)
-		{
-			
-			Player p = new Player(u);
-			RoomHelper.putPlayer(this, p);
-			Gateway startingSpot = world.gateways.get(GameConsts.STARTING_SPOTS[i]);
-			startingSpot.setOwner(p);	
-			
-			Set<String> set = world.gateways.keySet();
-			Iterator<String> itr = set.iterator();
-			while (itr.hasNext())
-			{
-				String key = itr.next();
-				Gateway currentGW = world.gateways.get(key);
-				currentGW.setCostsSoFar(p.getUserName(), 0);
-				currentGW.setParentForPath(p.getUserName(), null);
-			}
-			
-			/**FIXME: only for demo**/
-			startingSpot.installSoftware(GameConsts.BRUTEFORCER, p);
-			/************************/
-			i++;
-		}
-		
+	
 		
 		String str, JSONString;
 		Gateway currentGW = null;
@@ -83,7 +59,8 @@ public class WorldSetupHandler extends BaseClientRequestHandler
 		JSONString+="}";
 				
 		SFSObject reback = SFSObject.newFromJsonData(JSONString);
-		trace("Sending world setup info");
-		send("getWorldSetup", reback, sender);
+
+		trace("Sending sync request");
+		send("getWorldSetup", reback, userList);
 	}
 }

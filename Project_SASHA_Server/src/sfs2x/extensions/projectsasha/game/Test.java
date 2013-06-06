@@ -149,7 +149,7 @@ public class Test
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(sample);
+		/*System.out.println(sample);
 		switch (sample)
 		{
 			case "p":
@@ -162,7 +162,7 @@ public class Test
 				System.out.println(starting_gateway.toString()+"\n"+starting_gateway_u2.toString());
 				System.out.println("-------- Starting gateway info --------");
 			break;
-		}
+		}*/
 	}
 	public static String json(){
 		Set<String> set = world.gateways.keySet();

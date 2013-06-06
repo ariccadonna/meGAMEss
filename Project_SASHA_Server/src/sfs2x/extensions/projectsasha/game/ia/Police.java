@@ -185,7 +185,7 @@ public class Police
 	{
 		clearRemainingTraces();
 		this.currGateway.confiscate();
-		//TODO decrement player's stateCount, if 0 kick him outta session
+		//FIXME decrement player's stateCount, if 0 kick him outta session
 	}
 	
 

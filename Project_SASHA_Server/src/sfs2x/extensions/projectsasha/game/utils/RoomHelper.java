@@ -7,6 +7,8 @@ import com.smartfoxserver.v2.extensions.SFSExtension;
 import sfs2x.extensions.projectsasha.game.GameExtension;
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
+import sfs2x.extensions.projectsasha.game.entities.Region;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 import sfs2x.extensions.projectsasha.game.objectives.Objective;
 
 
@@ -57,12 +59,17 @@ public class RoomHelper {
 		GameExtension ext = (GameExtension) handler.getParentExtension();
 		ext.putPlayer(p);
 	}
-
+	
 	public static GameWorld getWorld(BaseServerEventHandler handler)
 	{
 		GameExtension ext = (GameExtension) handler.getParentExtension();
 		return ext.getWorld();
 	}
-
+	
+	public static Region getGatewayRegion(BaseClientRequestHandler handler, Gateway g)
+	{
+		GameExtension ext = (GameExtension) handler.getParentExtension();
+		return ext.getGatewayRegion(g);
+	}
 
 }

@@ -27,7 +27,7 @@ public class SoftwareFactory {
 		if(type == GameConsts.PROXY)
 			ret = new Proxy();
 		/*
-		 * TODO: togliere i fix per Sam
+		 * FIXME: togliere i fix per Sam
 		 */
 		/*switch(type){	
 		case GameConsts.FIREWALL:	

@@ -12,4 +12,9 @@ public class Region
 		this.name = name;
 		this.gateways = gateways;
 	}
+	
+	public String getRegionName()
+	{
+		return this.name;
+	}
 }

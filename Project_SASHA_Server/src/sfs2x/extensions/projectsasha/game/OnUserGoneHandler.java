@@ -34,7 +34,7 @@ public class OnUserGoneHandler extends BaseServerEventHandler {
 		Player p = RoomHelper.getPlayer(this, user.getName());
 		GameWorld world = RoomHelper.getWorld(this);
 		
-		for(Gateway g:p.getAllConqueredGateway(world))
+		for(Gateway g : p.getAllConqueredGateway(world))
 				g.setOwner(null);
 		
 	      for(Room r:joinedRooms)
@@ -55,7 +55,7 @@ public class OnUserGoneHandler extends BaseServerEventHandler {
 	         stmt.execute();
 	         
 	         /*
-	          * TODO: ridistribuzione delle risorse
+	          * FIXME: ridistribuzione delle risorse
 	          */
 	         
 	      }

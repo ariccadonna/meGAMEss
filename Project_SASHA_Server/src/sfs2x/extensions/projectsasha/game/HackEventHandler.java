@@ -65,7 +65,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				{
 					ISFSObject reback = SFSObject.newInstance();
 					reback.putBool("success", false);
-					// TODO: REFINE MESSAGE
+					// FIXME: REFINE MESSAGE
 					reback.putUtfString("error", "No path available");
 					send("hack", reback, sender);	
 					return;
@@ -127,7 +127,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 		Software[] defenderSw = to.getInstalledSoftwares();
 		
 		/*
-		 * TODO: togliere i fix per Sam
+		 * FIXME: togliere i fix per Sam
 		 */
 		for(Software sw: attackerSw)
 			if(sw!=null)
@@ -216,7 +216,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 		Software[] attackerSw = from.getInstalledSoftwares();
 		Software[] defenderSw = to.getInstalledSoftwares();
 		/*
-		 * TODO: togliere i fix per Sam
+		 * FIXME: togliere i fix per Sam
 		 */
 		for(Software sw: attackerSw)
 			if(sw!=null)
@@ -309,10 +309,12 @@ public class HackEventHandler extends BaseClientRequestHandler
 	
 	public int hackTime(GameWorld world, Gateway from, Gateway to)
 	{
-		int bonus;
+		int bonus, govBonus = 0;
+		if(to.getOwner()!=null)
+			govBonus = GameConsts.GOV_BONUS_MULTIPLIER * to.getOwner().getConqueredGateway(world, GameConsts.GOV_GATEWAY);
 		int diff = this.powerDifference(from, to)+
-				GameConsts.MIL_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.MIL_GATEWAY)-
-				GameConsts.GOV_BONUS_MULTIPLIER * to.getOwner().getConqueredGateway(world, GameConsts.GOV_GATEWAY);
+				GameConsts.MIL_BONUS_MULTIPLIER * from.getOwner().getConqueredGateway(world, GameConsts.MIL_GATEWAY)-
+				govBonus;
 		
 		int[] timeToLeave = {
 						15,15,15,15,15,15,15,15,15, 	// 1-9
@@ -345,7 +347,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 	
 	public boolean checkQuestComplete(Player p, Gateway g)
 	{
-		for(int i = 0; i< p.getQuest().size();i++)
+		for(int i = 0; i < p.getQuest().size();i++)
 		{
 			if(p.questComplete(p.getQuest().get(i), g))
 			{

@@ -1,5 +1,6 @@
 package sfs2x.extensions.projectsasha.game.entities;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class Player
 		this.money = 0;
 		this.canHack = true;
 		this.inventory = new Software[GameConsts.INVENTORY_SIZE];
+		this.current = new ArrayList<Quests>();
 	}
 
 
