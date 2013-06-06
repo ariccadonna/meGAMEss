@@ -5,9 +5,9 @@ import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 public class Steal extends Quests {
 	
-	public Steal(String player, String description, String title, String goal)
+	public Steal(String description, String title, String goal)
 	{
-		super(player,description,title,goal);
+		super(description,title,goal);
 		setType(GameConsts.QUEST_TYPE2);
 	}
 

@@ -6,8 +6,6 @@ import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 public abstract class Quests
 {
-
-	protected String player;
 	protected String descritption;
 	protected String type;
 	protected String title;
@@ -16,9 +14,8 @@ public abstract class Quests
 	
 	//COSTRUCTOR
   
-	public Quests(String player, String description, String title, String goal)
+	public Quests(String description, String title, String goal)
 	{
-		this.player = player;
 		this.descritption = description;
 		this.title = title;
 		this.goal = goal;
@@ -26,11 +23,6 @@ public abstract class Quests
 
 	//GETTERS
   
-	public String getPlayer()
-	{
-		return this.player;
-	}
-	
 	public String getDescription()
 	{
 		return this.descritption;
