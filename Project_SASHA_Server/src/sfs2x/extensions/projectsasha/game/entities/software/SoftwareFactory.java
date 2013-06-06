@@ -6,8 +6,30 @@ public class SoftwareFactory {
 	public static Software makeSoftware(String type) 
 	{
 		Software ret = null;
-		
-		switch(type){	
+		if(type == GameConsts.FIREWALL)
+			ret = new Firewall();
+		if(type == GameConsts.IDS)
+			ret = new IDS();
+		if(type == GameConsts.LOGCLEANER)
+			ret = new LogCleaner();
+		if(type == GameConsts.ANTIVIRUS)
+			ret = new Antivirus();
+		if(type == GameConsts.VIRUS)
+			ret = new Virus();
+		if(type == GameConsts.DEEPTHROAT)
+			ret = new DeepThroat();
+		if(type == GameConsts.SNIFFER)
+			ret = new Sniffer();
+		if(type == GameConsts.BRUTEFORCER)
+			ret = new BruteForcer();
+		if(type == GameConsts.DICTIONARY)
+			ret = new DictionaryAttacker();
+		if(type == GameConsts.PROXY)
+			ret = new Proxy();
+		/*
+		 * TODO: togliere i fix per Sam
+		 */
+		/*switch(type){	
 		case GameConsts.FIREWALL:	
 			ret = new Firewall();
 		break;
@@ -38,7 +60,7 @@ public class SoftwareFactory {
 		case GameConsts.PROXY: 
 			ret = new Proxy();
 			break;
-		}
+		}*/
 		return ret;
 	}
 }

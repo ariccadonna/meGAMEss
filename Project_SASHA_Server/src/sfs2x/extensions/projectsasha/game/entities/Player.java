@@ -120,6 +120,30 @@ public class Player
 		return this.canHack;
 	}
 	
+	public Gateway[] getAllConqueredGateway(GameWorld world)
+	{
+		Iterator<String> itr = world.gateways.keySet().iterator();
+		Gateway currentGW;
+		Gateway[] ret = new Gateway[getConqueredGateway(world)];
+		String str;
+		int counter = 0;
+
+		while (itr.hasNext()) 
+		{
+			str = itr.next();
+			currentGW = world.gateways.get(str);
+			
+			if(currentGW.getOwner() == this)
+			{
+				ret[counter] = currentGW;
+				counter++;
+			}
+		}
+		
+		
+		return ret;
+		
+	}
 	public int getConqueredGateway(GameWorld world)
 	{
 		Iterator<String> itr = world.gateways.keySet().iterator();

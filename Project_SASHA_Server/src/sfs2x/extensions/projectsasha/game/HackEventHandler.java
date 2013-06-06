@@ -34,7 +34,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 		
 		neutralize = params.getBool("neutralize");
 		
-		if(from.getOwner().canHack())
+		if(from.getOwner()!=null && from.getOwner().canHack())
 		{
 			if(to.getOwner()!=null && to.getOwner()!=p)
 			{
@@ -122,20 +122,33 @@ public class HackEventHandler extends BaseClientRequestHandler
 		Software[] attackerSw = from.getInstalledSoftwares();
 		Software[] defenderSw = to.getInstalledSoftwares();
 		
+		/*
+		 * TODO: togliere i fix per Sam
+		 */
 		for(Software sw: attackerSw)
 			if(sw!=null)
-				switch(sw.getType())
+				/*switch(sw.getType())
 				{
 					case GameConsts.DICTIONARY:
 						sw.runTriggeredAction(from, to);
 						break;
 					default:
 						break;
-				}
-		
+				}*/
+			if(sw.getType() == GameConsts.DICTIONARY)
+				sw.runTriggeredAction(from, to);
 		for(Software sw: defenderSw)
 			if(sw!=null)
-				switch(sw.getType())
+			{
+				if(sw.getType() == GameConsts.IDS)
+					if(to.getOwner()!=null)
+						sw.runTriggeredAction(from, to);
+				if(sw.getType() == GameConsts.VIRUS)
+						sw.runTriggeredAction(from, to);
+				if(sw.getType() == GameConsts.DEEPTHROAT)
+						sw.runTriggeredAction(from, to);
+			}
+				/*switch(sw.getType())
 				{
 					case GameConsts.IDS:
 						if(to.getOwner()!=null)
@@ -148,7 +161,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 						sw.runTriggeredAction(from, to);
 					default:
 						break;
-				}
+				}*/
 
 		if(difference > 0)
 		{
@@ -198,9 +211,14 @@ public class HackEventHandler extends BaseClientRequestHandler
 		
 		Software[] attackerSw = from.getInstalledSoftwares();
 		Software[] defenderSw = to.getInstalledSoftwares();
-		
+		/*
+		 * TODO: togliere i fix per Sam
+		 */
 		for(Software sw: attackerSw)
 			if(sw!=null)
+				if(sw.getType() == GameConsts.DICTIONARY)
+					sw.runTriggeredAction(from, to);
+		/*
 				switch(sw.getType())
 				{
 					case GameConsts.DICTIONARY:
@@ -209,9 +227,18 @@ public class HackEventHandler extends BaseClientRequestHandler
 					default:
 						break;
 				}
-		
+		*/
 		for(Software sw: defenderSw)
 			if(sw!=null)
+			{
+				if(sw.getType() == GameConsts.IDS)
+					if(to.getOwner()!=null)
+						sw.runTriggeredAction(from, to);
+				if(sw.getType() == GameConsts.VIRUS)
+						sw.runTriggeredAction(from, to);
+				if(sw.getType() == GameConsts.DEEPTHROAT)
+						sw.runTriggeredAction(from, to);
+			}/*
 				switch(sw.getType())
 				{
 					case GameConsts.IDS:
@@ -226,7 +253,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 					default:
 						break;
 				}
-
+*/
 		if(difference > 0)
 		{
 			int waitTime = this.hackTime(world, from, to);
@@ -311,6 +338,4 @@ public class HackEventHandler extends BaseClientRequestHandler
 		}
 		return false;
 	}
-	
-	
 }

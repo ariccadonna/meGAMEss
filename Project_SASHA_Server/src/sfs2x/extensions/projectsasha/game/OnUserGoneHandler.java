@@ -8,6 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import sfs2x.extensions.projectsasha.game.entities.GameWorld;
+import sfs2x.extensions.projectsasha.game.entities.Player;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
+import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
+
 import com.smartfoxserver.v2.entities.Room;
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.core.SFSEventParam;
@@ -25,8 +30,13 @@ public class OnUserGoneHandler extends BaseServerEventHandler {
 	   public void handleServerEvent(ISFSEvent event) throws SFSException {
 	     
 		List<Room> joinedRooms = (List<Room>) event.getParameter(SFSEventParam.JOINED_ROOMS);
-	      User user = (User) event.getParameter(SFSEventParam.USER);
-	      
+		User user = (User) event.getParameter(SFSEventParam.USER);
+		Player p = RoomHelper.getPlayer(this, user.getName());
+		GameWorld world = RoomHelper.getWorld(this);
+		
+		for(Gateway g:p.getAllConqueredGateway(world))
+				g.setOwner(null);
+		
 	      for(Room r:joinedRooms)
 	      {
 	    	  user.removeJoinedRoom(r);
