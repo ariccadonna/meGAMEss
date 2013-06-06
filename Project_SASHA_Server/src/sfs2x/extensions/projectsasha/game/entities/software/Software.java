@@ -64,6 +64,11 @@ public abstract class Software
 		return this.type;
 	}
 	
+	public int getCost()
+	{
+		return this.cost;
+	}
+	
 	public boolean isCumulative()
 	{
 		return this.cumulative;

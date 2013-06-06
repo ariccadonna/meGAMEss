@@ -197,6 +197,16 @@ public class Player
 		return false;
 	}
 	
+	public boolean addInventory(Software s)
+	{
+		if(this.getMoney()>=s.getCost())
+		{
+			this.getInventory()[this.getNextInventorySlotAvailable()] = s;
+			return true;
+		}
+		return false;
+	}
+	
 	@Override 
 	public String toString(){
 		String returnString = "/*****************************************\\\n";

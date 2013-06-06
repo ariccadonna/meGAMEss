@@ -15,7 +15,7 @@ public class Shop
 	
 	public String getItems(int position)
 	{
-		return items[position].toString();
+		return items[position];
 	}
 
 
