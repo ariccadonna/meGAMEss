@@ -171,7 +171,15 @@ public class NetworkManager : MonoBehaviour {
 		ISFSObject data = new SFSObject();
 		data.PutUtfString("from", fromGateway);
 		data.PutUtfString("to", toGateway);
-		
+		data.PutBool("neutralize", false);
+		smartFox.Send(new ExtensionRequest("hack", data, smartFox.LastJoinedRoom));
+	}
+	
+	public void SendNeutralizeRequest(String fromGateway, String toGateway) {
+		ISFSObject data = new SFSObject();
+		data.PutUtfString("from", fromGateway);
+		data.PutUtfString("to", toGateway);
+		data.PutBool("neutralize", true);
 		smartFox.Send(new ExtensionRequest("hack", data, smartFox.LastJoinedRoom));
 	}
 }
