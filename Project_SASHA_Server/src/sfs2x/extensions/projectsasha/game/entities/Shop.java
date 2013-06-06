@@ -13,9 +13,9 @@ public class Shop
 	
 	//METHODS
 	
-	public String getItems(int position)
+	public String[] getItems(int position)
 	{
-		return items[position];
+		return items;
 	}
 
 
