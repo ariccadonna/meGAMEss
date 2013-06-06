@@ -94,6 +94,9 @@ public class Player
 	public void removeMoney(int value)
 	{
 		this.money -= value;
+		if(this.money<0)
+			this.money = 0;
+
 	}
 	
 	public int getMoney()
@@ -204,6 +207,7 @@ public class Player
 		if(this.getMoney()>=s.getCost())
 		{
 			this.getInventory()[this.getNextInventorySlotAvailable()] = s;
+			this.removeMoney(s.getCost());
 			return true;
 		}
 		return false;
