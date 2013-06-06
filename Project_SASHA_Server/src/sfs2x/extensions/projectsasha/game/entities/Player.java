@@ -67,6 +67,10 @@ public class Player
 		return this.name;
 	}
 	
+	public List<Quests> getQuest()
+	{
+		return this.current;
+	}
 	public void addMoney(int value)
 	{
 			this.money += value;

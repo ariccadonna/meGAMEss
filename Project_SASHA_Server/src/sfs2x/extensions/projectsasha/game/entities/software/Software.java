@@ -11,6 +11,7 @@ public abstract class Software
 	protected String type;
 	protected boolean hasTriggeredAction;
 	protected String description;
+	protected int cost;
 	
 	
 	//CONSTRUCTORS
@@ -102,6 +103,10 @@ public abstract class Software
 		this.hasTriggeredAction = hasTriggeredAction;
 	}
 	
+	public void setCost(int cost, int version)
+	{
+		this.cost = cost*version;
+	}
 
 	//OTHERS
 	

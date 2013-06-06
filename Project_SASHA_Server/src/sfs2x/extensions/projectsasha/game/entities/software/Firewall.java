@@ -13,7 +13,7 @@ public class Firewall extends Software
 		setCumulative(GameConsts.FIREWALL_CUMULATIVE);
 		setType(GameConsts.FIREWALL);
 		setDescription(GameConsts.FIREWALL_DESCRIPTION);
-
+		setCost(GameConsts.FIREWALL_COST,1);
 	}
 	
 	
@@ -23,7 +23,7 @@ public class Firewall extends Software
 		setCumulative(GameConsts.FIREWALL_CUMULATIVE);
 		setType(GameConsts.FIREWALL);
 		setDescription(GameConsts.FIREWALL_DESCRIPTION);
-
+		setCost(GameConsts.FIREWALL_COST,version);
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ public class Antivirus extends Software
 		setCumulative(GameConsts.ANTIVIRUS_CUMULATIVE);
 		setType(GameConsts.ANTIVIRUS);
 		setDescription(GameConsts.ANTIVIRUS_DESCRIPTION);
+		setCost(GameConsts.ANTIVIRUS_COST,1);
 	}
 	
 	
@@ -23,6 +24,7 @@ public class Antivirus extends Software
 		setCumulative(GameConsts.ANTIVIRUS_CUMULATIVE);
 		setType(GameConsts.ANTIVIRUS);
 		setDescription(GameConsts.ANTIVIRUS_DESCRIPTION);
+		setCost(GameConsts.ANTIVIRUS_COST,version);
 
 	}
 	

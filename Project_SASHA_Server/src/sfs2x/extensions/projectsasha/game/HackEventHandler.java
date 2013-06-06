@@ -4,6 +4,7 @@ import java.util.List;
 
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
+import sfs2x.extensions.projectsasha.game.entities.Quests;
 import sfs2x.extensions.projectsasha.game.entities.gateways.*;
 import sfs2x.extensions.projectsasha.game.entities.software.*;
 import sfs2x.extensions.projectsasha.game.objectives.Objective;
@@ -23,6 +24,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 		boolean neutralize = false;
 		boolean success = false;
 		boolean isVictoryReached = false;
+		boolean isQuestComplete = false;
 		int attackRelevance;
 		List<Gateway> hackingPath = null;
 		GameWorld world = RoomHelper.getWorld(this);
@@ -100,10 +102,12 @@ public class HackEventHandler extends BaseClientRequestHandler
 			success = false;
 		}
 		
-		isVictoryReached = checkVictoryConditions(world, p);
+		isVictoryReached = checkVictoryConditions(p);
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", success);
 		reback.putBool("victoryReached", isVictoryReached);
+		isQuestComplete = checkQuestComplete(p,to);
+		reback.putBool("questComplete", isQuestComplete);
 		send("hack", reback, sender);
 		
 	}
@@ -328,13 +332,26 @@ public class HackEventHandler extends BaseClientRequestHandler
 		return 120 - timeToLeave[diff-1] - bonus;
 	}
 	
-	public boolean checkVictoryConditions(GameWorld world, Player p)
+	public boolean checkVictoryConditions(Player p)
 	{
 		Objective[] objectives = RoomHelper.getObjectives(this);
 		for(Objective o : objectives)
 		{
 			if(o.isObjectiveReached(o, p))
 				return true;
+		}
+		return false;
+	}
+	
+	public boolean checkQuestComplete(Player p, Gateway g)
+	{
+		for(int i = 0; i< p.getQuest().size();i++)
+		{
+			if(p.questComplete(p.getQuest().get(i), g))
+			{
+				p.addMoney(p.getQuest().get(i).getReward());
+				return true;
+			}
 		}
 		return false;
 	}

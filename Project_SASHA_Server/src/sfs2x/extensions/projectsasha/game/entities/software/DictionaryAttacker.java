@@ -13,6 +13,7 @@ public class DictionaryAttacker extends Software
 		setCumulative(GameConsts.DICTIONARY_CUMULATIVE);
 		setType(GameConsts.DICTIONARY);
 		setDescription(GameConsts.DICTIONARY_DESCRIPTION);
+		setCost(GameConsts.DICTIONARY_COST,1);
 
 	}
 	
@@ -23,7 +24,7 @@ public class DictionaryAttacker extends Software
 		setCumulative(GameConsts.DICTIONARY_CUMULATIVE);
 		setType(GameConsts.DICTIONARY);
 		setDescription(GameConsts.DICTIONARY_DESCRIPTION);
-
+		setCost(GameConsts.DICTIONARY_COST,version);
 	}
 	
 	@Override

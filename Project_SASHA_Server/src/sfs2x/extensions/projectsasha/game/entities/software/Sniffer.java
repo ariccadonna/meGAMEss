@@ -14,7 +14,7 @@ public class Sniffer extends Software
 		setCumulative(GameConsts.SNIFFER_CUMULATIVE);
 		setType(GameConsts.SNIFFER);
 		setDescription(GameConsts.SNIFFER_DESCRIPTION);
-
+		setCost(GameConsts.SNIFFER_COST,1);
 	}
 	
 	
@@ -24,7 +24,7 @@ public class Sniffer extends Software
 		setCumulative(GameConsts.SNIFFER_CUMULATIVE);
 		setType(GameConsts.SNIFFER);
 		setDescription(GameConsts.SNIFFER_DESCRIPTION);
-
+		setCost(GameConsts.SNIFFER_COST,version);
 	}
 	
 	@Override

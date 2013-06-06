@@ -14,6 +14,7 @@ public class DeepThroat extends Software
 		setCumulative(GameConsts.DEEPTHROAT_CUMULATIVE);
 		setType(GameConsts.DEEPTHROAT);
 		setDescription(GameConsts.DEEPTHROAT_DESCRIPTION);
+		setCost(GameConsts.DEEPTHROAT_COST,1);
 
 	}
 	
@@ -24,6 +25,7 @@ public class DeepThroat extends Software
 		setCumulative(GameConsts.DEEPTHROAT_CUMULATIVE);
 		setType(GameConsts.DEEPTHROAT);
 		setDescription(GameConsts.DEEPTHROAT_DESCRIPTION);
+		setCost(GameConsts.DEEPTHROAT_COST,version);
 
 	}
 	

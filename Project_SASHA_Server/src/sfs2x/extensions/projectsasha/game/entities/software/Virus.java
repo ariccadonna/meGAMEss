@@ -14,7 +14,7 @@ public class Virus extends Software
 		setCumulative(GameConsts.VIRUS_CUMULATIVE);
 		setType(GameConsts.VIRUS);
 		setDescription(GameConsts.VIRUS_DESCRIPTION);
-
+		setCost(GameConsts.VIRUS_COST,1);
 	}
 	
 	
@@ -24,7 +24,7 @@ public class Virus extends Software
 		setCumulative(GameConsts.VIRUS_CUMULATIVE);
 		setType(GameConsts.VIRUS);
 		setDescription(GameConsts.VIRUS_DESCRIPTION);
-
+		setCost(GameConsts.VIRUS_COST,version);
 	}
 	
 	@Override

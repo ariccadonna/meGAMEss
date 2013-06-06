@@ -12,7 +12,7 @@ public class Proxy extends Software
 		setCumulative(GameConsts.PROXY_CUMULATIVE);
 		setType(GameConsts.PROXY);
 		setDescription(GameConsts.PROXY_DESCRIPTION);
-
+		setCost(GameConsts.PROXY_COST,1);
 	}
 	
 	
@@ -22,7 +22,7 @@ public class Proxy extends Software
 		setCumulative(GameConsts.PROXY_CUMULATIVE);
 		setType(GameConsts.PROXY);
 		setDescription(GameConsts.PROXY_DESCRIPTION);
-
+		setCost(GameConsts.PROXY_COST,version);
 	}
 	
 	@Override

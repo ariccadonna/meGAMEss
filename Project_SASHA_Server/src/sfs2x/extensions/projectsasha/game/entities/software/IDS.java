@@ -15,6 +15,7 @@ public class IDS extends Software
 		setCumulative(GameConsts.IDS_CUMULATIVE);
 		setType(GameConsts.IDS);
 		setDescription(GameConsts.IDS_DESCRIPTION);
+		setCost(GameConsts.IDS_COST,1);
 
 	}
 	
@@ -25,7 +26,7 @@ public class IDS extends Software
 		setCumulative(GameConsts.IDS_CUMULATIVE);
 		setType(GameConsts.IDS);
 		setDescription(GameConsts.IDS_DESCRIPTION);
-
+		setCost(GameConsts.IDS_COST,version);
 	}
 	
 	@Override

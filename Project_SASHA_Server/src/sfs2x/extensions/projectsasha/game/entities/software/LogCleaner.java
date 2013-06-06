@@ -13,7 +13,7 @@ public class LogCleaner extends Software
 		setCumulative(GameConsts.LOGCLEANER_CUMULATIVE);
 		setType(GameConsts.LOGCLEANER);
 		setDescription(GameConsts.LOGCLEANER_DESCRIPTION);
-
+		setCost(GameConsts.LOGCLEANER_COST,1);
 	}
 	
 	
@@ -23,7 +23,7 @@ public class LogCleaner extends Software
 		setCumulative(GameConsts.LOGCLEANER_CUMULATIVE);
 		setType(GameConsts.LOGCLEANER);
 		setDescription(GameConsts.LOGCLEANER_DESCRIPTION);
-
+		setCost(GameConsts.LOGCLEANER_COST,version);
 	}
 	
 	@Override

@@ -13,6 +13,8 @@ public class BruteForcer extends Software
 		setCumulative(GameConsts.BRUTEFORCER_CUMULATIVE);
 		setType(GameConsts.BRUTEFORCER);
 		setDescription(GameConsts.BRUTEFORCER_DESCRIPTION);
+		setCost(GameConsts.BRUTALFORCER_COST,1);
+
 	}
 	
 	public BruteForcer(int version) 
@@ -21,6 +23,7 @@ public class BruteForcer extends Software
 		setCumulative(GameConsts.BRUTEFORCER_CUMULATIVE);
 		setType(GameConsts.BRUTEFORCER);
 		setDescription(GameConsts.BRUTEFORCER_DESCRIPTION);
+		setCost(GameConsts.BRUTALFORCER_COST,version);
 
 	}
 	
