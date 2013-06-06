@@ -4,15 +4,14 @@ import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 
 public class AIThread extends Thread 
 {
-	private GameWorld currentWorld;
+
+	public Police police;
 	
 	public AIThread(GameWorld currentWorld)
 	{
-		this.currentWorld = currentWorld;
+		this.police = new Police(currentWorld);
 	}
 
-	
-	public Police police = new Police(this.currentWorld);
 	
 	@Override
 	public void run()

@@ -5,6 +5,7 @@ import java.util.List;
 import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.User;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
+import sfs2x.extensions.projectsasha.game.ia.AIThread;
 
 public class TestTracePath {
 public long startingTime;
@@ -86,6 +87,15 @@ public long startingTime;
 			}
 		}
 		else System.out.println("PERCORSO NON ESISTENTE NELLA SECONDA ITERAZIONE");
+		
+		
+		
+		//POLIZIA
+		
+		Thread ai = new AIThread(gw);
+		ai.start();
+		
+		
 	}
 	
 	

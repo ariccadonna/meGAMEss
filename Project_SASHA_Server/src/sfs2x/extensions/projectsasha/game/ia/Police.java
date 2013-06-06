@@ -22,7 +22,8 @@ public class Police
 	{
 		this.rand = new Random();
 		this.currentWorld = currentWorld;
-		this.gatewayStates = (String[]) Arrays.asList(currentWorld.gateways.keySet()).toArray();
+		this.gatewayStates = new String[this.currentWorld.gateways.size()];
+		this.currentWorld.gateways.keySet().toArray(this.gatewayStates);
 		this.currGateway = currentWorld.gateways.get(this.gatewayStates[this.rand.nextInt(42)]);
 	}
 	
@@ -95,9 +96,11 @@ public class Police
 		{
 			this.prevGateway = this.currGateway;
 			this.currGateway = this.getBiasedGateway();
+			System.out.println(this.currGateway != null ? "Following trace in gw: "+this.currGateway.getState() : "No trace found"); //REMOVE ME
 			
 			if(this.currGateway != null && this.currGateway.hasStartedAttack(currTrace.attackID))
 			{
+					System.out.println(this.currGateway.getState()+" arrested"); //REMOVE ME
 					this.arrestPlayer(currTrace.player);
 					this.currTrace = null;
 					this.prevGateway = null;
@@ -106,6 +109,7 @@ public class Police
 			}
 			else if(this.currGateway == null)
 			{
+				System.out.println("Trace lost"); //REMOVE ME
 				this.currTrace = null;
 			}
 		}
@@ -124,6 +128,7 @@ public class Police
 			
 			int neighboorsSize = neighboorGateways.size();
 			this.currGateway = neighboorGateways.get(this.rand.nextInt(neighboorsSize));
+			System.out.println("WANDERING: Moving to "+this.currGateway.getState()); //REMOVE ME
 		}
 		
 	}
