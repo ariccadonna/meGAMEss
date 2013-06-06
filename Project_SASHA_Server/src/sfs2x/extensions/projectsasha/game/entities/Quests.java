@@ -1,11 +1,10 @@
 package sfs2x.extensions.projectsasha.game.entities;
 
-import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
-public astract class Quests
+
+public abstract class Quests
 {
-<<<<<<< HEAD
-=======
+
 	protected String player;
 	protected String descritption;
 	protected String type;
@@ -39,23 +38,20 @@ public astract class Quests
 	{
 		return this.title;
 	}
->>>>>>> Add ruba.java and update GameConsts.java, Conquista.java and Quest.java
+		
 
-	protected String Descritption;
-	protected String Type;
-	protected boolean Goal_reached;
-	protected String Title;
-	
-	
-<<<<<<< HEAD
-=======
 	public int getReward()
 	{
 		return this.reward;
 	}
 	
+	public void setType(String type)
+	{
+		this.type = type;
+	}
+	
 	//SETTER
->>>>>>> Add ruba.java and update GameConsts.java, Conquista.java and Quest.java
+
 	
 
 
