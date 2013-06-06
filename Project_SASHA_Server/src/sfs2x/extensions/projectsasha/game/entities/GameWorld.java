@@ -313,8 +313,7 @@ public class GameWorld
 		{
 			gateways.get("greenland"), 
 			gateways.get("ontario"),
-			gateways.get("north west territory"),
-			gateways.get("iceland")
+			gateways.get("north west territory")
 		});
 		gateways.get("greenland").setNeighborhoods(new Gateway[]
 		{
