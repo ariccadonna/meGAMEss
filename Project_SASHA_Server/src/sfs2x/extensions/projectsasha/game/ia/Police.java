@@ -125,6 +125,8 @@ public class Police
 	
 	public void followNextTrace()
 	{
+		//INSERIRE QUI LE INFO CHE PARTONO DA CURRENT_GATEWAY PER LA POLIZIA CLIENT
+		
 		if(this.isFollowingTrace || this.findNewTrace())
 		{			
 			if(this.currGateway.hasStartedAttack(currTrace.attackID))
