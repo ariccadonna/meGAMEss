@@ -51,7 +51,7 @@ public class WorldSetupHandler extends BaseClientRequestHandler
 						"\"STATE\":\""+str+"\","+
 						"\"X\":"+currentGW.getX()+","+
 						"\"Y\":"+currentGW.getY()+","+
-						"\"NAME\":\""+currentGW.getName()+"\","+
+						"\"NAME\":\""+currentGW.getState()+"\","+
 						"\"OWNER\":\""+GWOwner+"\","+
 						"\"ATK\":"+currentGW.getAttackLevel()+","+
 						"\"DEF\":"+currentGW.getDefenceLevel()+","+

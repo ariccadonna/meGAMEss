@@ -1,5 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities;
 
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
+
 
 
 public abstract class Quests
@@ -45,13 +47,19 @@ public abstract class Quests
 		return this.reward;
 	}
 	
+	public String getGoal()
+	{
+		return this.goal;
+	}
+	
+	//SETTER
+	
 	public void setType(String type)
 	{
 		this.type = type;
 	}
-	
-	//SETTER
 
+	
 	
 
 

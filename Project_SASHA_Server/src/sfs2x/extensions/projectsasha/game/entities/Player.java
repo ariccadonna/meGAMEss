@@ -1,6 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities;
 
 import java.util.Iterator;
+import java.util.List;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
@@ -19,6 +20,7 @@ public class Player
 	private int money;
 	private boolean canHack;
 	private Software[] inventory;
+	private List<Quests> current;
 	
 	
 	public Player(User sfsUser) 
@@ -158,6 +160,13 @@ public class Player
 		}
 		
 		return counter;
+	}
+	
+	public boolean questComplete(Quests q, Gateway g)
+	{
+		if(q.getGoal().equals(g.getName()) && this.getName().equals(g.getOwner().getName()))
+			return true;
+		return false;
 	}
 	
 	@Override 
