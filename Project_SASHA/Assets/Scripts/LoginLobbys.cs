@@ -535,7 +535,8 @@ public class LoginLobbys : MonoBehaviour {
 			case "startGame":
 				smartFox.Send(new JoinRoomRequest(dataObject.GetUtfString("roomName"),dataObject.GetUtfString("password")));
 				UnregisterSFSSceneCallbacks();
-				Application.LoadLevel("gameRoom");
+				PlayerPrefs.SetInt("playerNumber", currentActiveRoom.UserCount);
+				Application.LoadLevel("worldBoard");
 			break;
 		}
 		

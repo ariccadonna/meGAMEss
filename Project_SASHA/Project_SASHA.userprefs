@@ -2,8 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\gameScripts\NetworkManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\gameScripts\NetworkManager.cs" Line="129" Column="73" />
-      <File FileName="Assets\Scripts\gameScripts\Gateway.cs" Line="32" Column="1" />
+      <File FileName="Assets\Scripts\LoginLobbys.cs" Line="8" Column="19" />
+      <File FileName="Assets\Scripts\gameScripts\NetworkManager.cs" Line="65" Column="5" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

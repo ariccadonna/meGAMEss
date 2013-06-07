@@ -127,12 +127,21 @@
     <Compile Include="Assets\Orthello\Standard Assets\OT\_Base\OTTouch.cs" />
     <Compile Include="Assets\Scripts\LoginLobbys.cs" />
     <Compile Include="Assets\Scripts\SmartFoxConnection.cs" />
+    <Compile Include="Assets\Scripts\TestingLoginLobbys.cs" />
     <Compile Include="Assets\Scripts\gameScripts\Gateway.cs" />
     <Compile Include="Assets\Scripts\gameScripts\NetworkManager.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\input\generateMailPanel.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\input\generateShopPanel.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\input\hackEvent.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\input\neutralizeEvent.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\input\newsRandom.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\input\otMouseInput.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\input\printObjectives.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\input\printStat.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\input\referencePanel.cs" />
     <Compile Include="Assets\Scripts\openingLogo.cs" />
-    <None Include="Assets\Orthello\-Read-Me.txt" />
-    <None Include="Assets\Orthello\-Update-Upgrade info.txt" />
     <None Include="Assets\Orthello\Standard Assets\OT\_Base\TintedAlpha.shader" />
+    <None Include="Assets\font\fontgioco.txt" />
     <Reference Include="SmartFox2">
       <HintPath>Assets\Plugins\SmartFox2.dll</HintPath>
     </Reference>

@@ -61,6 +61,6 @@ public class SyncHandler extends BaseClientRequestHandler
 		SFSObject reback = SFSObject.newFromJsonData(JSONString);
 
 		trace("Sending sync request");
-		send("getWorldSetup", reback, userList);
+		send("syncWorld", reback, userList);
 	}
 }

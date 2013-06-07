@@ -46,9 +46,8 @@
   <ItemGroup>
      <Compile Include="Assets\Orthello\Standard Assets\Editor\OTAssetPostProcessor.cs" />
      <Compile Include="Assets\Orthello\Standard Assets\Editor\OTPrefabBreaker.cs" />
-     <None Include="Assets\Orthello\-Read-Me.txt" />
-     <None Include="Assets\Orthello\-Update-Upgrade info.txt" />
      <None Include="Assets\Orthello\Standard Assets\OT\_Base\TintedAlpha.shader" />
+     <None Include="Assets\font\fontgioco.txt" />
  <Reference Include="SmartFox2">
  <HintPath>Assets\Plugins\SmartFox2.dll</HintPath>
  </Reference>

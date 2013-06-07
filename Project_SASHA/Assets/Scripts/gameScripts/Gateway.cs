@@ -12,14 +12,16 @@ public class Gateway : MonoBehaviour {
 	private int def;
 	private string type;
 	private string[] sw;
-	//public GameObject networkManager = null;
+	public string region;
+	OTSprite sprite;
 	private NetworkManager nwm = null;
 
 	// Use this for initialization
 	void Start()
 	{
-	 	GameObject networkManager = GameObject.Find("NetworkManager");
+	 	GameObject networkManager = GameObject.Find("referencePanel");
 		nwm = networkManager.GetComponent<NetworkManager>();
+		sprite = GetComponent<OTSprite>();
 	}
 		// Update is called once per frame
 	void Update() {}
@@ -33,6 +35,7 @@ public class Gateway : MonoBehaviour {
 		this.def = obj.GetInt("DEF");
 		this.type = obj.GetUtfString("TYPE");
 		ISFSArray sws = obj.GetSFSArray("SW");
+		this.region = obj.GetUtfString("REGION");
 		this.sw = new string[3];
 		this.sw[0] = (string) sws.GetElementAt(0);
 		this.sw[1] = (string) sws.GetElementAt(1);
@@ -72,6 +75,11 @@ public class Gateway : MonoBehaviour {
 	public int getDef()
 	{
 		return this.def;
+	}
+	
+	public string getRegion()
+	{
+		return this.region;
 	}
 
 }
