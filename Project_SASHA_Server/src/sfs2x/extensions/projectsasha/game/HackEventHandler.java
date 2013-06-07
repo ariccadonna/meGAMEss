@@ -91,7 +91,9 @@ public class HackEventHandler extends BaseClientRequestHandler
 			}
 			else
 			{
+				attackRelevance = this.getAttackRelevance(from, to);
 				success = this.hack(world, from, to);
+				from.tracePath(to, attackRelevance);					
 				trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 			}
 		}
