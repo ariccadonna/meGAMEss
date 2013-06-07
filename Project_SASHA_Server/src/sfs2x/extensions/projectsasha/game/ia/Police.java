@@ -54,7 +54,7 @@ public class Police
 		//If no gateways are found the police is at a dead end
 		if(gateways.size() == 0)
 		{
-			System.out.println("asd");
+			System.out.println("Teleporting police because no relevant traces were found");
 			return teleportPolice();
 		}
 		
@@ -80,7 +80,7 @@ public class Police
 		//We found or the starting Gateway or the target one
 		if(rightGateway == null)
 		{
-			System.out.println("sono arrivato dalla parte dell'attaccato");
+			System.out.println("Wrong way! This is not the hacker, it is the hacked one!");
 			this.isFollowingTrace = false;
 			return this.currGateway.getNeighboors()[this.rand.nextInt(this.currGateway.getNeighboors().length)];		
 		}
@@ -142,7 +142,7 @@ public class Police
 			}
 			
 			this.currGateway = this.getBiasedGateway();
-			System.out.println("Following trace in gw: "+this.currGateway.getState()); //REMOVE ME
+			System.out.println("Following trace #"+currTrace.attackID+" in gw: "+this.currGateway.getState()); //REMOVE ME
 		}
 		else
 		{	
@@ -178,7 +178,13 @@ public class Police
 		
 		for(Gateway g : this.currentWorld.gateways.values())
 			for(Trace t: startTraces)
+			{
+				if(g.getTraces().contains(t))
+					System.out.println("Erased track #"+t.attackID+" from "+ g.getState());
 				g.getTraces().remove(t);
+			}
+		
+			
 	}
 	
 	private void arrestPlayer(String player) 
