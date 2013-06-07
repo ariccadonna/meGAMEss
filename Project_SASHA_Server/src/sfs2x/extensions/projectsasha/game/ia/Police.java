@@ -173,8 +173,14 @@ public class Police
 		List<Trace> startTraces = new ArrayList<Trace>();
 		
 		for(Trace t : gateway.getTraces())
+		{
+			System.out.println("Analyzing trace #"+t.attackID);
 			if(gateway.getStartedAttacks().contains(t.attackID))
+			{
 				startTraces.add(t);
+				System.out.println("Adding trace #"+t.attackID+" to the set of trace to erase");
+			}
+		}
 		
 		for(Gateway g : this.currentWorld.gateways.values())
 			for(Trace t: startTraces)

@@ -4,16 +4,23 @@ import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 public class Trace
 {
+	private static int lastTraceID = 2000;
+	
 	public Gateway startingAttack;
 	public int attackID, relevance;
 	public String player;
 
 	
-	public Trace(Gateway startingAttack, int attackID, int relevance, String player)
+	public Trace(Gateway startingAttack, int relevance, String player)
 	{
 		this.startingAttack = startingAttack;
-		this.attackID = attackID;
+		this.attackID = getNewID();
 		this.relevance = relevance;
 		this.player = player;
+	}
+	
+	private static synchronized int getNewID()
+	{
+		return lastTraceID++;
 	}
 }

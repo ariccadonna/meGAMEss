@@ -401,7 +401,7 @@ public abstract class Gateway
 			level-=s.getVersion();
 		}
 		
-		Trace tr = new Trace(this,this.getID(),level,this.getOwner().getName());
+		Trace tr = new Trace(this, level, this.getOwner().getName());
 		
 		list.get(0).startedAttacks.add(tr.attackID);
 				

@@ -71,15 +71,15 @@ public long startingTime;
 		mypath = g1.tracePath(g4, 5);
 		//g1.setTrace(mypath, 5);
 		
-		System.out.println("PRIMA ESECUZIONE: ");
-		if(mypath != null)
-		{
-			for(Gateway gw : mypath)
-			{
-				System.out.println(gw.getState());
-			}
-		}
-		else System.out.println("PERCORSO NON ESISTENTE NELLA PRIMA ITERAZIONE");
+//		System.out.println("PRIMA ESECUZIONE: ");
+//		if(mypath != null)
+//		{
+//			for(Gateway gw : mypath)
+//			{
+//				System.out.println(gw.getState());
+//			}
+//		}
+//		else System.out.println("PERCORSO NON ESISTENTE NELLA PRIMA ITERAZIONE");
 		
 		g5.upgradeSoftware(GameConsts.PROXY, p2);
 		g8.upgradeSoftware(GameConsts.PROXY, p2);
@@ -104,15 +104,15 @@ public long startingTime;
 		mypath = g1.tracePath(g4, 5);
 		g1.setTrace(mypath, 5);
 		
-		System.out.println("SECONDA ESECUZIONE: ");
-		if(mypath != null)
-		{
-			for(Gateway gw : mypath)
-			{
-				System.out.println(gw.getState());
-			}
-		}
-		else System.out.println("PERCORSO NON ESISTENTE NELLA SECONDA ITERAZIONE");
+//		System.out.println("SECONDA ESECUZIONE: ");
+//		if(mypath != null)
+//		{
+//			for(Gateway gw : mypath)
+//			{
+//				System.out.println(gw.getState());
+//			}
+//		}
+//		else System.out.println("PERCORSO NON ESISTENTE NELLA SECONDA ITERAZIONE");
 		
 		//Congo attacks China
 		mypath = g5.tracePath(g10, 7);
