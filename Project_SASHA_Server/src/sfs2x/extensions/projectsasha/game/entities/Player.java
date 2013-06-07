@@ -119,11 +119,6 @@ public class Player
 		return slot;
 	}
 	
-	public void setInventory(Software s)
-	{
-		inventory[this.getNextInventorySlotAvailable()] = s;
-	}
-	
 	public boolean canHack()
 	{
 		return this.canHack;
@@ -204,13 +199,33 @@ public class Player
 	
 	public boolean addInventory(Software s)
 	{
-		if(this.getMoney()>=s.getCost())
+		if(this.getInventory().length <= 10 && this.getMoney()>=s.getCost())
 		{
 			this.getInventory()[this.getNextInventorySlotAvailable()] = s;
 			this.removeMoney(s.getCost());
 			return true;
 		}
 		return false;
+	}
+	
+	public int indexOf(Software s)
+	{
+		int counter = 0;
+		for(Software tmp : this.inventory)
+		{
+			if(tmp.getType().equals(s.getType()))
+				return counter;
+			counter++;
+		}
+		return 10;
+	}
+	
+	public void removeItems(Software s)
+	{
+		int pos = this.indexOf(s);
+		for(int i = pos; i<10;i++)
+			this.inventory[i] = this.inventory[i+1];
+		this.inventory[9] = null;
 	}
 	
 	@Override 

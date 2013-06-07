@@ -1,6 +1,7 @@
 package sfs2x.extensions.projectsasha.game.entities;
 
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
+import sfs2x.extensions.projectsasha.game.entities.software.Software;
 
 
 
@@ -10,7 +11,8 @@ public abstract class Quests
 	protected String type;
 	protected String title;
 	protected String goal;
-	protected int reward;
+	protected int rewardMoney;
+	protected Software rewardItem; 
 	
 	//COSTRUCTOR
   
@@ -34,9 +36,14 @@ public abstract class Quests
 	}
 		
 
-	public int getReward()
+	public int getRewardMoney()
 	{
-		return this.reward;
+		return this.rewardMoney;
+	}
+	
+	public Software getRewardItem()
+	{
+		return this.rewardItem;
 	}
 	
 	public String getGoal()
@@ -51,7 +58,10 @@ public abstract class Quests
 		this.type = type;
 	}
 
-	
+	public void setRewardItem(Software s)
+	{
+		this.rewardItem = s;
+	}
 	
 
 

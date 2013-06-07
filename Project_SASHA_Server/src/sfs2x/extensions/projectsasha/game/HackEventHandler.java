@@ -16,6 +16,7 @@ import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
+import java.math.*;
 
 public class HackEventHandler extends BaseClientRequestHandler
 {
@@ -306,7 +307,9 @@ public class HackEventHandler extends BaseClientRequestHandler
 	
 	public int getAttackRelevance(Gateway from, Gateway to)
 	{
-		return ((from.getAttackLevel() + to.getDefenceLevel()) / 200) *10;
+		double result = (double)((from.getAttackLevel() + to.getDefenceLevel() / 200) *10);
+		Math.ceil(result);
+		return (int)result;
 	}
 	
 	public int hackTime(GameWorld world, Gateway from, Gateway to)
@@ -353,7 +356,10 @@ public class HackEventHandler extends BaseClientRequestHandler
 		{
 			if(p.questComplete(p.getQuest().get(i), g))
 			{
-				p.addMoney(p.getQuest().get(i).getReward());
+				if(p.getQuest().get(i).getRewardMoney()>0)
+					p.addMoney(p.getQuest().get(i).getRewardMoney());
+				else
+					p.addInventory(p.getQuest().get(i).getRewardItem());
 				return true;
 			}
 		}

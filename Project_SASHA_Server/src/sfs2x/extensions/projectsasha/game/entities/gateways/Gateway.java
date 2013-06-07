@@ -253,20 +253,23 @@ public abstract class Gateway
 		if(this.owner!=hacker)
 			return;
 
-		
-		if(this.hasSoftware(newSoftware.getType()) && !newSoftware.isCumulative())
-			return;
-		
-		int available_slot = this.getNextSoftwareSlotAvailable();
-		newSoftware.setVersion(1);
-		
-		if(available_slot < GameConsts.MAX_SOFTWARE_INSTALLED)
+		if(hacker.getNextInventorySlotAvailable()<=10 && hacker.hasItems(type))
 		{
-			newSoftware.setSlot(available_slot);
-			installedSoftware[available_slot] = newSoftware;
+			if(this.hasSoftware(newSoftware.getType()) && !newSoftware.isCumulative())
+				return;
+		
+			int available_slot = this.getNextSoftwareSlotAvailable();
+			newSoftware.setVersion(1);
+		
+			if(available_slot < GameConsts.MAX_SOFTWARE_INSTALLED)
+			{
+				newSoftware.setSlot(available_slot);
+				installedSoftware[available_slot] = newSoftware;
 			
-		}else
-			return;		
+			}else
+				return;		
+	
+		}
 	}
 	
 	synchronized public void uninstallSoftware(String type, Player p)
