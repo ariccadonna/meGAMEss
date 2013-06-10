@@ -34,7 +34,7 @@ public abstract class Gateway
 	private String name, state;
 	private int id, x, y;
 	private double lat, lon;
-	private Set<Integer> startedAttacks = Collections.synchronizedSet(new HashSet<Integer>());
+	private Set<Trace> startedAttacks = Collections.synchronizedSet(new HashSet<Trace>());
 
 	
 	public Gateway(Player owner, String name, String state, int x, int y, float lat, float lon)
@@ -134,12 +134,12 @@ public abstract class Gateway
 		this.costsSoFar.put(user, cost);
 	}
 	
-	public Set<Integer> getStartedAttacks() 
+	public Set<Trace> getStartedAttacks() 
 	{
 		return startedAttacks;
 	}
 
-	public void addStartedAttack(int startedAttack) 
+	public void addStartedAttack(Trace startedAttack) 
 	{
 		this.startedAttacks.add(startedAttack);
 	}
@@ -149,7 +149,7 @@ public abstract class Gateway
 		this.startedAttacks.remove(startedAttack);
 	}
 
-	public boolean hasStartedAttack(int startedAttack)
+	public boolean hasStartedAttack(Trace startedAttack)
 	{
 		return this.startedAttacks.contains(startedAttack);
 	}
@@ -406,7 +406,7 @@ public abstract class Gateway
 		
 		Trace tr = new Trace(this, level, this.getOwner().getName());
 		
-		list.get(0).startedAttacks.add(tr.attackID);
+		list.get(0).startedAttacks.add(tr);
 				
 		for(Gateway g : list)
 		{
