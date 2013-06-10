@@ -34,22 +34,25 @@ public class HackEventHandler extends BaseClientRequestHandler
 		
 		Gateway from = world.gateways.get(params.getUtfString("gatewayFrom"));
 		Gateway to = world.gateways.get(params.getUtfString("gatewayTo"));
-		
 		neutralize = params.getBool("neutralize");
 		
-		if(from.getOwner()!=null && from.getOwner().canHack())
+		if(from.getOwner()!=null && from.getOwner().canHack() && 	//if i'm owner of starting node and i can hack
+			to.getDisabled() < System.currentTimeMillis() && 		//starting node is not disabled
+			from.getDisabled() < System.currentTimeMillis() 		//ending node i disabled
+		) 
 		{
-			if(to.getOwner()!=null && to.getOwner()!=p)
+			if(to.getOwner()!=null && to.getOwner()!=p) // if there is an owner in attacked node and it's not me
 			{
 				attackRelevance = this.getAttackRelevance(from, to);
 				
-				
 				if(from.getInstalledSoftware(GameConsts.PROXY) == null)
 				{
+					trace("There is no proxy");
 					for(Gateway g : from.getNeighboors())
 					{
 						if(g == to)
 						{
+							trace("I found a path");
 							hackingPath = new ArrayList<Gateway>();
 							hackingPath.add(from);
 							hackingPath.add(to);
@@ -67,41 +70,74 @@ public class HackEventHandler extends BaseClientRequestHandler
 					ISFSObject reback = SFSObject.newInstance();
 					reback.putBool("success", false);
 					// FIXME: REFINE MESSAGE
+					trace("No hacking path available");
 					reback.putUtfString("error", "No path available");
 					send("hack", reback, sender);	
 					return;
 				}
 				
 				
-				if(neutralize)
+				if(neutralize) // if neutralize
 				{
 					success = this.neutralize(world, from, to);
 					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 					
 					if(success)
 					{
-						// to è da neutralizzare per 60 secondi
+						 to.setDisabled(System.currentTimeMillis()+GameConsts.DISABLED_TIME*1000);
 					}
 				}
-				else	//il gateway deve essere conquistato
+				else	// if conquer
 				{	
 					success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD);
 					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 				}
 				from.setTrace(hackingPath, attackRelevance);
 			}
-			else
+			else // if there is an not an owner in attacked node
 			{
+				
 				attackRelevance = this.getAttackRelevance(from, to);
+				
+				if(from.getInstalledSoftware(GameConsts.PROXY) == null)
+				{
+					trace("There is no proxy");
+					for(Gateway g : from.getNeighboors())
+					{
+						if(g == to)
+						{
+							trace("I found a path");
+							hackingPath = new ArrayList<Gateway>();
+							hackingPath.add(from);
+							hackingPath.add(to);
+							break;
+						}
+					}							
+				}
+				else
+				{
+					hackingPath = from.tracePath(to, attackRelevance);					
+				}
+				
+				if(hackingPath == null)
+				{
+					ISFSObject reback = SFSObject.newInstance();
+					reback.putBool("success", false);
+					// FIXME: REFINE MESSAGE
+					trace("No hacking path available");
+					reback.putUtfString("error", "No path available");
+					send("hack", reback, sender);	
+					return;
+				}
+				
 				success = this.hack(world, from, to);
-				from.tracePath(to, attackRelevance);					
 				trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 			}
 		}
-		else
+		else //if i'm not owner of starting node or i can't hack
 		{
-			//hack is disabled, we should return an error
-			trace("Hack request from " + p.getUserName() + ": FAILED since the hack is disabled for this player");
+			//FIXME: hack is disabled, we should return an error
+			trace("Hack request from " + p.getUserName() + ": FAILED since the hack is disabled for this player OR gateway is disabled for some seconds");
 			success = false;
 		}
 		

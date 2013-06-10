@@ -35,6 +35,7 @@ public abstract class Gateway
 	private int id, x, y;
 	private double lat, lon;
 	private Set<Trace> startedAttacks = Collections.synchronizedSet(new HashSet<Trace>());
+	private long disableTime;
 
 	
 	public Gateway(Player owner, String name, String state, int x, int y, float lat, float lon)
@@ -51,6 +52,7 @@ public abstract class Gateway
 		this.lon = lon;
 		this.costsSoFar = new HashMap<String,Integer>();
 		this.parentForPath = new HashMap<String, Gateway>();
+		this.disableTime = 0;
 	}	
 	
 	
@@ -206,14 +208,20 @@ public abstract class Gateway
 		return installedSoftware[slot];
 	}
 	
-	synchronized public int getX(){
+	synchronized public int getX()
+	{
 		return this.x;
 	}
 	
-	synchronized public int getY(){
+	synchronized public int getY()
+	{
 		return this.y;
 	}
 	
+	public long getDisabled()
+	{
+		return this.disableTime;
+	}
 	//SETTERS
 	
 	public void setNeighborhoods(Gateway[] neighboors)
@@ -225,7 +233,10 @@ public abstract class Gateway
 	{
 		this.owner = p;
 	}
-	
+	public void setDisabled(long time)
+	{
+		this.disableTime = time;
+	}
 	//ABSTRACT METHODS
 
 	protected abstract int getBaseAttackLevel();
@@ -414,8 +425,6 @@ public abstract class Gateway
 		}
 	}
 	
-	
-	
 	public void startTimedEvent()
 	{
 		//timed event here
@@ -426,6 +435,7 @@ public abstract class Gateway
 		Queue<Gateway> openSet = null;
 		int numSearchSteps = 0;
 		final String sourceOwner = this.getOwner().getUserName();
+		//FIXME: Il proxy non sempre è installato!!
 		int maxSteps = ((Proxy) this.getInstalledSoftware(GameConsts.PROXY)).getRange();
 		List<Gateway> path = new ArrayList<Gateway>();
 		int proxyLevel = this.getInstalledSoftware(GameConsts.PROXY).getVersion();

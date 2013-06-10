@@ -22,7 +22,8 @@ public class LogoutEventHandler extends BaseServerEventHandler
    @Override
    public void handleServerEvent(ISFSEvent event) throws SFSException {
      
-      List<Room> joinedRooms = (List<Room>) event.getParameter(SFSEventParam.JOINED_ROOMS);
+      @SuppressWarnings("unchecked")
+	List<Room> joinedRooms = (List<Room>) event.getParameter(SFSEventParam.JOINED_ROOMS);
       User user = (User) event.getParameter(SFSEventParam.USER);
       
       for(Room r:joinedRooms)

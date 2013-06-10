@@ -1,9 +1,6 @@
 package sfs2x.extensions.projectsasha.game;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
@@ -11,13 +8,8 @@ import sfs2x.extensions.projectsasha.game.entities.Region;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 import sfs2x.extensions.projectsasha.game.ia.AIThread;
 import sfs2x.extensions.projectsasha.game.objectives.Objective;
-import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
-import sfs2x.extensions.projectsasha.game.utils.TimerHelper;
 
 import com.smartfoxserver.v2.core.SFSEventType;
-import com.smartfoxserver.v2.entities.Room;
-import com.smartfoxserver.v2.entities.SFSZone;
-import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.extensions.SFSExtension;
 
 public class GameExtension extends SFSExtension

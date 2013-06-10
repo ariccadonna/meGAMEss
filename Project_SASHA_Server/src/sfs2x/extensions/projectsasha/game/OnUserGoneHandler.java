@@ -29,6 +29,7 @@ public class OnUserGoneHandler extends BaseServerEventHandler {
 	 @Override
 	   public void handleServerEvent(ISFSEvent event) throws SFSException {
 	     
+		@SuppressWarnings("unchecked")
 		List<Room> joinedRooms = (List<Room>) event.getParameter(SFSEventParam.JOINED_ROOMS);
 		User user = (User) event.getParameter(SFSEventParam.USER);
 		Player p = RoomHelper.getPlayer(this, user.getName());

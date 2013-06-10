@@ -9,10 +9,7 @@ import java.util.Set;
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 
-import sfs2x.extensions.projectsasha.game.*;
-import sfs2x.extensions.projectsasha.game.entities.*;
 import sfs2x.extensions.projectsasha.game.entities.gateways.*;
-import sfs2x.extensions.projectsasha.game.entities.software.*;
 
 public class Test 
 {
@@ -142,7 +139,8 @@ public class Test
 	
 	private static void console(){
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in) );
-	    String sample = null;
+	    @SuppressWarnings("unused")
+		String sample = null;
 		try {
 			sample = br.readLine();
 		} catch (IOException e) {
