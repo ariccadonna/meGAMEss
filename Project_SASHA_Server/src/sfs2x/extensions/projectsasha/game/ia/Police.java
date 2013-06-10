@@ -49,7 +49,6 @@ public class Police
 					if(t.relevance == currTrace.relevance)
 					{
 						gateways.add(g);
-						System.out.println("CANDIDATO: "+ g.getState());
 						break;
 					}
 				}
