@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
-import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
 

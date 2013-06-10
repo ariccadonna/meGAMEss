@@ -1,6 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\gameScripts\NetworkManager.cs">
+    <Files>
+      <File FileName="Assets\Scripts\gameScripts\NetworkManager.cs" Line="190" Column="27" />
+      <File FileName="Assets\Scripts\gameScripts\input\referencePanel.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\gameScripts\input\hackEvent.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\gameScripts\input\otMouseInput.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\gameScripts\printPlayerStat.cs" Line="24" Column="26" />
+      <File FileName="Assets\Scripts\gameScripts\input\printObjectives.cs" Line="25" Column="3" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
@@ -8,9 +16,8 @@
             <Node name="Assets" expanded="True">
               <Node name="Scripts" expanded="True">
                 <Node name="gameScripts" expanded="True">
-                  <Node name="input" expanded="True">
-                    <Node name="otMouseInput.cs" selected="True" />
-                  </Node>
+                  <Node name="input" expanded="True" />
+                  <Node name="NetworkManager.cs" selected="True" />
                 </Node>
               </Node>
             </Node>

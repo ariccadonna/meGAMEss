@@ -2,7 +2,6 @@ package sfs2x.extensions.projectsasha.game.objectives;
 
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
-import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 public class Objective 
 {

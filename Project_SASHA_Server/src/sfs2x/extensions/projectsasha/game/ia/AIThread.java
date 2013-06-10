@@ -10,7 +10,6 @@ public class AIThread extends Thread
 
 	public static Police police;
 	public GameExtension gameExtension;
-	private volatile boolean execute;
 	
 	public AIThread(GameWorld currentWorld, SFSExtension gameExtension)
 	{
@@ -57,9 +56,4 @@ public class AIThread extends Thread
 	{
 		this.gameExtension.setPolicePosition(g);
 	}
-	
-	public void stopExecuting() {
-        this.execute = false;
-    }
-
 }

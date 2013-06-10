@@ -28,35 +28,43 @@ public class GameExtension extends SFSExtension
 	private Objective[] gameObjectives = new Objective[6];
 	private Region[] regions;
 	private static Thread ai;
-	private static Gateway policePosition;
+	private Gateway policePosition;
 	private long startTime;
 	
 	@Override
 	public void init()
 	{
 		startTime = System.currentTimeMillis();
-		WorldInit();
-		startPoliceThread();
-		produceMoney();
+		
+		WorldInit(); 		// World init
+		startPoliceThread();// Starting police thread
+		produceMoney(); 	// Starting money thread
+		
 		trace("----- GAME EXTENSION INITIALIZED! -----");
 		addRequestHandler("getWorldSetup", WorldSetupHandler.class);
 		trace("WorldSetupHandler	=>		INITIALIZED");
+		
 		addRequestHandler("getNeighborhoods", NeightborhoodHandler.class);
 		trace("NeighborhoodsHandler	=>		INITIALIZED");
+		
 		addRequestHandler("getObjectives", ObjectiveHandler.class);
 		trace("ObjectiveSetupHandler=>		INITIALIZED");
+		
 		addRequestHandler("hack", HackEventHandler.class);	
 		trace("HackHandler			=>		INITIALIZED");
+		
 		addRequestHandler("playerInfo", PlayerInfoHandler.class);
 		trace("PlayerInfoHandler	=>		INITIALIZED");
-		addRequestHandler("getTime", GetTimeHandler.class);
-		trace("GetTimeHandler		=>		INITIALIZED");
+		
 		addRequestHandler("gatewayInfo", GatewayInfoHandler.class);
 		trace("GatewayInfoHandler 	=>		INITIALIZED");
+		
 		addRequestHandler("sync", SyncHandler.class);
 		trace("SyncHandler 			=>		INITIALIZED");
+		
 		addRequestHandler("policePosition", PolicePositionHandler.class);
 		trace("PolicePositionHandler=>		INITIALIZED");
+		
 		trace("----- GAME EXTENSION STOPPED! -----");
 		
 		addEventHandler(SFSEventType.USER_DISCONNECT, OnUserGoneHandler.class);
@@ -67,6 +75,7 @@ public class GameExtension extends SFSExtension
 
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void destroy() 
 	{
@@ -76,20 +85,25 @@ public class GameExtension extends SFSExtension
 		trace("----- GAME EXTENSION STOPPED! -----");
 		removeRequestHandler("getWorldSetup");
 		trace("WorldSetupHandler	=>		STOPPED");
+		
 		removeRequestHandler("hack");
 		trace("HackHandler			=>		STOPPED");
+		
 		removeRequestHandler("getNeighborhoods");
 		trace("NeighborhoodsHandler	=>		STOPPED");
+		
 		removeRequestHandler("getObjective");
 		trace("ObjectiveSetupHandler=>		STOPPED");
+		
 		removeRequestHandler("playerInfo");
 		trace("PlayerInfoHandler	=>		STOPPED");
-		removeRequestHandler("GetTimeHandler");
-		trace("GetTimeHandler		=>		STOPPED");
+		
 		removeRequestHandler("gatewayInfo");
 		trace("GatewayInfoHandler 	=>		STOPPED");
+		
 		removeRequestHandler("policePosition");
 		trace("PolicePositionHandler=>		STOPPED");
+		
 		trace("----- GAME EXTENSION STOPPED! -----");
 	}
 	
@@ -97,17 +111,19 @@ public class GameExtension extends SFSExtension
 	{
 		trace("----- WORLD INIT -----");
 		world = new GameWorld(0);
-		
+		trace("World Created");
 		gameObjectives[0] = new Objective(world,"Main Target", "Hack 17 gateways", 17, GameConsts.BASE_GATEWAY);
 		gameObjectives[1] = new Objective(world,"Hack.Edu", "Hack 4 academic gateways", 4, GameConsts.EDU_GATEWAY);
 		gameObjectives[2] = new Objective(world,"Cops & Hackers", "Hack 4 military gateways", 4, GameConsts.MIL_GATEWAY);
 		gameObjectives[3] = new Objective(world,"Hacker Impossible", "Hack 4 financial gateways", 4, GameConsts.SCI_GATEWAY);
 		gameObjectives[4] = new Objective(world,"Rating: Hacker", "Hack 4 scientific gateways", 4, GameConsts.BANK_GATEWAY);
 		gameObjectives[5] = new Objective(world,"Hack In Law", "Hack 4 government gateways", 4, GameConsts.GOV_GATEWAY);
-	
+		trace("Objectives created");
 		regions = world.regions;
 		moneyThread = new Thread(new MoneyThread(world));
+		trace("Money Thread insantiated");
 		ai = new AIThread(world, this);
+		trace("AI Thread insantiated");
 
 		trace("----- WORLD INIT DONE-----");
 	}
@@ -162,9 +178,9 @@ public class GameExtension extends SFSExtension
 		policePosition = g;
 	}
 	
-	public static Gateway getPolicePosition()
+	public Gateway getPolicePosition()
 	{
-		return policePosition;
+		return this.policePosition;
 	}
 
 	public long getTime() {
