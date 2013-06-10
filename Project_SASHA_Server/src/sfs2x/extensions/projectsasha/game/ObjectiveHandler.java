@@ -1,8 +1,11 @@
 package sfs2x.extensions.projectsasha.game;
 
 
+import java.util.Iterator;
+
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 import sfs2x.extensions.projectsasha.game.objectives.Objective;
 import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
 
@@ -31,12 +34,13 @@ public class ObjectiveHandler extends BaseClientRequestHandler{
 		}
 		
 		JSONString = JSONString.substring(0, JSONString.length()-1);
-		JSONString+="}";
-		
+		JSONString += "}";
+
 		SFSObject reback = SFSObject.newFromJsonData(JSONString);
 		
 		trace("Sending Objectives info");
 		
 		send("getObjectives", reback, sender);
 	}
+	
 }

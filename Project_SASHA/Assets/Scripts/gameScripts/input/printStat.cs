@@ -10,7 +10,7 @@ public class printStat : MonoBehaviour {
 	
 	public void stat(Gateway gtw){
 		stats=GameObject.Find("spotStats");
-		stats.GetComponent<OTTextSprite>().text="Name: " + gtw.getName() + " Type: " + gtw.getType() + "\nAttack: " + gtw.getAtk() + " Defence: " + gtw.getDef();
+		stats.GetComponent<OTTextSprite>().text="Name: " + gtw.getName() + " \nType: " + gtw.getType() + "\nAttack: " + gtw.getAtk() + " Defence: " + gtw.getDef();
 		slot1=GameObject.Find("slot1").GetComponent<OTSprite>();
 		slot2=GameObject.Find("slot2").GetComponent<OTSprite>();
 		slot3=GameObject.Find("slot3").GetComponent<OTSprite>();

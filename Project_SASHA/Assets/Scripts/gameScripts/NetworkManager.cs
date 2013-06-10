@@ -20,16 +20,22 @@ public class NetworkManager : MonoBehaviour {
 	public Texture mil;
 	public Texture gov;
 	public Texture bas;
+	private float prevTime, statTime;
+	private float policeUpdateTime = 9.0f;
+	private float statUpdatetime = 1.0f;
 	GameObject spots;
 	private int playerNumbers;
 	//private int playerNumbers=1;
 	private Dictionary<string, Color> playerColors = new Dictionary<string,Color>();
 	private Color[] colors = { Color.red, Color.green, Color.cyan, Color.magenta, Color.yellow };
 	private string currentPlayer;
-	
+	public GameObject policePrefab = null;
+	public GameObject glowParticlePrefab = null;
+	private GameObject glow = null;
 	
 	private static NetworkManager instance;	
 	public GameObject GatewayPrefab = null;
+	private GameObject currentPolice;
 	
 	private System.Object messagesLocker = new System.Object();
 	private SmartFox smartFox;
@@ -47,7 +53,10 @@ public class NetworkManager : MonoBehaviour {
 			Application.LoadLevel("loginScreen");
 			return;
 		}
-		
+		prevTime = Time.time;
+		statTime = Time.time;
+		currentPolice = Instantiate(policePrefab) as GameObject;
+		currentPolice.transform.name = "Police";
 		SubscribeDelegates();
 		
 		//DICHIARAZIONE CARTELLA SPOT
@@ -55,7 +64,6 @@ public class NetworkManager : MonoBehaviour {
 		spots.transform.name = "spots";
 		
 		currentPlayer=smartFox.MySelf.Name;
-		
 	}
 	
 	void Update()
@@ -68,6 +76,18 @@ public class NetworkManager : MonoBehaviour {
 			ColorSetup();
 			running = true;
 		}
+		if(Time.time - prevTime > policeUpdateTime)
+		{
+			prevTime = Time.time;
+			AskPolicePosition();
+		}
+		
+		if(Time.time - statTime > statUpdatetime)
+		{
+			statTime = Time.time;
+			getStat();
+		}
+		
 	}
 	
 	void FixedUpdate() {
@@ -122,6 +142,14 @@ public class NetworkManager : MonoBehaviour {
 
 		ExtensionRequest objectiveRequest = new ExtensionRequest("getObjectives", new SFSObject(), room);
 		smartFox.Send(objectiveRequest);
+		
+		ExtensionRequest policePositionRequest = new ExtensionRequest("policePosition", new SFSObject(), smartFox.LastJoinedRoom);
+		smartFox.Send(policePositionRequest);
+		
+		ExtensionRequest getStats = new ExtensionRequest("playerInfo", new SFSObject(), smartFox.LastJoinedRoom);
+		smartFox.Send(getStats);
+		
+		
 	}
 	
 	/*public void TimeSyncRequest()
@@ -150,6 +178,9 @@ public class NetworkManager : MonoBehaviour {
 			if (cmd == "hack") 
 			{
 				smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
+				Destroy(GameObject.FindWithTag("ray"));
+				if(data.GetBool("victoryReached") == true)
+					Debug.Log ("victory reached");
 			}
 			if (cmd == "syncWorld") 
 			{
@@ -163,38 +194,26 @@ public class NetworkManager : MonoBehaviour {
 			}
 			else if (cmd == "getObjectives") 
 			{
-				String[] keys = data.GetKeys();
-				foreach(String currentKey in keys)
-				{
-					ISFSObject currentObject = data.GetSFSObject(currentKey);
-					String objName = currentKey;
-					String type = currentObject.GetUtfString("TYPE");
-					int conqueredGateway = currentObject.GetInt ("SPOTCONQUERED");
-					int requiredGateway = currentObject.GetInt ("SPOTREQUIRED");
-				}
+				UpdateObjective(data);
 			}
 			else if (cmd == "getWorldSetup")
 			{
 				InstantiateWorld(data);
+			}
+			else if (cmd == "policePosition")
+			{
+				//smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
+				currentPolice.transform.position = new Vector3(data.GetInt ("police_x"),data.GetInt ("police_y")+13, -5);
+			}
+			else if (cmd == "playerInfo")
+			{
+				GameObject.Find("playerStats").GetComponent<printPlayerStat>().printStat(data.GetUtfString("name"), data.GetInt("money"), data.GetLong("time"));
 			}
 		}
 		catch (Exception e) {
 			Debug.Log("Exception handling response: "+e.Message+" >>> "+e.StackTrace);
 		}
 	}
-	
-	/*void OnGUI()
-	{
-		 if (GUI.Button(new Rect(0,30,100,100), "hack"))
-            {
-				Room room = smartFox.LastJoinedRoom;
-				ISFSObject data = new SFSObject();
-					data.PutUtfString("gatewayFrom", "north west territory");
-					data.PutUtfString("gatewayTo", "greenland");
-				data.PutBool("neutralize", false);
-				smartFox.Send(new ExtensionRequest("hack", data, room));
-            }
-	}*/
 	
 	private void OnUserLeaveRoom(BaseEvent evt) 
 	{
@@ -261,7 +280,6 @@ public class NetworkManager : MonoBehaviour {
 					ISFSObject currentObject = data.GetSFSObject(currentKey);
 					GameObject currentGw = Instantiate(GatewayPrefab) as GameObject;
 					currentGw.transform.name = currentObject.GetUtfString("STATE");
-					//Vector3 temp = new Vector3((float)currentObject.GetInt("X")+21,(float)currentObject.GetInt("Y")-26,1);
 					Vector3 temp = new Vector3((float)currentObject.GetInt("X"),(float)currentObject.GetInt("Y"),1);
 					
 					currentGw.transform.position = temp;
@@ -270,7 +288,15 @@ public class NetworkManager : MonoBehaviour {
 					gw.Setup(currentObject);
 					
 					gw.GetComponent<OTSprite>().tintColor = playerColors[gw.getOwner()];
-						
+	
+					stopParticle(gw);
+			
+					if(gw.getOwner() == smartFox.MySelf.Name)
+					{
+						startParticle(gw);
+						StartCoroutine(stopParticle(gw, 3.0f));
+					}
+			
 					if (!GameObject.Find(currentObject.GetUtfString("REGION")))
 					{
 						GameObject region = new GameObject();
@@ -322,5 +348,46 @@ public class NetworkManager : MonoBehaviour {
 			gw.GetComponent<OTSprite>().tintColor = playerColors[gw.getOwner()];
 			gw.GetComponent<otMouseInput>().setPrevColor(playerColors[gw.getOwner()]);
 		}
+		ExtensionRequest objectiveRequest = new ExtensionRequest("getObjectives", new SFSObject(), smartFox.LastJoinedRoom);
+		smartFox.Send(objectiveRequest);
+		AskPolicePosition();
 	}
+	
+	private void UpdateObjective(ISFSObject data)
+	{
+		
+		GameObject obj = GameObject.Find("objectives");
+		printObjectives objectives = obj.GetComponent<printObjectives>();
+		objectives.ObjectivesUpdate(data);
+		AskPolicePosition();
+	}
+	
+	public void AskPolicePosition()
+	{
+		ExtensionRequest policePositionRequest = new ExtensionRequest("policePosition", new SFSObject(), smartFox.LastJoinedRoom);
+		smartFox.Send(policePositionRequest);
+	}
+	
+	private void startParticle(Gateway gw)
+	{
+		gw.particleSystem.Play();
+	}
+	
+	private IEnumerator stopParticle(Gateway gw, float time)
+	{
+		yield return new WaitForSeconds(time);
+		gw.particleSystem.Stop();
+	}
+	
+	private void stopParticle(Gateway gw)
+	{
+		gw.particleSystem.Stop();
+	}
+	
+	private void getStat()
+	{
+		ExtensionRequest getStats = new ExtensionRequest("playerInfo", new SFSObject(), smartFox.LastJoinedRoom);
+		smartFox.Send(getStats);
+	}
+	
 }

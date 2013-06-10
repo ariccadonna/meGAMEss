@@ -60,6 +60,12 @@ public class RoomHelper {
 		ext.putPlayer(p);
 	}
 	
+	public static Gateway getPolicePosition(BaseClientRequestHandler handler) 
+	{
+		GameExtension ext = (GameExtension) handler.getParentExtension();
+		return ext.getPolicePosition();
+	}
+	
 	public static GameWorld getWorld(BaseServerEventHandler handler)
 	{
 		GameExtension ext = (GameExtension) handler.getParentExtension();
@@ -70,6 +76,11 @@ public class RoomHelper {
 	{
 		GameExtension ext = (GameExtension) handler.getParentExtension();
 		return ext.getGatewayRegion(g);
+	}
+
+	public static long getTimer(BaseClientRequestHandler handler) {
+		GameExtension ext = (GameExtension) handler.getParentExtension();
+		return ext.getTime();
 	}
 
 }

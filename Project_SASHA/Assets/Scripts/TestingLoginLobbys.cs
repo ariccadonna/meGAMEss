@@ -49,11 +49,12 @@ public class TestingLoginLobbys : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+		PlayerPrefs.SetInt("playerNumber", 1);
 		smartFox = new SmartFox(true);
 
 		smartFox.AddLogListener(LogLevel.INFO, OnDebugMessage);
 		
-		username = "Test1";
+		username = "Test";
 		password = "5f4dcc3b5aa765d61d8327deb882cf99";
 		AddEventListeners();
 		smartFox.Connect(serverName, serverPort);

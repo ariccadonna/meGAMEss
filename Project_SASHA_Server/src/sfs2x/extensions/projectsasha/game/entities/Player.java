@@ -180,7 +180,7 @@ public class Player
 			str = itr.next();
 			currentGW = world.gateways.get(str);
 			
-			if(currentGW.getClass().getSimpleName() != type)
+			if(!currentGW.getClass().getSimpleName().equals(type))
 				continue;
 			
 			if(currentGW.getOwner() == this)

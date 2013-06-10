@@ -336,7 +336,8 @@ public class HackEventHandler extends BaseClientRequestHandler
 		
 		bonus = GameConsts.SCI_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.SCI_GATEWAY);
 		
-		return 120 - timeToLeave[diff-1] - bonus;
+		/* FIXME: rimuovere i 10 secondi */
+		return 10;//120 - timeToLeave[diff-1] - bonus;
 	}
 	
 	public boolean checkVictoryConditions(Player p)

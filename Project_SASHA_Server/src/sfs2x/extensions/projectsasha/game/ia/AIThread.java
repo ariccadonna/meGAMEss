@@ -1,15 +1,26 @@
 package sfs2x.extensions.projectsasha.game.ia;
 import sfs2x.extensions.projectsasha.game.GameConsts;
+import sfs2x.extensions.projectsasha.game.GameExtension;
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
+import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
+import com.smartfoxserver.v2.extensions.SFSExtension;
 
 public class AIThread extends Thread 
 {
 
-	public Police police;
+	public static Police police;
+	public GameExtension gameExtension;
+	private volatile boolean execute;
+	
+	public AIThread(GameWorld currentWorld, SFSExtension gameExtension)
+	{
+		this.gameExtension = (GameExtension) gameExtension;
+		police = new Police(currentWorld);
+	}
 	
 	public AIThread(GameWorld currentWorld)
 	{
-		this.police = new Police(currentWorld);
+		police = new Police(currentWorld);
 	}
 
 	
@@ -25,6 +36,7 @@ public class AIThread extends Thread
 			 if(tickCount % GameConsts.POLICE_SLEEP_TIME == 0)
 			 {
 				 police.followNextTrace();
+				 setCurrentGateway(police.getCurrentgateway());
 			 }
 			 
 			 
@@ -40,4 +52,14 @@ public class AIThread extends Thread
 			 }
 		}
 	}
+	
+	public void setCurrentGateway(Gateway g)
+	{
+		this.gameExtension.setPolicePosition(g);
+	}
+	
+	public void stopExecuting() {
+        this.execute = false;
+    }
+
 }

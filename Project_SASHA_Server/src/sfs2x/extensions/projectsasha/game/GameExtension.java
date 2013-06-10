@@ -9,8 +9,10 @@ import sfs2x.extensions.projectsasha.game.entities.GameWorld;
 import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.entities.Region;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
+import sfs2x.extensions.projectsasha.game.ia.AIThread;
 import sfs2x.extensions.projectsasha.game.objectives.Objective;
 import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
+import sfs2x.extensions.projectsasha.game.utils.TimerHelper;
 
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.entities.Room;
@@ -25,12 +27,17 @@ public class GameExtension extends SFSExtension
 	private static Map<String,Player> players = new Hashtable<String,Player>();
 	private Objective[] gameObjectives = new Objective[6];
 	private Region[] regions;
+	private static Thread ai;
+	private static Gateway policePosition;
+	private long startTime;
 	
 	@Override
 	public void init()
 	{
+		startTime = System.currentTimeMillis();
 		WorldInit();
-		
+		startPoliceThread();
+		produceMoney();
 		trace("----- GAME EXTENSION INITIALIZED! -----");
 		addRequestHandler("getWorldSetup", WorldSetupHandler.class);
 		trace("WorldSetupHandler	=>		INITIALIZED");
@@ -40,14 +47,17 @@ public class GameExtension extends SFSExtension
 		trace("ObjectiveSetupHandler=>		INITIALIZED");
 		addRequestHandler("hack", HackEventHandler.class);	
 		trace("HackHandler			=>		INITIALIZED");
-		addRequestHandler("spawnMe", SpawnMeHandler.class);
-		trace("SpawnMeHandler		=>		INITIALIZED");
+		addRequestHandler("playerInfo", PlayerInfoHandler.class);
+		trace("PlayerInfoHandler	=>		INITIALIZED");
 		addRequestHandler("getTime", GetTimeHandler.class);
 		trace("GetTimeHandler		=>		INITIALIZED");
 		addRequestHandler("gatewayInfo", GatewayInfoHandler.class);
 		trace("GatewayInfoHandler 	=>		INITIALIZED");
 		addRequestHandler("sync", SyncHandler.class);
 		trace("SyncHandler 			=>		INITIALIZED");
+		addRequestHandler("policePosition", PolicePositionHandler.class);
+		trace("PolicePositionHandler=>		INITIALIZED");
+		trace("----- GAME EXTENSION STOPPED! -----");
 		
 		addEventHandler(SFSEventType.USER_DISCONNECT, OnUserGoneHandler.class);
 		addEventHandler(SFSEventType.USER_LEAVE_ROOM, OnUserGoneHandler.class);
@@ -60,6 +70,8 @@ public class GameExtension extends SFSExtension
 	@Override
 	public void destroy() 
 	{
+		ai.stop();
+		moneyThread.stop();
 		super.destroy();
 		trace("----- GAME EXTENSION STOPPED! -----");
 		removeRequestHandler("getWorldSetup");
@@ -70,12 +82,14 @@ public class GameExtension extends SFSExtension
 		trace("NeighborhoodsHandler	=>		STOPPED");
 		removeRequestHandler("getObjective");
 		trace("ObjectiveSetupHandler=>		STOPPED");
-		removeRequestHandler("SpawnMeHandler");
-		trace("SpawnMeHandler		=>		STOPPED");
+		removeRequestHandler("playerInfo");
+		trace("PlayerInfoHandler	=>		STOPPED");
 		removeRequestHandler("GetTimeHandler");
 		trace("GetTimeHandler		=>		STOPPED");
 		removeRequestHandler("gatewayInfo");
 		trace("GatewayInfoHandler 	=>		STOPPED");
+		removeRequestHandler("policePosition");
+		trace("PolicePositionHandler=>		STOPPED");
 		trace("----- GAME EXTENSION STOPPED! -----");
 	}
 	
@@ -93,12 +107,19 @@ public class GameExtension extends SFSExtension
 	
 		regions = world.regions;
 		moneyThread = new Thread(new MoneyThread(world));
+		ai = new AIThread(world, this);
 
 		trace("----- WORLD INIT DONE-----");
 	}
 	
 	private static void produceMoney() {
 		moneyThread.start();
+
+	}
+	
+	private static void startPoliceThread()
+	{
+		ai.start();
 	}
 	
 	public Player getPlayer(String name) 
@@ -135,5 +156,18 @@ public class GameExtension extends SFSExtension
 	{
 		return this.gameObjectives;
 	}
+
+	public void setPolicePosition(Gateway g)
+	{
+		policePosition = g;
+	}
 	
+	public static Gateway getPolicePosition()
+	{
+		return policePosition;
+	}
+
+	public long getTime() {
+		return System.currentTimeMillis() - this.startTime;
+	}
 }

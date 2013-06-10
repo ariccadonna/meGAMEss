@@ -41,14 +41,14 @@ public class otMouseInput : MonoBehaviour {
 	
 	public void enter(OTObject s)
 	{
-		GetComponent<OTSprite>().size=new Vector2(96f,96f);
+		GetComponent<OTSprite>().size=new Vector2(64f,64f);
 		GetComponent<OTSprite>().tintColor=Color.blue;
 
 	}
 	
 	public void exit(OTObject s)
 	{
-		GetComponent<OTSprite>().size=new Vector2(64f,64f);
+		GetComponent<OTSprite>().size=new Vector2(40f,40f);
 		GetComponent<OTSprite>().tintColor=prevColor;
 
 	}
@@ -59,22 +59,27 @@ public class otMouseInput : MonoBehaviour {
 	
 		if(Input.GetMouseButtonDown(0))
 		{
-			referencePanel.activateBottomPanel(GetComponent<Gateway>());
+			
+
+				foreach(GameObject g in GameObject.FindGameObjectsWithTag("Gateway"))
+					if(g != hackEvent.gatewayStart && g != hackEvent.gatewayTarget)
+						g.particleSystem.Stop();
 			
 				//controlla che non sia lo stesso selezionato, se seleziono un altro gateway mostro le stat. se seleziono lo stesso disattivo il panel
-				if (referencePanel.lastSelectedGateway==GetComponent<Gateway>())
+				if (referencePanel.lastSelectedGateway!=gameObject)
 				{
-					
 					if (owner==player){
-						hackEvent.gatewayStart=gameObject;	
-						neutralizeEvent.gatewayStart=gameObject;
+						hackEvent.gatewayStart=gameObject;
+						neutralizeEvent.gatewayStart=gameObject;					
+					
 					} 
 					else
 					{
+						//hackEvent.gatewayTarget.particleSystem.Stop();
 						hackEvent.gatewayTarget=gameObject;
 						neutralizeEvent.gatewayTarget=gameObject;
 					}
-	
+					gameObject.particleSystem.Play();
 				}
 				else{
 					if (owner==player){
@@ -88,9 +93,15 @@ public class otMouseInput : MonoBehaviour {
 						}
 				
 				}
+			referencePanel.activateBottomPanel(gameObject);
 				
 		}
 		
+	}
+	
+	void Update()
+	{
+		owner = GetComponent<Gateway>().getOwner();	
 	}
 	
 	public void setPrevColor(Color newColor)

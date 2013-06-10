@@ -174,4 +174,9 @@ public class Police
 		this.currGateway = teleportPolice();
 		//TODO decrement player's stateCount, if 0 kick him outta session
 	} 
+	
+	public Gateway getCurrentgateway()
+	{
+		return this.currGateway;
+	}
 }

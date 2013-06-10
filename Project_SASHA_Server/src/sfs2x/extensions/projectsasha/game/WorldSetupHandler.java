@@ -43,6 +43,8 @@ public class WorldSetupHandler extends BaseClientRequestHandler
 			
 			/**FIXME: only for demo**/
 			startingSpot.installSoftware(GameConsts.BRUTEFORCER, p);
+			startingSpot.upgradeSoftware(GameConsts.BRUTEFORCER, p);
+			startingSpot.upgradeSoftware(GameConsts.BRUTEFORCER, p);
 			/************************/
 			i++;
 		}
