@@ -385,13 +385,7 @@ public abstract class Gateway
 		returnString += " * Attak:\t "+this.getAttackLevel()+"\n";
 		returnString += " * Defence:\t "+this.getDefenceLevel()+"\n";
 		returnString += " * Software:\t "+Arrays.toString(this.getInstalledSoftwares())+"\n";
-		String traceString = " * Traces:\t ";
-		for(Trace t : this.traces)
-		{
-			traceString += "[ID: "+ t.attackID + ", attacker: " + t.player + ", relevance: " + t.relevance + "]\n\t\t ";
-		}
-		returnString += traceString;
-		returnString += "\r\\*****************************************/";
+		returnString += "\\*****************************************/";
 		return returnString;
 	}
 	
