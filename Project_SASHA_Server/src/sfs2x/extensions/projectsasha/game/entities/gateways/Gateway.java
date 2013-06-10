@@ -195,7 +195,7 @@ public abstract class Gateway
 	{
 		for(Software s : installedSoftware)
 		{
-			if (s.getType() == type)
+			if (s!= null && s.getType() == type)
 				return s;
 		}
 		return null;

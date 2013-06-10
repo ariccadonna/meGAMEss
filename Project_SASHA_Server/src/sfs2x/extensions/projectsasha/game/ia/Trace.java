@@ -11,7 +11,7 @@ public class Trace
 	public String player;
 
 	
-	public Trace(Gateway startingAttack, int relevance, String player)
+	public Trace(Gateway startingAttack,  int relevance, String player)
 	{
 		this.startingAttack = startingAttack;
 		this.attackID = getNewID();

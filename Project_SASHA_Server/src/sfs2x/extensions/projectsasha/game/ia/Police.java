@@ -1,8 +1,10 @@
 package sfs2x.extensions.projectsasha.game.ia;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.GameWorld;
@@ -17,6 +19,7 @@ public class Police
 	private String[] gatewayStates;
 	private GameWorld currentWorld;
 	private boolean isFollowingTrace;
+	private Set<Gateway> analyzedGateways;
 	
 	public Police(GameWorld currentWorld)
 	{
@@ -28,41 +31,36 @@ public class Police
 		this.currentWorld.gateways.keySet().toArray(this.gatewayStates);
 		this.isFollowingTrace = false;
 		this.currGateway = currentWorld.gateways.get(this.gatewayStates[this.rand.nextInt(42)]);
+		this.analyzedGateways = new HashSet<Gateway>();
 	}
 	
 	
 	public Gateway getBiasedGateway()
 	{
+		analyzedGateways.add(this.currGateway);
 		List <Gateway> gateways = new ArrayList<Gateway>();
-		
 		//Adding all the gateways which contain a relevance level equal to the one considered, except the previous gateway
 		for(Gateway g : currGateway.getNeighboors())
 		{
-			if(g != prevGateway)
+			if(g != prevGateway && !this.analyzedGateways.contains(g))
 			{
 				for(Trace t: g.getTraces())
 				{
 					if(t.relevance == currTrace.relevance)
 					{
 						gateways.add(g);
+						System.out.println("CANDIDATO: "+ g.getState());
 						break;
 					}
 				}
 			}
 		}
 		
-		//If no gateways are found the police is at a dead end
-		if(gateways.size() == 0)
-		{
-			System.out.println("Teleporting police because no relevant traces were found");
-			return teleportPolice();
-		}
-		
 		//Looking for the gateway which actually contains the right trace considering the attack id
 		Gateway rightGateway = null;
-		
 		for(Gateway g : gateways)
 		{
+			
 			if(rightGateway != null)
 				break;
 			
@@ -70,7 +68,6 @@ public class Police
 			{
 				if(t.attackID == currTrace.attackID)
 				{
-					System.out.println("FOUND RIGHT ID: "+t.attackID);
 					rightGateway = g;
 					break;
 				}
@@ -80,9 +77,8 @@ public class Police
 		//We found or the starting Gateway or the target one
 		if(rightGateway == null)
 		{
-			System.out.println("Wrong way! This is not the hacker, it is the hacked one!");
-			this.isFollowingTrace = false;
-			return this.currGateway.getNeighboors()[this.rand.nextInt(this.currGateway.getNeighboors().length)];		
+			System.out.println("Wrong way! This is not the hacker, it is the hacked one (teleporting)!");
+			return teleportPolice();
 		}
 		//The more traces with the same relevance are found, the more the police can get confused and can follow a trace with the same relevance but different id
 		if(rand.nextFloat() <= 1/gateways.size())
@@ -93,7 +89,6 @@ public class Police
 		else
 		{
 			this.prevGateway = this.currGateway;
-			gateways.remove(rightGateway);
 			return gateways.get(rand.nextInt(gateways.size()));
 		}
 	}
@@ -126,23 +121,19 @@ public class Police
 	public void followNextTrace()
 	{
 		//INSERIRE QUI LE INFO CHE PARTONO DA CURRENT_GATEWAY PER LA POLIZIA CLIENT
-		
 		if(this.isFollowingTrace || this.findNewTrace())
 		{			
 			if(this.currGateway.hasStartedAttack(currTrace.attackID))
 			{
-					System.out.println(this.currGateway.getState()+" arrested"); //REMOVE ME
-					this.arrestPlayer(currTrace.player);
-					this.currGateway = teleportPolice();
-			}
-			else if(!this.isFollowingTrace)
-			{
-				System.out.println("Trace lost"); //REMOVE ME
+				System.out.println(this.currGateway.getState()+" arrested"); //REMOVE ME
+				this.arrestPlayer(currTrace.player);
 				this.currGateway = teleportPolice();
 			}
-			
-			this.currGateway = this.getBiasedGateway();
-			System.out.println("Following trace #"+currTrace.attackID+" in gw: "+this.currGateway.getState()); //REMOVE ME
+			else 
+			{
+				this.currGateway = this.getBiasedGateway();
+				System.out.println("Following trace #"+currTrace.attackID+" in gw: "+this.currGateway.getState()); //REMOVE ME
+			}
 		}
 		else
 		{	
@@ -156,12 +147,13 @@ public class Police
 			this.prevGateway = this.currGateway;
 			this.currGateway = neighboorGateways.get(this.rand.nextInt(neighboorGateways.size()));
 		
-			System.out.println("WANDERING: Moving to "+this.currGateway.getState()); //REMOVE ME
+			System.out.println("WANDERING: Moving to "+this.currGateway.getState()+" ("+this.currGateway.getName()+")"); //REMOVE ME
 		}	
 	}
 
 	private Gateway teleportPolice()
 	{
+		this.analyzedGateways.clear();
 		this.isFollowingTrace = false;
 		this.prevGateway = null;
 		return currentWorld.gateways.get(this.gatewayStates[this.rand.nextInt(42)]);		
@@ -174,11 +166,9 @@ public class Police
 		
 		for(Trace t : gateway.getTraces())
 		{
-			System.out.println("Analyzing trace #"+t.attackID);
 			if(gateway.getStartedAttacks().contains(t.attackID))
 			{
 				startTraces.add(t);
-				System.out.println("Adding trace #"+t.attackID+" to the set of trace to erase");
 			}
 		}
 		
@@ -190,7 +180,7 @@ public class Police
 				g.getTraces().remove(t);
 			}
 		
-			
+		
 	}
 	
 	private void arrestPlayer(String player) 
