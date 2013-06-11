@@ -36,6 +36,7 @@ public abstract class Gateway
 	private double lat, lon;
 	private Set<Trace> startedAttacks = Collections.synchronizedSet(new HashSet<Trace>());
 	private long disableTime;
+	private boolean isBusy;
 
 	
 	public Gateway(Player owner, String name, String state, int x, int y, float lat, float lon)
@@ -53,6 +54,7 @@ public abstract class Gateway
 		this.costsSoFar = new HashMap<String,Integer>();
 		this.parentForPath = new HashMap<String, Gateway>();
 		this.disableTime = 0;
+		this.isBusy = false;
 	}	
 	
 	
@@ -222,6 +224,12 @@ public abstract class Gateway
 	{
 		return this.disableTime;
 	}
+	
+	synchronized public boolean getBusy()
+	{
+		return this.isBusy;
+	}
+	
 	//SETTERS
 	
 	public void setNeighborhoods(Gateway[] neighboors)
@@ -236,6 +244,11 @@ public abstract class Gateway
 	public void setDisabled(long time)
 	{
 		this.disableTime = time;
+	}
+	
+	synchronized public void setBusy(boolean status)
+	{
+		this.isBusy = status;
 	}
 	//ABSTRACT METHODS
 

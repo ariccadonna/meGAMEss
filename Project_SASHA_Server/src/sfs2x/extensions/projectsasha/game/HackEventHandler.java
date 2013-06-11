@@ -163,38 +163,40 @@ public class HackEventHandler extends BaseClientRequestHandler
 	public boolean hack(GameWorld world, Gateway from, Gateway to, int extraTime)
 	{
 		boolean ret = false;
-		long startTime, endTime;
-		int difference = this.powerDifference(from, to);
+		if(changeStatus(from,to))
+		{
+			long startTime, endTime;
+			int difference = this.powerDifference(from, to);
 		
-		Software[] attackerSw = from.getInstalledSoftwares();
-		Software[] defenderSw = to.getInstalledSoftwares();
+			Software[] attackerSw = from.getInstalledSoftwares();
+			Software[] defenderSw = to.getInstalledSoftwares();
 		
-		/*
-		 * FIXME: togliere i fix per Sam
-		 */
-		for(Software sw: attackerSw)
-			if(sw!=null)
-				/*switch(sw.getType())
-				{
+			/*
+			 * FIXME: togliere i fix per Sam
+			 */
+			for(Software sw: attackerSw)
+				if(sw!=null)
+					/*switch(sw.getType())
+					{
 					case GameConsts.DICTIONARY:
 						sw.runTriggeredAction(from, to);
 						break;
 					default:
 						break;
 				}*/
-			if(sw.getType() == GameConsts.DICTIONARY)
-				sw.runTriggeredAction(from, to);
-		for(Software sw: defenderSw)
-			if(sw!=null)
-			{
-				if(sw.getType() == GameConsts.IDS)
-					if(to.getOwner()!=null)
+					if(sw.getType() == GameConsts.DICTIONARY)
 						sw.runTriggeredAction(from, to);
-				if(sw.getType() == GameConsts.VIRUS)
-						sw.runTriggeredAction(from, to);
-				if(sw.getType() == GameConsts.DEEPTHROAT)
-						sw.runTriggeredAction(from, to);
-			}
+			for(Software sw: defenderSw)
+				if(sw!=null)
+				{
+					if(sw.getType() == GameConsts.IDS)
+						if(to.getOwner()!=null)
+							sw.runTriggeredAction(from, to);
+					if(sw.getType() == GameConsts.VIRUS)
+							sw.runTriggeredAction(from, to);
+					if(sw.getType() == GameConsts.DEEPTHROAT)
+							sw.runTriggeredAction(from, to);
+				}
 				/*switch(sw.getType())
 				{
 					case GameConsts.IDS:
@@ -210,45 +212,47 @@ public class HackEventHandler extends BaseClientRequestHandler
 						break;
 				}*/
 
-		if(difference > 0)
-		{
-			int waitTime = this.hackTime(world, from, to) + extraTime;
-			startTime = System.currentTimeMillis();
-			endTime = startTime+(waitTime*1000);
-			from.getOwner().setCanHack(false);//disable hack for the following seconds
-
-			while(System.currentTimeMillis() != endTime)
+			if(difference > 0)
 			{
+				int waitTime = this.hackTime(world, from, to) + extraTime;
+				startTime = System.currentTimeMillis();
+				endTime = startTime+(waitTime*1000);
+				from.getOwner().setCanHack(false);//disable hack for the following seconds
+
+				while(System.currentTimeMillis() != endTime)
+				{
 				/*BUSY WAIT*/
 				//currentTick = System.currentTimeMillis()-starTime;
 				//	if(currentTick%1000==0)
 				//		send a countdown to the player for remaining hack time??
-			}
+				}
 
-			from.getOwner().setCanHack(true);
-			to.setOwner(from.getOwner());
-			
-			ret = true;
-		}
-		else
-		{
-			startTime = System.currentTimeMillis();
-			endTime = startTime+(GameConsts.FAILTIME*1000);
-			from.getOwner().setCanHack(false); //disable hack for the following seconds
-			
-			while(System.currentTimeMillis() != endTime)
+				from.getOwner().setCanHack(true);
+				to.setOwner(from.getOwner());
+				freeStatus(from,to);
+				ret = true;
+			}
+			else
 			{
+				startTime = System.currentTimeMillis();
+				endTime = startTime+(GameConsts.FAILTIME*1000);
+				from.getOwner().setCanHack(false); //disable hack for the following seconds
+			
+				while(System.currentTimeMillis() != endTime)
+				{
 				/*BUSY WAIT*/
 				//currentTick = System.currentTimeMillis()-starTime;
 				//	if(currentTick%1000==0)
 				//		send a countdown to the player??
-			}
+				}
 			
-			from.getOwner().setCanHack(true);
-			ret = false;
+				from.getOwner().setCanHack(true);
+				ret = false;
+				freeStatus(from,to);
+				}
+			}
+			return ret;
 		}
-		return ret;
-	}
 	
 	public boolean neutralize(GameWorld world, Gateway from, Gateway to)
 	{
@@ -406,4 +410,22 @@ public class HackEventHandler extends BaseClientRequestHandler
 		}
 		return false;
 	}
+	
+	synchronized public static boolean changeStatus(Gateway from, Gateway to)
+	{
+		if(!(from.getBusy() || to.getBusy()))
+		{
+			from.setBusy(true);
+			to.setBusy(true);
+			return true;
+		}
+		return false;
+	}
+	
+	synchronized public static void freeStatus(Gateway from, Gateway to)
+	{
+		from.setBusy(false);
+		to.setBusy(false);
+	}
+	
 }
