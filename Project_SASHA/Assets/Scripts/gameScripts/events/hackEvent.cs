@@ -8,12 +8,6 @@ public class hackEvent : MonoBehaviour {
 	OTScale9Sprite sprite;
 	private NetworkManager nwm = null;
 	private string target,start;
-	GameObject ray;
- 	public GameObject rayPrefab; 
- 	float lunghezzaRay;
- 	float inclinazioneRay;
- 	private float xt,xs,yt,ys;
- 	Quaternion rotation;
 	
 	// Use this for initialization
 	void Start () {
@@ -57,22 +51,6 @@ public class hackEvent : MonoBehaviour {
 					target=gatewayTarget.GetComponent<Gateway>().getState();
 					start=gatewayStart.GetComponent<Gateway>().getState();
 					nwm.SendHackRequest(start,target);
-					
-					xs=gatewayStart.transform.position.x;
-				    ys=gatewayStart.transform.position.y;
-				    xt=gatewayTarget.transform.position.x;
-				    yt=gatewayTarget.transform.position.y;
-				     
-				    ray=Instantiate(rayPrefab) as GameObject;
-				    ray.transform.position=new Vector2((xt+xs)/2,(yt+ys)/2);
-				    //ray.transform.position.x=(xt-xs);
-				    //ray.transform.position.y=yt-ys;  
-				    lunghezzaRay=Mathf.Sqrt(Mathf.Pow((xt-xs),2)+Mathf.Pow((yt-ys),2));
-				    ray.transform.localScale=new Vector2(lunghezzaRay,1);
-				    inclinazioneRay=Mathf.Atan((yt-ys)/(xt-xs))*Mathf.Rad2Deg;
-				    rotation.eulerAngles=new Vector3(0,0,inclinazioneRay);
-				    ray.transform.rotation=rotation;
-					
 				}
 			}
 		}

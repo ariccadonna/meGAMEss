@@ -14,9 +14,9 @@ import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
 import com.smartfoxserver.v2.entities.User;
 
 import com.smartfoxserver.v2.entities.data.ISFSObject;
+import com.smartfoxserver.v2.entities.data.SFSArray;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
-import java.math.*;
 
 public class HackEventHandler extends BaseClientRequestHandler
 {
@@ -68,13 +68,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				
 				if(hackingPath == null)
 				{
-					ISFSObject reback = SFSObject.newInstance();
-					reback.putBool("success", false);
-					// FIXME: REFINE MESSAGE
-					trace("No hacking path available");
-					reback.putUtfString("error", "NOPATH");
-					send("hack", reback, sender);	
-					return;
+					sendError("NOPATH", sender);
 				}
 				
 				
@@ -85,9 +79,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 					
 					if(success)
-					{
 						 to.setDisabled(System.currentTimeMillis()+GameConsts.DISABLED_TIME*1000);
-					}
 				}
 				else	// if conquer
 				{	
@@ -119,30 +111,27 @@ public class HackEventHandler extends BaseClientRequestHandler
 				{
 					hackingPath = from.tracePath(to, attackRelevance);
 					trace("There is a proxy of level "+((Proxy)from.getInstalledSoftware(GameConsts.PROXY)).getRange());
-					
-					
 				}
 				
 				if(hackingPath == null)
 				{
-					ISFSObject reback = SFSObject.newInstance();
-					reback.putBool("success", false);
-					// FIXME: REFINE MESSAGE
-					trace("No hacking path available");
-					reback.putUtfString("error", "NOPATH");
-					send("hack", reback, sender);	
+					sendError("NOPATH", sender);
 					return;
 				}
+				
+				
+				sendPathInfo(hackingPath, sender); // send path info to the client
+				
 				success = this.hack(world, from, to);
 				trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 				from.setTrace(hackingPath, attackRelevance);
+				
 			}
 		}
 		else //if i'm not owner of starting node or i can't hack
 		{
-			//FIXME: hack is disabled, we should return an error
-			trace("Hack request from " + p.getUserName() + ": FAILED since the hack is disabled for this player OR gateway is disabled for some seconds");
-			success = false;
+			sendError("HACKDISABLED", sender);
+			return;
 		}
 		
 		isVictoryReached = checkVictoryConditions(p);
@@ -427,5 +416,34 @@ public class HackEventHandler extends BaseClientRequestHandler
 		from.setBusy(false);
 		to.setBusy(false);
 	}
-	
+
+	private void sendPathInfo(List<Gateway> hackingPath, User sender)
+	{
+		ISFSObject pathReback = SFSObject.newInstance();
+		SFSArray pathArray = new SFSArray();
+		for (int i = 0; i < hackingPath.size(); i++) 
+			pathArray.addUtfString(hackingPath.get(i).getX()+":"+hackingPath.get(i).getY());
+		
+		pathReback.putSFSArray("hackingPath", pathArray);
+		send("path", pathReback, sender);
+	}
+
+	private void sendError(String errorType, User sender)
+	{
+		ISFSObject reback = SFSObject.newInstance();
+		reback.putBool("success", false);
+		
+		//FIXME switch on errors
+		if(errorType == "NOPATH")
+		{
+			trace("No hacking path available");
+			reback.putUtfString("error", "NOPATH");
+		}
+		if(errorType == "HACKDISABLED")
+		{
+			trace("Hack request from " + sender.getName() + ": FAILED since the hack is disabled for this player OR gateway is disabled for some seconds");
+			reback.putUtfString("error", "HACKDISABLED");
+		}
+		send("error", reback, sender);	
+	}
 }

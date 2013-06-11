@@ -20,12 +20,21 @@ public class NetworkManager : MonoBehaviour {
 	public Texture mil;
 	public Texture gov;
 	public Texture bas;
+	
+	public GameObject rayPrefab; 
+	private GameObject ray;
+ 	private float rayLenght;
+ 	private float rayRotation;
+ 	private float xt,xs,yt,ys;
+ 	private Quaternion rotation;
+	
 	private float prevTime, statTime;
 	private float policeUpdateTime = 9.0f;
 	private float statUpdatetime = 1.0f;
-	GameObject spots;
+	
+	private GameObject spots;
 	private int playerNumbers;
-	//private int playerNumbers=1;
+
 	private Dictionary<string, Color> playerColors = new Dictionary<string,Color>();
 	private Color[] colors = { Color.red, Color.green, Color.cyan, Color.magenta, Color.yellow };
 	private string currentPlayer;
@@ -70,7 +79,6 @@ public class NetworkManager : MonoBehaviour {
 	{
 	
 		if(smartFox.LastJoinedRoom.UserCount == playerNumbers && !running)
-		//if(smartFox.LastJoinedRoom.UserCount == 1 && !running)
 		{
 			SendWorldSetupRequest();
 			ColorSetup();
@@ -125,14 +133,14 @@ public class NetworkManager : MonoBehaviour {
 		}*/
 	}
 
-    public void SendInfoRequest(String gatewayName) 
+   /* public void SendInfoRequest(String gatewayName) 
 	{
         Room room = smartFox.LastJoinedRoom;
         ISFSObject data = new SFSObject();
         data.PutUtfString("selctedGateway", gatewayName);
         ExtensionRequest request = new ExtensionRequest("gatewayInfo", data, room);
         smartFox.Send(request);
-    }
+    }*/
 	
 	public void SendWorldSetupRequest()
 	{
@@ -151,13 +159,6 @@ public class NetworkManager : MonoBehaviour {
 		
 		
 	}
-	
-	/*public void TimeSyncRequest()
-	{
-		Room room = smartFox.LastJoinedRoom;
-		ExtensionRequest request = new ExtensionRequest("getTime", new SFSObject(), room);
-		smartFox.Send(request);
-	}*/
 	
 	private void OnConnectionLost(BaseEvent evt) 
 	{
@@ -178,7 +179,8 @@ public class NetworkManager : MonoBehaviour {
 			if (cmd == "hack") 
 			{
 				smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
-				Destroy(GameObject.FindWithTag("ray"));
+				foreach(GameObject g in GameObject.FindGameObjectsWithTag("ray"))
+					Destroy(g);
 				if(data.GetBool("victoryReached") == true)
 					Debug.Log ("victory reached");
 			}
@@ -202,13 +204,14 @@ public class NetworkManager : MonoBehaviour {
 			}
 			else if (cmd == "policePosition")
 			{
-				//smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
 				currentPolice.transform.position = new Vector3(data.GetInt ("police_x"),data.GetInt ("police_y")+13, -5);
 			}
 			else if (cmd == "playerInfo")
 			{
 				GameObject.Find("playerStats").GetComponent<printPlayerStat>().printStat(data.GetUtfString("name"), data.GetInt("money"), data.GetLong("time"));
 			}
+			else if (cmd == "path")
+				tracePath(data);
 		}
 		catch (Exception e) {
 			Debug.Log("Exception handling response: "+e.Message+" >>> "+e.StackTrace);
@@ -227,12 +230,11 @@ public class NetworkManager : MonoBehaviour {
 		UnsubscribeDelegates();
 		smartFox.Disconnect();
 	}
-
 	
 	public void SendLeaveRoom() 
 	{
-		UnsubscribeDelegates();
 		smartFox.Send(new JoinRoomRequest("Lobby", null, smartFox.LastJoinedRoom.Id));
+		UnsubscribeDelegates();
 		Application.LoadLevel("loginScreen");
 	}
 	
@@ -245,6 +247,7 @@ public class NetworkManager : MonoBehaviour {
 		
 		smartFox.Send(new ExtensionRequest("hack", data, smartFox.LastJoinedRoom));
 	}
+	
 	public void SendNeutralizeRequest(String fromGateway, String toGateway) {
 		
 		ISFSObject data = new SFSObject();
@@ -388,6 +391,45 @@ public class NetworkManager : MonoBehaviour {
 	{
 		ExtensionRequest getStats = new ExtensionRequest("playerInfo", new SFSObject(), smartFox.LastJoinedRoom);
 		smartFox.Send(getStats);
+	}
+	
+private void tracePath(ISFSObject data)
+	{
+		ISFSArray path = data.GetSFSArray("hackingPath");
+		int i = 0;
+		while(i < path.Size()-1)
+		{
+			String startC = (String) path.GetElementAt(i);
+			String[] coord_1 = startC.Split(':');
+			String targetC =(String) path.GetElementAt(i+1);
+			String[] coord_2 = targetC.Split(':');
+			
+			
+			
+			Vector3 p0 = new Vector3(int.Parse(coord_1[0]), int.Parse(coord_1[1]), 5);
+			Vector3 p1 = new Vector3(int.Parse(coord_2[0]), int.Parse(coord_2[1]), 5);
+			Vector3 direction = (Vector3)((p1 - p0).normalized);
+			float distance = Vector3.Distance(p1,p0);
+			ray = Instantiate(rayPrefab) as GameObject;
+			
+			ray.transform.position = new Vector2((p1.x+p0.x)/2,(p1.y+p0.y)/2);
+					    
+			rayLenght = distance;
+			
+			ray.transform.localScale = new Vector2(rayLenght,1);
+
+			//rotation.eulerAngles = direction;
+			//ray.transform.rotation = rotation;
+			
+							//Mathf.Atan2(pixelpos.Y, pixelpos.X) / (2 * Math.PI)
+			//inclinazioneRay=Mathf.Atan((yt-ys)/(xt-xs))*Mathf.Rad2Deg;
+			float inclinazioneRay = Mathf.Atan((p1.y-p0.y)/(p1.x-p0.x))*Mathf.Rad2Deg;
+			rotation.eulerAngles = new Vector3(0,0,inclinazioneRay);
+			ray.transform.rotation=rotation;
+
+			
+			i++;
+		}
 	}
 	
 }

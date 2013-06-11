@@ -10,13 +10,16 @@ import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 
 public class PlayerInfoHandler extends BaseClientRequestHandler{
 	public void handleClientRequest(User sender, ISFSObject params){
+		
 		Player p = RoomHelper.getPlayer(this, sender.getName());
 		int money = p.getMoney();
 		long time = RoomHelper.getTimer(this);
+		
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putUtfString("name", p.getName());
 		reback.putInt("money", money);
 		reback.putLong("time", time);
+		
 		send("playerInfo", reback, sender);
 	}
 }

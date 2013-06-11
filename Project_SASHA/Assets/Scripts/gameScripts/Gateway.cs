@@ -44,7 +44,7 @@ public class Gateway : MonoBehaviour {
 	
 	void OnMouseDown() 
 	{
-		nwm.SendInfoRequest(this.state);
+		//nwm.SendInfoRequest(this.state);
 	}
 	
 	public string getName()

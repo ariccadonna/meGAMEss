@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_STANDALONE;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_0_1;UNITY_4_0;UNITY_STANDALONE_WIN;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_TEAM_LICENSE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_STANDALONE;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_0_1;UNITY_4_0;UNITY_STANDALONE_WIN;ENABLE_PROFILER;UNITY_EDITOR;UNITY_TEAM_LICENSE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -130,16 +130,16 @@
     <Compile Include="Assets\Scripts\TestingLoginLobbys.cs" />
     <Compile Include="Assets\Scripts\gameScripts\Gateway.cs" />
     <Compile Include="Assets\Scripts\gameScripts\NetworkManager.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\input\generateMailPanel.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\input\generateShopPanel.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\input\hackEvent.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\input\neutralizeEvent.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\input\newsRandom.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\input\otMouseInput.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\input\printObjectives.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\input\printStat.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\input\referencePanel.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\printPlayerStat.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\events\hackEvent.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\events\neutralizeEvent.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\events\otMouseInput.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\panels\generateMailPanel.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\panels\generateShopPanel.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\panels\referencePanel.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\print\newsRandom.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\print\printObjectives.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\print\printPlayerStat.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\print\printStat.cs" />
     <Compile Include="Assets\Scripts\openingLogo.cs" />
     <None Include="Assets\Orthello\Standard Assets\OT\_Base\TintedAlpha.shader" />
     <None Include="Assets\font\fontgioco.txt" />
