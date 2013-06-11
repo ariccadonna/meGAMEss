@@ -57,8 +57,6 @@ public class GameExtension extends SFSExtension
 		addRequestHandler("policePosition", PolicePositionHandler.class);
 		trace("PolicePositionHandler=>		INITIALIZED");
 		
-		trace("----- GAME EXTENSION STOPPED! -----");
-		
 		addEventHandler(SFSEventType.USER_DISCONNECT, OnUserGoneHandler.class);
 		addEventHandler(SFSEventType.USER_LEAVE_ROOM, OnUserGoneHandler.class);
 		addEventHandler(SFSEventType.USER_LOGOUT, OnUserGoneHandler.class);
@@ -102,7 +100,7 @@ public class GameExtension extends SFSExtension
 	private void WorldInit()
 	{
 		trace("----- WORLD INIT -----");
-		world = new GameWorld(0);
+		this.world = new GameWorld(0);
 		trace("World Created");
 		gameObjectives[0] = new Objective(world,"Main Target", "Hack 17 gateways", 17, GameConsts.BASE_GATEWAY);
 		gameObjectives[1] = new Objective(world,"Hack.Edu", "Hack 4 academic gateways", 4, GameConsts.EDU_GATEWAY);

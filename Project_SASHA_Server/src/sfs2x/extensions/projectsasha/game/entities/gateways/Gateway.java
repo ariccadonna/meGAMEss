@@ -433,9 +433,7 @@ public abstract class Gateway
 	synchronized public List<Gateway> tracePath(final Gateway destination, final int relevance )
 	{
 		Queue<Gateway> openSet = null;
-		int numSearchSteps = 0;
 		final String sourceOwner = this.getOwner().getUserName();
-		//FIXME: Il proxy non sempre è installato!!
 		int maxSteps = ((Proxy) this.getInstalledSoftware(GameConsts.PROXY)).getRange();
 		List<Gateway> path = new ArrayList<Gateway>();
 		int proxyLevel = this.getInstalledSoftware(GameConsts.PROXY).getVersion();
@@ -447,7 +445,7 @@ public abstract class Gateway
 			@Override
 			public int compare(Gateway o1, Gateway o2)
 			{
-				return (int)((float)(o1.costsSoFar.get(sourceOwner)*(1-GameConsts.HEURISTIC_WEIGHT) + o1.distanceFrom(destination)*GameConsts.HEURISTIC_WEIGHT) - (o2.costsSoFar.get(sourceOwner)*(2/3) + o2.distanceFrom(destination)*(1/3)));
+				return (int)((float)(o1.costsSoFar.get(sourceOwner)*(1-GameConsts.HEURISTIC_WEIGHT) + o1.distanceFrom(destination)*GameConsts.HEURISTIC_WEIGHT) - (o2.costsSoFar.get(sourceOwner)*(2/3) + o2.distanceFrom(destination)*(1/3))); 
 			}
 		 });	
 		
@@ -456,8 +454,7 @@ public abstract class Gateway
 		openSet.add(this);
 		bucket.add(this);
 		//DEBUG ONLY!
-		maxSteps = 99;
-		while(!openSet.isEmpty()  && (numSearchSteps <= maxSteps))
+		while(!openSet.isEmpty())
 		{
 			Gateway currentGateway = openSet.poll();
 			bucket.add(currentGateway);
@@ -476,7 +473,7 @@ public abstract class Gateway
 					g.setParentForPath(sourceOwner, null);
 					g.setCostsSoFar(sourceOwner, 0);
 				}
-				return path; 
+				return (path.size() <= maxSteps) ? path : null; 
 			}
 			
 			Gateway[] neighboors = currentGateway.getNeighboors();
@@ -529,7 +526,6 @@ public abstract class Gateway
 				}
 				
 				closedSet.add(currentGateway);
-				numSearchSteps++;
 			}
 		}
 

@@ -147,7 +147,7 @@ public class GameConsts
 	
 	/* Police constants */
 	public static final int IA_THREAD_SLEEP_TIME 			= 50;
-	public static final int DEFAULT_POLICE_RELEVANCE_THRS	= 4;
+	public static final int DEFAULT_POLICE_RELEVANCE_THRS	= 2;
 	public static final int POLICE_SLEEP_TIME				= 10*20;
 
 	//**********************//

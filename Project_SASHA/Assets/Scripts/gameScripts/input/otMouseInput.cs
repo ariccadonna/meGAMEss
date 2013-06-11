@@ -59,44 +59,44 @@ public class otMouseInput : MonoBehaviour {
 	
 		if(Input.GetMouseButtonDown(0))
 		{
-			
-
-				foreach(GameObject g in GameObject.FindGameObjectsWithTag("Gateway"))
-					if(g != hackEvent.gatewayStart && g != hackEvent.gatewayTarget)
-						g.particleSystem.Stop();
-			
-				//controlla che non sia lo stesso selezionato, se seleziono un altro gateway mostro le stat. se seleziono lo stesso disattivo il panel
-				if (referencePanel.lastSelectedGateway!=gameObject)
-				{
-					if (owner==player){
-						hackEvent.gatewayStart=gameObject;
-						neutralizeEvent.gatewayStart=gameObject;					
-					
-					} 
-					else
-					{
-						//hackEvent.gatewayTarget.particleSystem.Stop();
-						hackEvent.gatewayTarget=gameObject;
-						neutralizeEvent.gatewayTarget=gameObject;
-					}
-					gameObject.particleSystem.Play();
-				}
-				else{
-					if (owner==player){
-							hackEvent.gatewayStart=null;
-							neutralizeEvent.gatewayStart=null;					
-						} 
-						else
-						{
-							hackEvent.gatewayTarget=null;
-							neutralizeEvent.gatewayTarget=null;
-						}
-				
-				}
-			referencePanel.activateBottomPanel(gameObject);
-				
-		}
 		
+			//controlla che non sia lo stesso selezionato, se seleziono un altro gateway mostro le stat. se seleziono lo stesso disattivo il panel
+			if (referencePanel.lastSelectedGateway!=gameObject)
+			{
+				if (owner==player){
+					hackEvent.gatewayStart=gameObject;
+					neutralizeEvent.gatewayStart=gameObject;					
+				} 
+				else
+				{
+					hackEvent.gatewayTarget=gameObject;
+					neutralizeEvent.gatewayTarget=gameObject;
+				}
+				
+				//starting particle for selected gateway
+				gameObject.particleSystem.Play();
+				
+			}
+			else
+			{
+				if (owner==player){
+					hackEvent.gatewayStart=null;
+					neutralizeEvent.gatewayStart=null;					
+				} 
+				else
+				{
+					hackEvent.gatewayTarget=null;
+					neutralizeEvent.gatewayTarget=null;
+				}
+			}
+			
+			//disabling particle for not selected gateways
+			foreach(GameObject g in GameObject.FindGameObjectsWithTag("Gateway"))
+				if(g != hackEvent.gatewayStart && g != hackEvent.gatewayTarget)
+					g.particleSystem.Stop();
+			
+			referencePanel.activateBottomPanel(gameObject);
+		}
 	}
 	
 	void Update()

@@ -62,6 +62,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				}
 				else
 				{
+					trace("There is a proxy of level "+((Proxy)from.getInstalledSoftware(GameConsts.PROXY)).getAttackLevel());
 					hackingPath = from.tracePath(to, attackRelevance);					
 				}
 				
@@ -71,7 +72,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 					reback.putBool("success", false);
 					// FIXME: REFINE MESSAGE
 					trace("No hacking path available");
-					reback.putUtfString("error", "No path available");
+					reback.putUtfString("error", "NOPATH");
 					send("hack", reback, sender);	
 					return;
 				}
@@ -79,6 +80,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				
 				if(neutralize) // if neutralize
 				{
+					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": PROCESSING");
 					success = this.neutralize(world, from, to);
 					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 					
@@ -89,6 +91,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				}
 				else	// if conquer
 				{	
+					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": PROCESSING");
 					success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD);
 					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 				}
@@ -108,15 +111,16 @@ public class HackEventHandler extends BaseClientRequestHandler
 						{
 							trace("I found a path");
 							hackingPath = new ArrayList<Gateway>();
-							hackingPath.add(from);
-							hackingPath.add(to);
 							break;
 						}
 					}							
 				}
 				else
 				{
-					hackingPath = from.tracePath(to, attackRelevance);					
+					hackingPath = from.tracePath(to, attackRelevance);
+					trace("There is a proxy of level "+((Proxy)from.getInstalledSoftware(GameConsts.PROXY)).getRange());
+					
+					
 				}
 				
 				if(hackingPath == null)
@@ -125,13 +129,13 @@ public class HackEventHandler extends BaseClientRequestHandler
 					reback.putBool("success", false);
 					// FIXME: REFINE MESSAGE
 					trace("No hacking path available");
-					reback.putUtfString("error", "No path available");
+					reback.putUtfString("error", "NOPATH");
 					send("hack", reback, sender);	
 					return;
 				}
-				
 				success = this.hack(world, from, to);
 				trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
+				from.setTrace(hackingPath, attackRelevance);
 			}
 		}
 		else //if i'm not owner of starting node or i can't hack
@@ -343,7 +347,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 	
 	public int getAttackRelevance(Gateway from, Gateway to)
 	{
-		double result = (double)((from.getAttackLevel() + to.getDefenceLevel() / 200) *10);
+		float result = ((from.getAttackLevel() + to.getDefenceLevel()) / 200f) *10;
 		Math.ceil(result);
 		return (int)result;
 	}
