@@ -13,14 +13,14 @@ import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
 
 public class Police 
 {
-	private Random rand;
-	private Trace currTrace;
-	private Gateway prevGateway;
-	private Gateway currGateway;
-	private String[] gatewayStates;
-	private GameWorld currentWorld;
-	private boolean isFollowingTrace;
-	private Set<Gateway> analyzedGateways;
+	private Random rand;					//A random generator for random choices
+	private Trace currTrace;				//The trace the police is currently following
+	private Gateway prevGateway;			//The gateway just visited, used to avoid the police getting on an already visited gateway
+	private Gateway currGateway;			//The gateway currently being analyzed
+	private String[] gatewayStates;			//An array with the names of the 42 states
+	private GameWorld currentWorld;			//A reference to the current gameworld of the match
+	private boolean isFollowingTrace;		//Flag to see if the police is wandering or following a trace
+	private Set<Gateway> analyzedGateways;	//A set of visited gateways during a police chasing to avoid loops
 	
    //CONSTRUCTOR
 	public Police(GameWorld currentWorld)
@@ -36,35 +36,32 @@ public class Police
 		this.analyzedGateways = new HashSet<Gateway>();
 	}
 	
+	
+	//Current gateway getter, useful to notify the police position to the players
+	public synchronized Gateway getCurrentgateway()
+	{
+		return this.currGateway;
+	}
+	
    //Main method called each Tick
 	public void followNextTrace()
 	{
-		//INSERIRE QUI LE INFO CHE PARTONO DA CURRENT_GATEWAY PER LA POLIZIA CLIENT
-		if(this.isFollowingTrace || this.findNewTrace())
+		if(this.isFollowingTrace || this.findNewTrace())	//The police is following a trace or tries to get one from the current gateway
 		{			
-			if(this.currGateway.hasStartedAttack(currTrace))
+			if(this.currGateway.hasStartedAttack(currTrace))	//If the trace started from this gateway the police will confiscate it
 			{
-				System.out.println(this.currGateway.getState()+" arrested"); //REMOVE ME
 				this.confiscateGateway(currTrace.player);
+				System.out.println("CONFISCATED: " + this.currGateway.getState()); //REMOVE ME
 			}
-			else 
+			else	//The police is following a trace and moves to the next gateway following the attack ID or the relevance
 			{
 				this.currGateway = this.getBiasedGateway();
-				System.out.println("Following trace #"+(currTrace != null ? currTrace.attackID : "null") +" in gw: "+this.currGateway.getState()); //REMOVE ME
+				System.out.println("TRACE FOLLOWING: id#"+(currTrace != null ? currTrace.attackID : "null") +" in gw: "+this.currGateway.getState()); //REMOVE ME
 			}
 		}
-		else
+		else	//The police has no trace and is wandering trying to find a node that has a trace with the relevance >= the threshold
 		{	
-			List<Gateway> neighboorGateways = new ArrayList<Gateway>();
-			
-			for(Gateway g: this.currGateway.getNeighboors())
-			{
-				if(g != this.prevGateway)
-					neighboorGateways.add(g);
-			}
-			this.prevGateway = this.currGateway;
-			this.currGateway = neighboorGateways.get(this.rand.nextInt(neighboorGateways.size()));
-		
+			this.currGateway = this.wander();			
 			System.out.println("WANDERING: Moving to "+this.currGateway.getState()+" ("+this.currGateway.getName()+")"); //REMOVE ME
 		}	
 	}
@@ -74,7 +71,7 @@ public class Police
 	{
 		int currMaxRelevance = 0;
 
-		for (Trace t: this.currGateway.getTraces())
+		for (Trace t: this.currGateway.getTraces())	//Tries to find a trace to follow in the current gateway
 		{
 			if(t.relevance >= GameConsts.DEFAULT_POLICE_RELEVANCE_THRS && t.relevance > currMaxRelevance)
 			{
@@ -83,12 +80,12 @@ public class Police
 			}
 		}
 		
-		if(currMaxRelevance > 0)
+		if(currMaxRelevance > 0)	//If a trace has been found
 		{
 			this.isFollowingTrace = true;
 			return this.isFollowingTrace;
 		}
-		else
+		else	//If no traces are found
 		{
 			this.isFollowingTrace = false;
 			return this.isFollowingTrace;
@@ -98,15 +95,15 @@ public class Police
    //Main Police decision making algorithm, tries to find the next gateway to analyze
 	private Gateway getBiasedGateway()
 	{
-   	List <Gateway> gateways = new ArrayList<Gateway>();
+		List <Gateway> gateways = new ArrayList<Gateway>();
       
-      //Keeps track of the visited gateways to avoid loops
+		//Keeps track of the visited gateways to avoid loops
 		analyzedGateways.add(this.currGateway);
 
 		//Adding all the gateways which contain a relevance level equal to the one considered, except the previous gateway and the ones already considered
 		for(Gateway g : currGateway.getNeighboors())
 		{
-			if(g != prevGateway && !this.analyzedGateways.contains(g))
+			if(g != prevGateway && !this.analyzedGateways.contains(g))	//Finds all the neighboors that have a trace relevance equals to the one being followed
 			{
 				for(Trace t: g.getTraces())
 				{
@@ -126,7 +123,7 @@ public class Police
 			if(rightGateway != null)
 				break;
 			
-			for(Trace t: g.getTraces())
+			for(Trace t: g.getTraces())		//Tries to find the right gateway to follow, the one with the same attack ID
 			{
 				if(t.attackID == currTrace.attackID)
 				{
@@ -139,19 +136,33 @@ public class Police
 		//The police has been diverted, it will start the research from a new random gateway
 		if(rightGateway == null)
 		{
-			System.out.println("Wrong way! This is not the hacker, it is the hacked one (teleporting)!");
+			System.out.println("TRACE LOST: Wrong way! police got diverted or reached the attacked gateway");
 			return teleportPolice();
 		}
       
       //The more traces with the same relevance are found, the more the police can get confused and can follow a trace with the same relevance but different id
       this.prevGateway = this.currGateway;    
       
-		if(rand.nextFloat() <= 1/gateways.size())
+		if(rand.nextFloat() <= 1/gateways.size())				//Follow by ID
 			return rightGateway;
 		else
-			return gateways.get(rand.nextInt(gateways.size()));
+			return gateways.get(rand.nextInt(gateways.size()));	//Follow by relevance
 	}
 	
+	//Wandering algorithm, goes to a neighboor excluding the previous one
+	private Gateway wander()
+	{
+		List<Gateway> neighboorGateways = new ArrayList<Gateway>();
+		
+		for(Gateway g: this.currGateway.getNeighboors())	//Populates a list of the neighboors excluding the previous one
+		{
+			if(g != this.prevGateway)
+				neighboorGateways.add(g);
+		}
+		this.prevGateway = this.currGateway;
+		return neighboorGateways.get(this.rand.nextInt(neighboorGateways.size()));	//Choose a random neighboor gateway to go
+	}
+		
 	//Teleports the police to a new gateway and resets every information about the previous investigation
 	private Gateway teleportPolice()
 	{
@@ -174,9 +185,4 @@ public class Police
 		this.currGateway = teleportPolice();
 		//TODO decrement player's stateCount, if 0 kick him outta session
 	} 
-	
-	public Gateway getCurrentgateway()
-	{
-		return this.currGateway;
-	}
 }
