@@ -447,7 +447,7 @@ public abstract class Gateway
 			@Override
 			public int compare(Gateway o1, Gateway o2)
 			{
-				return (o1.costsSoFar.get(sourceOwner) + o1.distanceFrom(destination)) - (o2.costsSoFar.get(sourceOwner) + o2.distanceFrom(destination));
+				return (int)((float)(o1.costsSoFar.get(sourceOwner)*(1-GameConsts.HEURISTIC_WEIGHT) + o1.distanceFrom(destination)*GameConsts.HEURISTIC_WEIGHT) - (o2.costsSoFar.get(sourceOwner)*(2/3) + o2.distanceFrom(destination)*(1/3)));
 			}
 		 });	
 		
