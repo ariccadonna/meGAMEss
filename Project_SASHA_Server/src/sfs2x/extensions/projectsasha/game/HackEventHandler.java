@@ -200,16 +200,17 @@ public class HackEventHandler extends BaseClientRequestHandler
 					default:
 						break;
 				}*/
-
+			Player currentOwner = from.getOwner();
 			if(difference > 0)
 			{
 				int waitTime = this.hackTime(world, from, to) + extraTime;
 				startTime = System.currentTimeMillis();
 				endTime = startTime+(waitTime*1000);
 				from.getOwner().setCanHack(false);//disable hack for the following seconds
-
 				while(System.currentTimeMillis() != endTime)
 				{
+					if(currentOwner == null)
+						return ret;
 				/*BUSY WAIT*/
 				//currentTick = System.currentTimeMillis()-starTime;
 				//	if(currentTick%1000==0)
@@ -226,9 +227,10 @@ public class HackEventHandler extends BaseClientRequestHandler
 				startTime = System.currentTimeMillis();
 				endTime = startTime+(GameConsts.FAILTIME*1000);
 				from.getOwner().setCanHack(false); //disable hack for the following seconds
-			
 				while(System.currentTimeMillis() != endTime)
 				{
+					if(currentOwner == null)
+						return ret;
 				/*BUSY WAIT*/
 				//currentTick = System.currentTimeMillis()-starTime;
 				//	if(currentTick%1000==0)
@@ -294,6 +296,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 						break;
 				}
 */
+		Player currentOwner = from.getOwner();
 		if(difference > 0)
 		{
 			int waitTime = this.hackTime(world, from, to);
@@ -303,6 +306,8 @@ public class HackEventHandler extends BaseClientRequestHandler
 
 			while(System.currentTimeMillis() != endTime)
 			{
+				if(currentOwner == null)
+					return ret;
 				/*BUSY WAIT*/
 				//currentTick = System.currentTimeMillis()-starTime;
 				//	if(currentTick%1000==0)
