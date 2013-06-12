@@ -172,6 +172,27 @@ public class Police
 		this.prevGateway = null;
 		return currentWorld.gateways.get(this.gatewayStates[this.rand.nextInt(42)]);		
 	}
+
+	//Teleports the police to a new specified gateway and tries to set a new trace against the owner of the gateway
+	public Gateway teleportPolice(Gateway newDestination)
+	{		
+		this.analyzedGateways.clear();
+		this.isFollowingTrace = false;
+		this.currTrace = null;
+		
+		for(Trace t : newDestination.getTraces())
+			if(t.relevance >= GameConsts.DEFAULT_POLICE_RELEVANCE_THRS && t.player.equals(newDestination.getOwner().getName()))
+			{
+				this.currTrace = t;
+				this.isFollowingTrace = true;
+				break;
+			}
+		
+		this.prevGateway = null;
+		return newDestination;		
+	}
+
+	
 	
 	//Confiscates the gateway and arrest the player if he has 0 territories
 	private void confiscateGateway(String player) 

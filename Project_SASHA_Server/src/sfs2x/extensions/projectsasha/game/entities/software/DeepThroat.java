@@ -39,11 +39,11 @@ public class DeepThroat extends Software
 		else
 			return;
 	}	
-	
+		
 	@Override
 	public void runTriggeredAction(Gateway from, Gateway to)
 	{
-		//avvisare la polizia
+		
 	}
 	
 }

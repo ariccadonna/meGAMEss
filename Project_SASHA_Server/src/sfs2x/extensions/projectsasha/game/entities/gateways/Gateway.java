@@ -277,7 +277,7 @@ public abstract class Gateway
 		if(this.owner!=hacker)
 			return;
 
-		if(hacker.getNextInventorySlotAvailable()<=10 && hacker.hasItems(type))
+		if(hacker.getInventorySlotAvailable()<=10 && hacker.hasItems(type))
 		{
 			if(this.hasSoftware(newSoftware.getType()) && !newSoftware.isCumulative())
 				return;

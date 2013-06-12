@@ -215,7 +215,7 @@ public class Player
 	
 	public boolean checkInventory(String type, int level)
 	{
-		for(Software s : this.getInventory())
+		for(Software s : this.inventory)
 		{
 			if(s.getType().equals(type) && s.getVersion() == level)
 				return true;
