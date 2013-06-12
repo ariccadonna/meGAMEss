@@ -136,8 +136,8 @@ public class GameConsts
 
 	public static final String PROXY					= "PROXY";
 	public static final String PROXY_NAME 				= "Thor Garlic Proxy";
-	public static final int PROXY_LEV_1_2_MAX_HOPS		= 3;
-	public static final int PROXY_LEV_3_MAX_HOPS		= 5;
+	public static final int PROXY_LEV_1_2_MAX_HOPS		= 4;
+	public static final int PROXY_LEV_3_MAX_HOPS		= 6;
 	public static final int PROXY_MAX_LEVEL				= 3;
 	public static final boolean PROXY_CUMULATIVE		= false;
 	public static final String PROXY_DESCRIPTION 		= "Allows to expand the range of possible path";
