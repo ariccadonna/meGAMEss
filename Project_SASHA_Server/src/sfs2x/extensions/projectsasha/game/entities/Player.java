@@ -91,6 +91,14 @@ public class Player
 		return false;
 	}
 	
+	public boolean hasItems(String type, int level)
+	{
+		for(Software s : this.inventory)
+			if(s!=null && type == s.getType() && s.getVersion()==level)
+				return true;
+		return false;
+	}
+	
 	public void removeMoney(int value)
 	{
 		this.money -= value;
