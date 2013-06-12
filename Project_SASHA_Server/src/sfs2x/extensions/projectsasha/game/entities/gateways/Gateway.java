@@ -360,7 +360,10 @@ public abstract class Gateway
 			return;
 		
 		if(this.hasSoftware(type) && hacker.checkInventory(type, this.getInstalledSoftware(type).getVersion()+1))
-			this.getInstalledSoftware(type).upgrade();
+			{
+				this.getInstalledSoftware(type).upgrade();
+				hacker.removeItems(this.getInstalledSoftware(type));
+			}
 		else
 			return; 
 	}
@@ -370,8 +373,11 @@ public abstract class Gateway
 		if(this.owner!=hacker)
 			return;
 		
-		if(this.hasSoftware(type))
-			this.getInstalledSoftware(slot).upgrade();
+		if(this.hasSoftware(type)&& hacker.checkInventory(type, this.getInstalledSoftware(type).getVersion()+1))
+		{
+			this.getInstalledSoftware(type).upgrade();
+			hacker.removeItems(this.getInstalledSoftware(type));
+		}
 		else
 			return;
 	}
