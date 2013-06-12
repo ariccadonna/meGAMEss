@@ -2,6 +2,7 @@ package sfs2x.extensions.projectsasha.game.entities.software;
 
 import sfs2x.extensions.projectsasha.game.GameConsts;
 import sfs2x.extensions.projectsasha.game.entities.gateways.Gateway;
+import sfs2x.extensions.projectsasha.game.ia.Police;
 
 
 public class DeepThroat extends Software
@@ -41,9 +42,12 @@ public class DeepThroat extends Software
 	}	
 		
 	@Override
-	public void runTriggeredAction(Gateway from, Gateway to)
+	public void runTriggeredAction(Gateway from, Gateway to){}
+
+	public void runTriggeredAction(Gateway from, Gateway to, Police police)
 	{
-		
+		police.teleportPolice(from);
+		to.uninstallSoftware(this.type, to.getOwner());
 	}
-	
+
 }

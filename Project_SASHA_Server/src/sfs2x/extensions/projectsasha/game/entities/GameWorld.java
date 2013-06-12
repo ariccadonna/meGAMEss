@@ -7,6 +7,7 @@ import sfs2x.extensions.projectsasha.game.entities.gateways.*;
 public class GameWorld 
 {
 	public int id;
+	public Thread ai;
 	public Region[] regions;
 	public Map<String,Gateway> gateways = new Hashtable<String,Gateway>();
 	

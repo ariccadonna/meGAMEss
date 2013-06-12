@@ -8,7 +8,7 @@ import com.smartfoxserver.v2.extensions.SFSExtension;
 public class AIThread extends Thread 
 {
 
-	public static Police police;
+	public Police police;
 	public GameExtension gameExtension;
 	
 	public AIThread(GameWorld currentWorld, SFSExtension gameExtension)

@@ -15,11 +15,10 @@ import com.smartfoxserver.v2.extensions.SFSExtension;
 public class GameExtension extends SFSExtension
 {
 	private GameWorld world; // Reference to World simulation model
-	private static Thread moneyThread;
+	private Thread moneyThread;
 	private static Map<String,Player> players = new Hashtable<String,Player>();
 	private Objective[] gameObjectives = new Objective[6];
 	private Region[] regions;
-	private static Thread ai;
 	private Gateway policePosition;
 	private long startTime;
 	
@@ -69,7 +68,7 @@ public class GameExtension extends SFSExtension
 	@Override
 	public void destroy() 
 	{
-		ai.stop();
+		world.ai.stop();
 		moneyThread.stop();
 		super.destroy();
 		trace("----- GAME EXTENSION STOPPED! -----");
@@ -112,20 +111,20 @@ public class GameExtension extends SFSExtension
 		regions = world.regions;
 		moneyThread = new Thread(new MoneyThread(world));
 		trace("Money Thread insantiated");
-		ai = new AIThread(world, this);
+		world.ai = new AIThread(world, this);
 		trace("AI Thread insantiated");
 
 		trace("----- WORLD INIT DONE-----");
 	}
 	
-	private static void produceMoney() {
+	private void produceMoney() {
 		moneyThread.start();
 
 	}
 	
-	private static void startPoliceThread()
+	private void startPoliceThread()
 	{
-		ai.start();
+		world.ai.start();
 	}
 	
 	public Player getPlayer(String name) 

@@ -7,6 +7,7 @@ import sfs2x.extensions.projectsasha.game.entities.Player;
 import sfs2x.extensions.projectsasha.game.entities.Quests;
 import sfs2x.extensions.projectsasha.game.entities.gateways.*;
 import sfs2x.extensions.projectsasha.game.entities.software.*;
+import sfs2x.extensions.projectsasha.game.ia.AIThread;
 import sfs2x.extensions.projectsasha.game.objectives.Objective;
 import sfs2x.extensions.projectsasha.game.utils.RoomHelper;
 
@@ -184,7 +185,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 					if(sw.getType() == GameConsts.VIRUS)
 							sw.runTriggeredAction(from, to);
 					if(sw.getType() == GameConsts.DEEPTHROAT)
-							sw.runTriggeredAction(from, to);
+							((DeepThroat)sw).runTriggeredAction(from, to, ((AIThread)world.ai).police);
 				}
 				/*switch(sw.getType())
 				{
