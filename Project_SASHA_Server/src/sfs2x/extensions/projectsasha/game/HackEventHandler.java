@@ -398,7 +398,10 @@ public class HackEventHandler extends BaseClientRequestHandler
 				if(p.getQuest().get(i).getRewardMoney()>0)
 					p.addMoney(p.getQuest().get(i).getRewardMoney());
 				else
+				{
+					p.getQuest().get(i).getRewardItem().setLock(false);
 					p.addInventory(p.getQuest().get(i).getRewardItem());
+				}
 				return true;
 			}
 		}

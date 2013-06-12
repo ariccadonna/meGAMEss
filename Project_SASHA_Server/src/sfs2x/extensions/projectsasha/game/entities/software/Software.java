@@ -12,6 +12,7 @@ public abstract class Software
 	protected boolean hasTriggeredAction;
 	protected String description;
 	protected int cost;
+	protected boolean lock;
 	
 	
 	//CONSTRUCTORS
@@ -24,6 +25,7 @@ public abstract class Software
 		this.type = "SOFTWARE";
 		this.hasTriggeredAction = false;
 		this.description = "";
+		this.lock = false;
 	}
 	
 	
@@ -74,6 +76,11 @@ public abstract class Software
 		return this.cumulative;
 	}
 	
+	public boolean getLock()
+	{
+		return this.lock;
+	}
+	
 	//SETTERS
 	
 	public void setVersion(int version)
@@ -113,6 +120,11 @@ public abstract class Software
 		this.cost = cost*version;
 	}
 
+	public void setLock(boolean lock)
+	{
+		this.lock = lock;
+	}
+	
 	//OTHERS
 	
 	public void upgrade()

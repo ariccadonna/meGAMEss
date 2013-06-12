@@ -61,6 +61,7 @@ public abstract class Quests
 	public void setRewardItem(Software s)
 	{
 		this.rewardItem = s;
+		s.setLock(true);
 	}
 	
 

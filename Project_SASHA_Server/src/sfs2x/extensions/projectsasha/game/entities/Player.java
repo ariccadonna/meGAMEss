@@ -199,7 +199,7 @@ public class Player
 	
 	public boolean addInventory(Software s)
 	{
-		if(this.getInventory().length <= 10 && this.getMoney()>=s.getCost())
+		if(this.getInventory().length <= 10 && this.getMoney()>=s.getCost() && s.getLock()==false)
 		{
 			this.getInventory()[this.getNextInventorySlotAvailable()] = s;
 			this.removeMoney(s.getCost());
