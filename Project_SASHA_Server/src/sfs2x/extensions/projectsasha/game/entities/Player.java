@@ -217,6 +217,8 @@ public class Player
 	{
 		for(Software s : this.inventory)
 		{
+			if(s==null)
+				continue;
 			if(s.getType().equals(type) && s.getVersion() == level)
 				return true;
 		}

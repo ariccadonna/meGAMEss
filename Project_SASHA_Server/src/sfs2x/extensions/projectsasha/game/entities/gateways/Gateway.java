@@ -277,7 +277,7 @@ public abstract class Gateway
 		if(this.owner!=hacker)
 			return;
 
-		if(hacker.getInventorySlotAvailable()<=10 && hacker.hasItems(type))
+		if(hacker.getInventorySlotAvailable()<=GameConsts.INVENTORY_SIZE && hacker.hasItems(type))
 		{
 			if(this.hasSoftware(newSoftware.getType()) && !newSoftware.isCumulative())
 				return;
@@ -289,6 +289,7 @@ public abstract class Gateway
 			{
 				newSoftware.setSlot(available_slot);
 				installedSoftware[available_slot] = newSoftware;
+				hacker.removeItems(newSoftware);
 			
 			}else
 				return;		
