@@ -109,14 +109,11 @@ public class Player
 		this.canHack = value;
 	}
 	
-	public int getNextInventorySlotAvailable()
+	public int getInventorySlotAvailable()
 	{
-		int slot = 0;
-		for(Software s : inventory)
-			if(s != null)
-				slot++;
-		
-		return slot;
+		int i = 0;
+		for(; i<this.inventory.length  && this.inventory[i]!=null; i++);
+		return i==this.inventory.length ? -1 : i;
 	}
 	
 	public boolean canHack()
@@ -199,9 +196,9 @@ public class Player
 	
 	public boolean addInventory(Software s)
 	{
-		if(this.getInventory().length <= 10 && this.getMoney()>=s.getCost() && s.getLock()==false)
+		if(this.getInventorySlotAvailable()!=-1 && this.getMoney()>=s.getCost() && s.getLock()==false)
 		{
-			this.getInventory()[this.getNextInventorySlotAvailable()] = s;
+			this.getInventory()[this.getInventorySlotAvailable()] = s;
 			this.removeMoney(s.getCost());
 			return true;
 		}
@@ -223,7 +220,7 @@ public class Player
 		int counter = 0;
 		for(Software tmp : this.inventory)
 		{
-			if(tmp.getType().equals(s.getType()))
+			if(tmp.getType().equals(s.getType()) && tmp.getVersion()==s.getVersion())
 				return counter;
 			counter++;
 		}
@@ -234,8 +231,8 @@ public class Player
 	{
 		int pos = this.indexOf(s);
 		for(int i = pos; i<10;i++)
-			this.inventory[i] = this.inventory[i+1];
-		this.inventory[9] = null;
+			if(this.inventory[i].getType().equals(s.getType()) && this.inventory[i].getVersion()==s.getVersion())
+				this.inventory[i] = null;
 	}
 	
 	@Override 
