@@ -359,7 +359,7 @@ public abstract class Gateway
 		if(this.owner!=hacker)
 			return;
 		
-		if(this.hasSoftware(type))
+		if(this.hasSoftware(type) && hacker.checkInventory(type, this.getInstalledSoftware(type).getVersion()+1))
 			this.getInstalledSoftware(type).upgrade();
 		else
 			return; 

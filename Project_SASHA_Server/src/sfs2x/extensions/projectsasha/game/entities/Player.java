@@ -208,6 +208,16 @@ public class Player
 		return false;
 	}
 	
+	public boolean checkInventory(String type, int level)
+	{
+		for(Software s : this.getInventory())
+		{
+			if(s.getType().equals(type) && s.getVersion() == level)
+				return true;
+		}
+		return false;
+	}
+	
 	public int indexOf(Software s)
 	{
 		int counter = 0;
