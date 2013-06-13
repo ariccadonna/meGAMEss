@@ -59,6 +59,11 @@ public class GameExtension extends SFSExtension
 		addRequestHandler("install", InstallSoftwareHandler.class);
 		trace("InstallSoftwareHandler=>		INITIALIZED");
 		
+		addRequestHandler("shopInfo", ShopInfoHandler.class);
+		trace("ShopInfoHandler		=>		INITIALIZED");
+		
+		
+		
 		addEventHandler(SFSEventType.USER_DISCONNECT, OnUserGoneHandler.class);
 		addEventHandler(SFSEventType.USER_LEAVE_ROOM, OnUserGoneHandler.class);
 		addEventHandler(SFSEventType.USER_LOGOUT, OnUserGoneHandler.class);
@@ -96,8 +101,11 @@ public class GameExtension extends SFSExtension
 		removeRequestHandler("policePosition");
 		trace("PolicePositionHandler=>		STOPPED");
 		
-		addRequestHandler("install", InstallSoftwareHandler.class);
+		removeRequestHandler("install");
 		trace("InstallSoftwareHandler=>		STOPPED");
+		
+		removeRequestHandler("shopInfo");
+		trace("ShopInfoHandler		=>		STOPPED");
 		
 		trace("----- GAME EXTENSION STOPPED! -----");
 	}

@@ -75,6 +75,9 @@ public class HackEventHandler extends BaseClientRequestHandler
 				
 				if(neutralize) // if neutralize
 				{
+					
+					sendPathInfo(hackingPath, sender); // send path info to the client
+					
 					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": PROCESSING");
 					success = this.neutralize(world, from, to);
 					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
@@ -84,6 +87,9 @@ public class HackEventHandler extends BaseClientRequestHandler
 				}
 				else	// if conquer
 				{	
+					
+					sendPathInfo(hackingPath, sender); // send path info to the client
+					
 					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": PROCESSING");
 					success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD);
 					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));

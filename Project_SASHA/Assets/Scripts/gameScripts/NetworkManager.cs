@@ -49,6 +49,8 @@ public class NetworkManager : MonoBehaviour {
 	private System.Object messagesLocker = new System.Object();
 	private SmartFox smartFox;
 	private bool installSuccess = false;
+	
+	private ISFSObject shop;
 
 	void Awake() 
 	{
@@ -224,6 +226,8 @@ public class NetworkManager : MonoBehaviour {
 			else if (cmd == "shopInfo")
 			{
 				//shop setup
+				ShopSetup(data);
+			//	Debug.Log (data.GetUtfString);
 			}
 			else if (cmd == "path")
 				tracePath(data);
@@ -361,6 +365,23 @@ public class NetworkManager : MonoBehaviour {
 					}
 					
 				}
+	}
+	private void ShopSetup(ISFSObject data)
+	{
+		this.shop = data;
+		//String[] keys = data.GetKeys();
+		/*foreach(String currentKey in data.GetKeys())
+		{
+			ISFSObject currentObject = data.GetSFSObject(currentKey);
+			price = currentObject.GetInt("PRICE");
+			desc = currentObject.GetUtfString("DESC");
+			Debug.Log (currentKey+" "+price+" "+desc);
+		}*/
+	}
+	
+	public ISFSObject getShop()
+	{
+		return this.shop;
 	}
 	
 	private void UpdateWorldSetup(ISFSObject data)

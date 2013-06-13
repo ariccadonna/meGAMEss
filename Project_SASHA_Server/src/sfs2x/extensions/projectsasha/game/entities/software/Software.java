@@ -81,6 +81,11 @@ public abstract class Software
 		return this.lock;
 	}
 	
+	public String getDescription()
+	{
+		return this.description;
+	}
+	
 	//SETTERS
 	
 	public void setVersion(int version)

@@ -61,6 +61,7 @@ public class GameConsts
 	//***********************//
 
 	public static final int MAX_SOFTWARE_INSTALLED	= 3;
+	public static final int SHOPITEMS				= 28;
 	
 	/* Defensive Software */
 	public static final String FIREWALL 				= "FIREWALL";

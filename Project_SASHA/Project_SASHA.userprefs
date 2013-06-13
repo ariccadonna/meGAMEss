@@ -3,21 +3,7 @@
   <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="Scripts" expanded="True">
-                <Node name="gameScripts" expanded="True">
-                  <Node name="events" expanded="True">
-                    <Node name="drop.cs" selected="True" />
-                  </Node>
-                  <Node name="panels" expanded="True" />
-                  <Node name="print" expanded="True" />
-                </Node>
-              </Node>
-            </Node>
-          </Node>
-        </State>
+        <State expanded="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

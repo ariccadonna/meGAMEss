@@ -84,7 +84,7 @@ public class SoftwareFactory {
 		if(type == GameConsts.BRUTEFORCER)
 			ret = new BruteForcer(version);
 		if(type == GameConsts.DICTIONARY)
-			ret = new DictionaryAttacker();
+			ret = new DictionaryAttacker(version);
 		if(type == GameConsts.PROXY)
 			ret = new Proxy(version);
 		/*
