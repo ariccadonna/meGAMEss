@@ -56,6 +56,9 @@ public class GameExtension extends SFSExtension
 		addRequestHandler("policePosition", PolicePositionHandler.class);
 		trace("PolicePositionHandler=>		INITIALIZED");
 		
+		addRequestHandler("install", InstallSoftwareHandler.class);
+		trace("InstallSoftwareHandler=>		INITIALIZED");
+		
 		addEventHandler(SFSEventType.USER_DISCONNECT, OnUserGoneHandler.class);
 		addEventHandler(SFSEventType.USER_LEAVE_ROOM, OnUserGoneHandler.class);
 		addEventHandler(SFSEventType.USER_LOGOUT, OnUserGoneHandler.class);
@@ -92,6 +95,9 @@ public class GameExtension extends SFSExtension
 		
 		removeRequestHandler("policePosition");
 		trace("PolicePositionHandler=>		STOPPED");
+		
+		addRequestHandler("install", InstallSoftwareHandler.class);
+		trace("InstallSoftwareHandler=>		STOPPED");
 		
 		trace("----- GAME EXTENSION STOPPED! -----");
 	}

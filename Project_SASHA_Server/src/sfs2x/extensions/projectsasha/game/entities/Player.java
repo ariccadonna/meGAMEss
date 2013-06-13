@@ -239,10 +239,16 @@ public class Player
 	
 	public void removeItems(Software s)
 	{
-		int pos = this.indexOf(s);
-		for(int i = pos; i<10;i++)
+		for(int i = 0; i<GameConsts.INVENTORY_SIZE;i++)
+		{
+			if(this.inventory[i]==null)
+				continue;
 			if(this.inventory[i].getType().equals(s.getType()) && this.inventory[i].getVersion()==s.getVersion())
+			{
 				this.inventory[i] = null;
+				break;
+			}
+		}
 	}
 	
 	@Override 

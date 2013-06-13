@@ -81,6 +81,11 @@ public class Gateway : MonoBehaviour {
 	{
 		return this.region;
 	}
+	
+	public string getSlot(int slot)
+	{
+		return this.sw[slot];
+	}
 
 }
 

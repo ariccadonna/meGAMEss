@@ -163,7 +163,7 @@ public abstract class Software
 	
 	@Override
 	public String toString(){
-		return this.getName() + " V"+this.getVersion();
+		return this.getName().replace(' ', '_') + "_V"+this.getVersion();
 	}
 	
 }

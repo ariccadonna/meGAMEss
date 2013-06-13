@@ -11,7 +11,7 @@ public class GameConsts
 	public static final int CONQUER_TIME_TRESHOLD	= 30; //time to add when neutralizing and hacking a gateway in seconds
 	public static final int FAILTIME				= 10; //time to wait if an hack fails in seconds
 	public static final int DISABLED_TIME			= 60; //offline time of disabled gateway
-	public static final int INVENTORY_SIZE			= 10;
+	public static final int INVENTORY_SIZE			= 9;
 	public static final float HEURISTIC_WEIGHT		= 1/3;
 
 	/* Gateway parameters */

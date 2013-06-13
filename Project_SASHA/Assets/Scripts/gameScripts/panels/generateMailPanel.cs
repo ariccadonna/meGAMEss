@@ -24,7 +24,7 @@ public class generateMailPanel : MonoBehaviour {
 	
 		if(Input.GetMouseButtonDown(0))
 		{
-			if (script.mailPanel.activeSelf==false)
+			if (script.inventoryPanel.activeSelf==false)
 			{
 				script.activateMailPanel();
 			}

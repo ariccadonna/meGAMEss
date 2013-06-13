@@ -48,6 +48,7 @@ public class NetworkManager : MonoBehaviour {
 	
 	private System.Object messagesLocker = new System.Object();
 	private SmartFox smartFox;
+	private bool installSuccess = false;
 
 	void Awake() 
 	{
@@ -209,6 +210,13 @@ public class NetworkManager : MonoBehaviour {
 			else if (cmd == "playerInfo")
 			{
 				GameObject.Find("playerStats").GetComponent<printPlayerStat>().printStat(data.GetUtfString("name"), data.GetInt("money"), data.GetLong("time"));
+				gameObject.GetComponent<referencePanel>().inventoryPanel.GetComponent<inventory>().refreshInventory(data.GetSFSArray("inventory"));
+				//Debug.Log (data.GetSFSArray("inventory").GetElementAt(0));
+			}
+			else if (cmd == "install")
+			{
+				installSuccess = data.GetBool("success");
+				smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
 			}
 			else if (cmd == "path")
 				tracePath(data);
@@ -270,6 +278,16 @@ public class NetworkManager : MonoBehaviour {
 		playerColors.Add ("Neutral", Color.gray);
 	}
 	
+	public bool installSoftware(string name, string gateway)
+	{
+		ISFSObject data = new SFSObject();
+		data.PutUtfString("software", name);
+		data.PutUtfString("gateway", gateway);	
+		smartFox.Send(new ExtensionRequest("install", data, smartFox.LastJoinedRoom));
+		
+		return installSuccess;
+	}
+	
 	public string getCurrentPlayer()
 	{
 		return currentPlayer;
@@ -291,7 +309,6 @@ public class NetworkManager : MonoBehaviour {
 					gw.Setup(currentObject);
 					
 					gw.GetComponent<OTSprite>().tintColor = playerColors[gw.getOwner()];
-	
 					stopParticle(gw);
 			
 					if(gw.getOwner() == smartFox.MySelf.Name)
@@ -393,7 +410,7 @@ public class NetworkManager : MonoBehaviour {
 		smartFox.Send(getStats);
 	}
 	
-private void tracePath(ISFSObject data)
+	private void tracePath(ISFSObject data)
 	{
 		ISFSArray path = data.GetSFSArray("hackingPath");
 		int i = 0;
@@ -410,26 +427,32 @@ private void tracePath(ISFSObject data)
 			Vector3 p1 = new Vector3(int.Parse(coord_2[0]), int.Parse(coord_2[1]), 5);
 			Vector3 direction = (Vector3)((p1 - p0).normalized);
 			float distance = Vector3.Distance(p1,p0);
-			ray = Instantiate(rayPrefab) as GameObject;
 			
+			ray = Instantiate(rayPrefab) as GameObject;
 			ray.transform.position = new Vector2((p1.x+p0.x)/2,(p1.y+p0.y)/2);
 					    
 			rayLenght = distance;
 			
 			ray.transform.localScale = new Vector2(rayLenght,1);
 
-			//rotation.eulerAngles = direction;
-			//ray.transform.rotation = rotation;
-			
-							//Mathf.Atan2(pixelpos.Y, pixelpos.X) / (2 * Math.PI)
-			//inclinazioneRay=Mathf.Atan((yt-ys)/(xt-xs))*Mathf.Rad2Deg;
 			float inclinazioneRay = Mathf.Atan((p1.y-p0.y)/(p1.x-p0.x))*Mathf.Rad2Deg;
 			rotation.eulerAngles = new Vector3(0,0,inclinazioneRay);
 			ray.transform.rotation=rotation;
-
+			
+			
 			
 			i++;
 		}
+	}
+	
+	public bool isSoftwareInstalled()
+	{
+		return this.installSuccess;
+	}
+	
+	public void resetInstalledSuccess()
+	{
+		this.installSuccess = false;
 	}
 	
 }

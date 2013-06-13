@@ -5,7 +5,7 @@ public class referencePanel : MonoBehaviour {
 	
 	public GameObject bottomPanel;
 	public GameObject shopPanel;
-	public GameObject mailPanel;
+	public GameObject inventoryPanel;
 	public GameObject lastSelectedGateway;
 	GameObject obj;
 	float a;
@@ -24,6 +24,9 @@ public class referencePanel : MonoBehaviour {
 			bottomPanel.SetActive(true); 
 			bottomPanel.GetComponent<printStat>().stat(gtw.GetComponent<Gateway>());
 			lastSelectedGateway=gtw;
+			GameObject.Find("slot1").GetComponent<drop>().setGateway(gtw);
+			GameObject.Find("slot2").GetComponent<drop>().setGateway(gtw);
+			GameObject.Find("slot3").GetComponent<drop>().setGateway(gtw);
 		}
 		else
 		{
@@ -37,8 +40,14 @@ public class referencePanel : MonoBehaviour {
 	public void activateShopPanel(){shopPanel.SetActive(true);}
 	public void deactivateShopPanel(){shopPanel.SetActive(false);}
 
-	public void activateMailPanel(){mailPanel.SetActive(true);}
-	public void deactivateMailPanel(){mailPanel.SetActive(false);}
+	public void activateMailPanel(){
+		inventoryPanel.GetComponent<inventory>().instantiateSW();
+		inventoryPanel.SetActive(true);
+	}
+	public void deactivateMailPanel(){
+		inventoryPanel.SetActive(false);
+		inventoryPanel.GetComponent<inventory>().deleteSW();
+	}
 	
 	
 
