@@ -213,6 +213,18 @@ public class Player
 		return false;
 	}
 	
+	public boolean addInventory(GameWorld world, Software s)
+	{
+		int cost = (s.getCost() *this.getConqueredGateway(world, GameConsts.EDU_GATEWAY))/100;
+		if(this.getInventorySlotAvailable()!=-1 && this.getMoney()>=(s.getCost() - cost) && s.getLock()==false)
+		{
+			this.getInventory()[this.getInventorySlotAvailable()] = s;
+			this.removeMoney(s.getCost() - cost);
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean checkInventory(String type, int level)
 	{
 		for(Software s : this.inventory)

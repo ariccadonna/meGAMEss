@@ -218,7 +218,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				//		send a countdown to the player for remaining hack time??
 				}
 
-				from.getOwner().setCanHack(true);
+				currentOwner.setCanHack(true);
 				to.setOwner(from.getOwner());
 				freeStatus(from,to);
 				ret = true;
