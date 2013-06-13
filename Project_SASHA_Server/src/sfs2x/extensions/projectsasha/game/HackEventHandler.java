@@ -48,12 +48,12 @@ public class HackEventHandler extends BaseClientRequestHandler
 				
 				if(from.getInstalledSoftware(GameConsts.PROXY) == null)
 				{
-					trace("There is no proxy");
+					//trace("There is no proxy");
 					for(Gateway g : from.getNeighboors())
 					{
 						if(g == to)
 						{
-							trace("I found a path");
+							//trace("I found a path");
 							hackingPath = new ArrayList<Gateway>();
 							hackingPath.add(from);
 							hackingPath.add(to);
@@ -63,7 +63,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				}
 				else
 				{
-					trace("There is a proxy of level "+((Proxy)from.getInstalledSoftware(GameConsts.PROXY)).getAttackLevel());
+					//trace("There is a proxy of level "+((Proxy)from.getInstalledSoftware(GameConsts.PROXY)).getAttackLevel());
 					hackingPath = from.tracePath(to, attackRelevance);					
 				}
 				
@@ -97,13 +97,15 @@ public class HackEventHandler extends BaseClientRequestHandler
 				
 				if(from.getInstalledSoftware(GameConsts.PROXY) == null)
 				{
-					trace("There is no proxy");
+					//trace("There is no proxy");
 					for(Gateway g : from.getNeighboors())
 					{
 						if(g == to)
 						{
-							trace("I found a path");
+							//trace("I found a path");
 							hackingPath = new ArrayList<Gateway>();
+							hackingPath.add(from);
+							hackingPath.add(to);
 							break;
 						}
 					}							
@@ -111,7 +113,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				else
 				{
 					hackingPath = from.tracePath(to, attackRelevance);
-					trace("There is a proxy of level "+((Proxy)from.getInstalledSoftware(GameConsts.PROXY)).getRange());
+					//trace("There is a proxy of level "+((Proxy)from.getInstalledSoftware(GameConsts.PROXY)).getRange());
 				}
 				
 				if(hackingPath == null)
@@ -207,17 +209,19 @@ public class HackEventHandler extends BaseClientRequestHandler
 				int waitTime = this.hackTime(world, from, to) + extraTime;
 				startTime = System.currentTimeMillis();
 				endTime = startTime+(waitTime*1000);
-				from.getOwner().setCanHack(false);//disable hack for the following seconds
+				currentOwner.setCanHack(false);//disable hack for the following seconds
 				while(System.currentTimeMillis() != endTime)
 				{
-					if(currentOwner == null)
-						return ret;
 				/*BUSY WAIT*/
 				//currentTick = System.currentTimeMillis()-starTime;
 				//	if(currentTick%1000==0)
 				//		send a countdown to the player for remaining hack time??
 				}
-
+				if(from.getOwner() == null)
+				{
+					currentOwner.setCanHack(true);
+					return ret;
+				}
 				currentOwner.setCanHack(true);
 				to.setOwner(from.getOwner());
 				freeStatus(from,to);
@@ -230,15 +234,18 @@ public class HackEventHandler extends BaseClientRequestHandler
 				from.getOwner().setCanHack(false); //disable hack for the following seconds
 				while(System.currentTimeMillis() != endTime)
 				{
-					if(currentOwner == null)
-						return ret;
 				/*BUSY WAIT*/
 				//currentTick = System.currentTimeMillis()-starTime;
 				//	if(currentTick%1000==0)
 				//		send a countdown to the player??
 				}
 			
-				from.getOwner().setCanHack(true);
+				if(from.getOwner() == null)
+				{
+					currentOwner.setCanHack(true);
+					return ret;
+				}
+				currentOwner.setCanHack(true);
 				ret = false;
 				freeStatus(from,to);
 				}

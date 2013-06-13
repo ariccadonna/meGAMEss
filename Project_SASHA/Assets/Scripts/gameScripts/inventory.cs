@@ -36,8 +36,8 @@ public class inventory : MonoBehaviour {
 	public void instantiateSW()
 	{
 		imgRepo=GameObject.Find("imagesRepository").GetComponent<imgRepo>();
-		float sizex = gameObject.GetComponent<OTSprite>().size.x;
-		float sizey = gameObject.GetComponent<OTSprite>().size.y;
+		float sizex = gameObject.GetComponent<OTSprite>().size.x;// <-------------------
+		float sizey = gameObject.GetComponent<OTSprite>().size.y;// <-------------------
 		int i = 0;
 		while(i < sw.Length)
 		{
@@ -55,7 +55,7 @@ public class inventory : MonoBehaviour {
 			currentSW.transform.localPosition = new Vector3(positionX, positionY, 0F);
 			
 			currentSW.GetComponent<OTSprite>().image = imgRepo.getTxt(sw[i]);
-			if(sw[i]==null)
+			if(sw[i]==null || sw[i] == "")
 			{
 				currentSW.GetComponent<OTSprite>().draggable = false;
 				currentSW.GetComponent<OTSprite>()._registerInput = false;

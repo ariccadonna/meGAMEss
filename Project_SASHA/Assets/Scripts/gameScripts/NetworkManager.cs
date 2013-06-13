@@ -158,6 +158,9 @@ public class NetworkManager : MonoBehaviour {
 		ExtensionRequest getStats = new ExtensionRequest("playerInfo", new SFSObject(), smartFox.LastJoinedRoom);
 		smartFox.Send(getStats);
 		
+		ExtensionRequest getShop = new ExtensionRequest("shopInfo", new SFSObject(), smartFox.LastJoinedRoom);
+		smartFox.Send(getShop);
+		
 		
 	}
 	
@@ -217,6 +220,10 @@ public class NetworkManager : MonoBehaviour {
 			{
 				installSuccess = data.GetBool("success");
 				smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
+			}
+			else if (cmd == "shopInfo")
+			{
+				//shop setup
 			}
 			else if (cmd == "path")
 				tracePath(data);
