@@ -29,6 +29,11 @@ public class BuyItemHandler extends BaseClientRequestHandler{
 			return;
 		}
 		
+		if(p.isFree()==false)
+		{
+			sendError("INVENTORYFULL", sender);
+		}
+		
 		p.addInventory(world, s);
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", true);
@@ -69,6 +74,12 @@ public class BuyItemHandler extends BaseClientRequestHandler{
 		{
 			trace("Player hasn't enough money to buy this item");
 			reback.putUtfString("error", "NOTENOUGHMONEY");
+		}
+		
+		if(errorType == "INVENTORYFULL")
+		{
+			trace("Inventory is full");
+			reback.putUtfString("error", "INVENTORYFULL");
 		}
 		
 		send("error", reback, sender);	

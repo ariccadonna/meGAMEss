@@ -263,6 +263,14 @@ public class Player
 		}
 	}
 	
+	public boolean isFree()
+	{
+		for(Software s : this.inventory)
+			if(s==null)
+				return true;
+		return false;
+	}
+	
 	@Override 
 	public String toString(){
 		String returnString = "/*****************************************\\\n";
