@@ -563,6 +563,9 @@ public class NetworkManager : MonoBehaviour {
 			case "NOTCUMULATIVE":
 				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You cant install\nthat item on that\nGateway since it's\nalready installed";
 			break;
+			case "ITEMNOTPRESENT":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You need to install\na previous version\nof that software";
+			break;
 			case "LOST":
 				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You lost";
 				lost = true;
