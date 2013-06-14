@@ -41,8 +41,10 @@ public class WorldSetupHandler extends BaseClientRequestHandler
 				currentGW.setParentForPath(p.getUserName(), null);
 			}
 			
+			p.addMoney(GameConsts.STARTING_MONEY);
+			
 			/**FIXME: only for demo**/
-			p.addMoney(100);
+			
 			/*p.addInventory(SoftwareFactory.makeSoftware(GameConsts.BRUTEFORCER));
 			p.addInventory(SoftwareFactory.makeSoftware(GameConsts.BRUTEFORCER, 2));
 			p.addInventory(SoftwareFactory.makeSoftware(GameConsts.BRUTEFORCER, 3));

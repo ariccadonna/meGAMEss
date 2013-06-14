@@ -24,6 +24,8 @@ public class buttonShopInput : MonoBehaviour {
 	ISFSObject shopList;
 	int price;
 	string desc;
+	private bool sc = false;
+	Vector3 scale;
 	
 	// Use this for initialization
 	void Awake () {
@@ -51,10 +53,12 @@ public class buttonShopInput : MonoBehaviour {
 		
 		sprite = GetComponent<OTSprite>();
 		sprite.onInput=click;
+		sprite.onMouseExitOT = exit;
 		name=gameObject.name;
 		imgRepo=GameObject.Find("imagesRepository").GetComponent<imgRepo>();
 		
 		resize=new Vector2(0.1f,0.6f);
+		scale = gameObject.transform.localScale;
 		
 		
 	
@@ -66,7 +70,18 @@ public class buttonShopInput : MonoBehaviour {
 	
 		//SWdsc_txt.text=desc;
 		
-				
+		if(Input.GetMouseButtonDown(0))
+		{
+			gameObject.transform.localScale=new Vector3(gameObject.transform.localScale.x-2f,gameObject.transform.localScale.y-2f,gameObject.transform.localScale.z);
+			sc = true;
+		}
+		
+		if(Input.GetMouseButtonUp(0))
+		{
+			gameObject.transform.localScale=scale;
+			sc = false;
+		}
+		
 		
 		nwm=GameObject.Find("referencePanel").GetComponent<NetworkManager>();
 		shopList=nwm.getShop();
@@ -119,6 +134,15 @@ public class buttonShopInput : MonoBehaviour {
 			costItem3.text="";
 		}
 		
+	}
+	
+	void exit(OTObject sprite) 
+	{
+		if(sc)
+		{
+			gameObject.transform.localScale=scale;
+			sc = false;
+		}
 	}
 	
 

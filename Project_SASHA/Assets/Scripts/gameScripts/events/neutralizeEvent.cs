@@ -8,6 +8,8 @@ public class neutralizeEvent : MonoBehaviour {
 	OTScale9Sprite sprite;
 	private NetworkManager nwm = null;
 	private string target,start;
+	private bool sc = false;
+	Vector3 scale;
 	
 	
 	
@@ -20,6 +22,8 @@ public class neutralizeEvent : MonoBehaviour {
 		sprite=GetComponent<OTScale9Sprite>();
 		sprite.tintColor=Color.red;
 		sprite.onInput=click;
+		sprite.onMouseExitOT = exit;
+		scale = gameObject.transform.localScale;
 		
 		
 	}
@@ -40,6 +44,18 @@ public class neutralizeEvent : MonoBehaviour {
 	
 	void click(OTObject sprite)
 	{
+		if(Input.GetMouseButtonDown(0))
+		{
+			gameObject.transform.localScale=new Vector3(gameObject.transform.localScale.x-1f,gameObject.transform.localScale.y-1f,gameObject.transform.localScale.z);
+			sc = true;
+		}
+		
+		if(Input.GetMouseButtonUp(0))
+		{
+			gameObject.transform.localScale=scale;
+			sc = false;
+		}
+		
 		if(!gatewayStart)
 		{
 		print ("first select the start gateway from those you own");
@@ -54,7 +70,15 @@ public class neutralizeEvent : MonoBehaviour {
 				
 			}
 		}
-		
+	}
+	
+	void exit(OTObject sprite) 
+	{
+		if(sc)
+		{
+			gameObject.transform.localScale=scale;
+			sc = false;
+		}
 	}
 	
 }

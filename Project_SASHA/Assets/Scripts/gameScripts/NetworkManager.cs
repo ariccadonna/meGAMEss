@@ -258,6 +258,8 @@ public class NetworkManager : MonoBehaviour {
 		User user = (User)evt.Params["user"];
 		Room room = (Room)evt.Params["room"];
 		smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
+		if(room.UserList.Count == 1)
+			DisplayWindow("YOUWON");
         Debug.Log("User " + user.Name + " left room " + room);
 	}
 	

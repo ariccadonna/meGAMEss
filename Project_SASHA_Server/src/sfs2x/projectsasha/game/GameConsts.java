@@ -7,12 +7,13 @@ public class GameConsts
 	public static final int EARTH_RADIUS			= 6371;
 	public static final int EARTH_MAX_DISTANCE		= 20015;
 	public static final int MONEY_UPDATE_TIME		= 5000;
-	public static final int BONUS_MONEY_PER_REGION	= 10;
+	public static final int BONUS_MONEY_PER_REGION	= 2;
 	public static final int CONQUER_TIME_TRESHOLD	= 30; //time to add when neutralizing and hacking a gateway in seconds
 	public static final int FAILTIME				= 10; //time to wait if an hack fails in seconds
 	public static final int DISABLED_TIME			= 60; //offline time of disabled gateway
 	public static final int INVENTORY_SIZE			= 9;
 	public static final float HEURISTIC_WEIGHT		= 1/3;
+	public static final int STARTING_MONEY			= 50;
 
 	/* Gateway parameters */
 	public static final String[] STARTING_SPOTS		= {
