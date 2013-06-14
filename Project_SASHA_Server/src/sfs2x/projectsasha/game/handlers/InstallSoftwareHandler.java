@@ -37,14 +37,21 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 			return;
 		}
 		
-		if(currentGw.hasSoftware(swName))
+		if(currentGw.hasSoftware(swName) && swVersion > currentGw.getInstalledSoftware(swName).getVersion())
 		{
 			currentGw.upgradeSoftware(swName, p);
 			trace("has sw, i'm upgrading it");
 		}
 		else
 		{
-			currentGw.installSoftware(swName, p);
+			if(swVersion == 1)
+				currentGw.installSoftware(swName, p);
+			else
+			{
+				sendError("ITEMNOTPRESENT",sender);
+				return;
+			}
+				
 			trace("has sw, i'm installing it");
 		}
 		
@@ -94,6 +101,10 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 		if(errorType == "NOTCUMULATIVE")
 		{
 			reback.putUtfString("error", "NOTCUMULATIVE");
+		}
+		if(errorType == "ITEMNOTPRESENT")
+		{
+			reback.putUtfString("error","ITEMNOTPRESENT");
 		}
 		send("error", reback, sender);	
 	}
