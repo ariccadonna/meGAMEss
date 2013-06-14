@@ -14,13 +14,27 @@ public class printPlayerStat : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	public void printStat (string name, int money, long time) 
+	public void printStat (string name, int money, long time, Color myColor) 
 	{
+		string color = "";
+		
+		if(myColor == Color.red)
+			color = "red";
+		if(myColor == Color.green)
+			color = "green";
+		if(myColor == Color.cyan)
+			color = "cyan";
+		if(myColor == Color.magenta)
+			color = "magenta";
+		if(myColor == Color.yellow)
+			color = "yellow";
+
+		
 		int newtime = (int) time/1000;
 		s = (int) newtime%60;
 		m = (int) (newtime/60)%60;
 		h = (int) (newtime/3600)%24;
 		formattedTime = string.Format("{0:00}:{1:00}:{2:00}",h,m,s);
-		sprite.text="STATS:\n\nPlayer: "+ name + "\nMoney: " + money +"\nGame time: "+ formattedTime;
+		sprite.text="STATS:\nColor:"+color+"\nPlayer: "+ name + "\nMoney: " + money +"\nGame time: "+ formattedTime;
 	}
 }

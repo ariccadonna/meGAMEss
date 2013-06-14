@@ -130,6 +130,9 @@
     <Compile Include="Assets\Scripts\TestingLoginLobbys.cs" />
     <Compile Include="Assets\Scripts\gameScripts\Gateway.cs" />
     <Compile Include="Assets\Scripts\gameScripts\NetworkManager.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\events\buttonShopInput.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\events\clickOnItem.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\events\closeWindow.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\drag.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\drop.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\hackEvent.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="Assets\Scripts\gameScripts\print\printObjectives.cs" />
     <Compile Include="Assets\Scripts\gameScripts\print\printPlayerStat.cs" />
     <Compile Include="Assets\Scripts\gameScripts\print\printStat.cs" />
+    <Compile Include="Assets\Scripts\hackInfo.cs" />
     <Compile Include="Assets\Scripts\openingLogo.cs" />
     <None Include="Assets\Orthello\Standard Assets\OT\_Base\TintedAlpha.shader" />
     <None Include="Assets\font\fontgioco.txt" />

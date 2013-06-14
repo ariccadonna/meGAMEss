@@ -29,15 +29,15 @@ public class inventory : MonoBehaviour {
 	
 	public void refreshInventory(ISFSArray inv)
 	{
-		for(int i = 0; i<inv.Size()-1; i++)
+		for(int i = 0; i<9; i++)
+		{
 			sw[i] = (String) inv.GetElementAt(i);
+		}
 	}
 	
 	public void instantiateSW()
 	{
 		imgRepo=GameObject.Find("imagesRepository").GetComponent<imgRepo>();
-		float sizex = gameObject.GetComponent<OTSprite>().size.x;// <-------------------
-		float sizey = gameObject.GetComponent<OTSprite>().size.y;// <-------------------
 		int i = 0;
 		while(i < sw.Length)
 		{

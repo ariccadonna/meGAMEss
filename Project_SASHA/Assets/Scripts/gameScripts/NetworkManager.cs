@@ -50,6 +50,8 @@ public class NetworkManager : MonoBehaviour {
 	private SmartFox smartFox;
 	private bool installSuccess = false;
 	
+	private bool lost = false;
+	
 	private ISFSObject shop;
 
 	void Awake() 
@@ -168,7 +170,6 @@ public class NetworkManager : MonoBehaviour {
 	
 	private void OnConnectionLost(BaseEvent evt) 
 	{
-		print ("disconnected for this reason: "+ evt.Params["reason"]);
         UnsubscribeDelegates();
 		Screen.lockCursor = false;
 		Screen.showCursor = true;
@@ -184,11 +185,12 @@ public class NetworkManager : MonoBehaviour {
 											
 			if (cmd == "hack") 
 			{
+				GameObject.Find("hackInfo").GetComponent<hackInfo>().isHacking = false;
 				smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
 				foreach(GameObject g in GameObject.FindGameObjectsWithTag("ray"))
 					Destroy(g);
 				if(data.GetBool("victoryReached") == true)
-					Debug.Log ("victory reached");
+					DisplayWindow("YOUWON");
 			}
 			if (cmd == "syncWorld") 
 			{
@@ -214,20 +216,30 @@ public class NetworkManager : MonoBehaviour {
 			}
 			else if (cmd == "playerInfo")
 			{
-				GameObject.Find("playerStats").GetComponent<printPlayerStat>().printStat(data.GetUtfString("name"), data.GetInt("money"), data.GetLong("time"));
+				GameObject.Find("playerStats").GetComponent<printPlayerStat>().printStat(data.GetUtfString("name"), data.GetInt("money"), data.GetLong("time"), playerColors[smartFox.MySelf.Name]);
 				gameObject.GetComponent<referencePanel>().inventoryPanel.GetComponent<inventory>().refreshInventory(data.GetSFSArray("inventory"));
-				//Debug.Log (data.GetSFSArray("inventory").GetElementAt(0));
 			}
 			else if (cmd == "install")
 			{
 				installSuccess = data.GetBool("success");
 				smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
+				DisplayWindow("INSTALLED");
 			}
 			else if (cmd == "shopInfo")
 			{
-				//shop setup
 				ShopSetup(data);
-			//	Debug.Log (data.GetUtfString);
+			}
+			else if (cmd == "buy")
+			{
+				DisplayWindow("SUCCESS");
+			}
+			else if (cmd == "error")
+			{
+				DisplayWindow(data.GetUtfString("error"));
+			}
+			else if (cmd == "lost")
+			{
+				DisplayWindow("LOST");
 			}
 			else if (cmd == "path")
 				tracePath(data);
@@ -241,6 +253,7 @@ public class NetworkManager : MonoBehaviour {
 	{
 		User user = (User)evt.Params["user"];
 		Room room = (Room)evt.Params["room"];
+		smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
         Debug.Log("User " + user.Name + " left room " + room);
 	}
 	
@@ -259,21 +272,29 @@ public class NetworkManager : MonoBehaviour {
 	
 	public void SendHackRequest(String fromGateway, String toGateway) 
 	{
+		if(lost)
+		{
+			DisplayWindow("ACTIONSDISABLED");
+			return;
+		}
 		ISFSObject data = new SFSObject();
 		data.PutUtfString("gatewayFrom", fromGateway);
 		data.PutUtfString("gatewayTo", toGateway);
 		data.PutBool("neutralize", false);
-		
 		smartFox.Send(new ExtensionRequest("hack", data, smartFox.LastJoinedRoom));
+		
 	}
 	
 	public void SendNeutralizeRequest(String fromGateway, String toGateway) {
-		
+		if(lost)
+		{
+			DisplayWindow("ACTIONSDISABLED");
+			return;
+		}
 		ISFSObject data = new SFSObject();
 		data.PutUtfString("gatewayFrom", fromGateway);
 		data.PutUtfString("gatewayTo", toGateway);
 		data.PutBool("neutralize", true);
-		
 		smartFox.Send(new ExtensionRequest("hack", data, smartFox.LastJoinedRoom));
 	}
 
@@ -291,6 +312,11 @@ public class NetworkManager : MonoBehaviour {
 	
 	public bool installSoftware(string name, string gateway)
 	{
+		if(lost)
+		{
+			DisplayWindow("ACTIONSDISABLED");
+			return false;
+		}
 		ISFSObject data = new SFSObject();
 		data.PutUtfString("software", name);
 		data.PutUtfString("gateway", gateway);	
@@ -366,17 +392,10 @@ public class NetworkManager : MonoBehaviour {
 					
 				}
 	}
+	
 	private void ShopSetup(ISFSObject data)
 	{
 		this.shop = data;
-		//String[] keys = data.GetKeys();
-		/*foreach(String currentKey in data.GetKeys())
-		{
-			ISFSObject currentObject = data.GetSFSObject(currentKey);
-			price = currentObject.GetInt("PRICE");
-			desc = currentObject.GetUtfString("DESC");
-			Debug.Log (currentKey+" "+price+" "+desc);
-		}*/
 	}
 	
 	public ISFSObject getShop()
@@ -403,7 +422,6 @@ public class NetworkManager : MonoBehaviour {
 	
 	private void UpdateObjective(ISFSObject data)
 	{
-		
 		GameObject obj = GameObject.Find("objectives");
 		printObjectives objectives = obj.GetComponent<printObjectives>();
 		objectives.ObjectivesUpdate(data);
@@ -440,6 +458,12 @@ public class NetworkManager : MonoBehaviour {
 	
 	private void tracePath(ISFSObject data)
 	{
+		if(lost)
+		{
+			DisplayWindow("ACTIONSDISABLED");
+			return;
+		}
+		GameObject.Find("hackInfo").GetComponent<hackInfo>().isHacking = true;
 		ISFSArray path = data.GetSFSArray("hackingPath");
 		int i = 0;
 		while(i < path.Size()-1)
@@ -483,4 +507,70 @@ public class NetworkManager : MonoBehaviour {
 		this.installSuccess = false;
 	}
 	
+	public void buyItem(string software)
+	{
+		if(lost)
+		{
+			DisplayWindow("ACTIONSDISABLED");
+			return;
+		}
+		ISFSObject data = new SFSObject();
+		data.PutUtfString("software", software);
+		ExtensionRequest buyItem = new ExtensionRequest("buy", data, smartFox.LastJoinedRoom);
+		smartFox.Send(buyItem);
+	}
+	
+	public void DisplayWindow(string action)
+	{
+		GameObject.Find("messageContainer").transform.position = new Vector3(-200F, 64F, -80F);
+		switch(action)
+		{
+			case "SUCCESS":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Item bought with success";
+			break;
+			case "YOUWON":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You win";
+			break;
+			case "INSTALLED":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Software installed";
+			break;
+			case "NOPATH":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "No hacking path\navailable";
+			break;
+			case "HACKDISABLED":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Your hack is disabled\nOR one of the selected nGateway\nis disabled for some seconds";
+			break;
+			case "NOTOWNER":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont own\nthat nGateway";
+			break;
+			case "ITEMNOTOWNED":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont own\nthat item";
+			break;
+			case "INVENTORYFULL":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Your inventory is full";
+			break;
+			case "NOTENOUGHMONEY":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont have\nenough money";
+			break;
+			case "NOTCUMULATIVE":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You cant install\nthat item on that\nGateway since it's\nalready installed";
+			break;
+			case "LOST":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You lost";
+				lost = true;
+				StartCoroutine(endGame);
+			break;
+			case "ACTIONSDISABLED":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "All the actions\nhave been disabled";
+			break;
+		}
+	}
+	
+	private IEnumerator endGame()
+	{
+		yield return new WaitForSeconds(5f);
+		ExtensionRequest endGameRequest = new ExtensionRequest("endGame", new SFSObject(), room);
+		smartFox.Send(endGameRequest);
+			
+	}
 }
