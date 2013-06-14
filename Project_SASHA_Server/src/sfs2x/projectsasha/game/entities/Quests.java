@@ -1,6 +1,5 @@
 package sfs2x.projectsasha.game.entities;
 
-import sfs2x.projectsasha.game.entities.gateways.Gateway;
 import sfs2x.projectsasha.game.entities.software.Software;
 
 

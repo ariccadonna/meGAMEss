@@ -2,15 +2,12 @@ package sfs2x.projectsasha.game.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import sfs2x.projectsasha.game.entities.gateways.*;
-import sfs2x.projectsasha.game.entities.software.*;
 import sfs2x.projectsasha.game.ia.AIThread;
 import sfs2x.projectsasha.game.entities.Objective;
 import sfs2x.projectsasha.game.utils.RoomHelper;
 import sfs2x.projectsasha.game.GameConsts;
 import sfs2x.projectsasha.game.entities.GameWorld;
 import sfs2x.projectsasha.game.entities.Player;
-import sfs2x.projectsasha.game.entities.Quests;
 import sfs2x.projectsasha.game.entities.gateways.Gateway;
 import sfs2x.projectsasha.game.entities.software.DeepThroat;
 import sfs2x.projectsasha.game.entities.software.Software;
@@ -374,6 +371,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 		return (int)result;
 	}
 	
+	@SuppressWarnings("unused")
 	public int hackTime(GameWorld world, Gateway from, Gateway to)
 	{
 		int bonus, govBonus = 0;

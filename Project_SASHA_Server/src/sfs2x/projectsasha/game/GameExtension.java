@@ -77,6 +77,7 @@ public class GameExtension extends SFSExtension
 
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void destroy() 
 	{
 	
