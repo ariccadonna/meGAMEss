@@ -1,15 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\gameScripts\events\hackEvent.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\gameScripts\NetworkManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\gameScripts\Gateway.cs" Line="15" Column="23" />
-      <File FileName="Assets\Scripts\gameScripts\NetworkManager.cs" Line="524" Column="90" />
+      <File FileName="Assets\Scripts\gameScripts\NetworkManager.cs" Line="593" Column="45" />
       <File FileName="Assets\Scripts\gameScripts\events\buttonShopInput.cs" Line="105" Column="43" />
-      <File FileName="Assets\Scripts\gameScripts\events\clickOnItem.cs" Line="35" Column="19" />
-      <File FileName="Assets\Scripts\gameScripts\print\newsRandom.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\hackInfo.cs" Line="35" Column="4" />
-      <File FileName="Assets\Scripts\gameScripts\events\hackEvent.cs" Line="7" Column="34" />
-      <File FileName="Assets\Scripts\gameScripts\events\neutralizeEvent.cs" Line="52" Column="59" />
+      <File FileName="Assets\Scripts\gameScripts\events\clickOnItem.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\gameScripts\panels\generateShopPanel.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\gameScripts\panels\generateMailPanel.cs" Line="14" Column="47" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,10 +15,9 @@
             <Node name="Assets" expanded="True">
               <Node name="Scripts" expanded="True">
                 <Node name="gameScripts" expanded="True">
-                  <Node name="events" expanded="True">
-                    <Node name="hackEvent.cs" selected="True" />
-                  </Node>
-                  <Node name="print" expanded="True" />
+                  <Node name="events" expanded="True" />
+                  <Node name="panels" expanded="True" />
+                  <Node name="NetworkManager.cs" selected="True" />
                 </Node>
               </Node>
             </Node>

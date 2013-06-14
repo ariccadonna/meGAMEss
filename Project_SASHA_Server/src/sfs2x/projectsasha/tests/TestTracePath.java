@@ -169,7 +169,6 @@ public long startingTime;
 		try {
 			br.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		//POLIZIA

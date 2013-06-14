@@ -27,7 +27,7 @@ public class SoftwareFactory {
 		if(type == GameConsts.PROXY)
 			ret = new Proxy();
 		/*
-		 * FIXME: togliere i fix per Sam
+		 * FIXME: fix for JRE 1.6
 		 */
 		/*switch(type){	
 		case GameConsts.FIREWALL:	
@@ -88,7 +88,7 @@ public class SoftwareFactory {
 		if(type == GameConsts.PROXY)
 			ret = new Proxy(version);
 		/*
-		 * FIXME: togliere i fix per Sam
+		 * FIXME: fix for JRE 1.6
 		 */
 		/*switch(type){	
 		case GameConsts.FIREWALL:	

@@ -12,7 +12,6 @@ public class generateMailPanel : MonoBehaviour {
 		
 		pop = GameObject.Find("referencePanel");
 		script = pop.GetComponent<referencePanel>();
-		
 		sprite = GetComponent<OTSprite>();
 		sprite.onInput=click;
 		

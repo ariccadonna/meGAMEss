@@ -9,13 +9,13 @@ import sfs2x.projectsasha.game.entities.Player;
 import sfs2x.projectsasha.game.entities.Region;
 import sfs2x.projectsasha.game.entities.gateways.Gateway;
 import sfs2x.projectsasha.game.handlers.*;
+
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.extensions.SFSExtension;
 
 public class GameExtension extends SFSExtension
 {
 	private GameWorld world; // Reference to World simulation model
-	private Thread moneyThread;
 	private static Map<String,Player> players = new Hashtable<String,Player>();
 	private Objective[] gameObjectives = new Objective[6];
 	private Region[] regions;
@@ -116,6 +116,10 @@ public class GameExtension extends SFSExtension
 		trace("EndGameHandler		=>		STOPPED");
 		
 		trace("----- GAME EXTENSION STOPPED! -----");
+		
+		world.ai.stop();
+		world.money.stop();
+		
 	}
 	
 	private void WorldInit()
@@ -140,7 +144,7 @@ public class GameExtension extends SFSExtension
 	}
 	
 	private void produceMoney() {
-		moneyThread.start();
+		world.money.start();
 
 	}
 	

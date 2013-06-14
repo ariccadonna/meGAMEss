@@ -83,7 +83,6 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", false);
 		
-		//FIXME switch on errors
 		if(errorType == "NOTOWNER")
 		{
 			reback.putUtfString("error", "NOTOWNER");

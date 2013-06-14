@@ -241,6 +241,10 @@ public class NetworkManager : MonoBehaviour {
 			{
 				DisplayWindow("LOST");
 			}
+			else if (cmd == "endGameInfo")
+			{
+				DisplayStats(data);
+			}
 			else if (cmd == "path")
 				tracePath(data);
 		}
@@ -529,6 +533,8 @@ public class NetworkManager : MonoBehaviour {
 				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Item bought with success";
 			break;
 			case "YOUWON":
+				lost = true;
+				StartCoroutine(endGame());
 				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You win";
 			break;
 			case "INSTALLED":
@@ -558,7 +564,7 @@ public class NetworkManager : MonoBehaviour {
 			case "LOST":
 				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You lost";
 				lost = true;
-				StartCoroutine(endGame);
+				StartCoroutine(endGame());
 			break;
 			case "ACTIONSDISABLED":
 				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "All the actions\nhave been disabled";
@@ -569,8 +575,25 @@ public class NetworkManager : MonoBehaviour {
 	private IEnumerator endGame()
 	{
 		yield return new WaitForSeconds(5f);
-		ExtensionRequest endGameRequest = new ExtensionRequest("endGame", new SFSObject(), room);
+		ExtensionRequest endGameRequest = new ExtensionRequest("endGame", new SFSObject(), smartFox.LastJoinedRoom);
 		smartFox.Send(endGameRequest);
 			
+	}
+	
+	private void DisplayStats(ISFSObject data)
+	{
+		GameObject.Find("referencePanel").GetComponent<referencePanel>().deactivateMailPanel();
+		GameObject.Find("referencePanel").GetComponent<referencePanel>().deactivateShopPanel();
+		string text = "";
+		for(int i = 0; i < data.Size(); i++){
+		ISFSArray p = data.GetSFSArray("player"+i);
+		
+			p.GetBool(3);//won
+			string victory = p.GetBool(3)?"VICTORY":"DEFEAT";
+			text += p.GetUtfString(0)+":"+victory+"\nConquered Gateway: "+p.GetInt(1)+"\nEarned Money:"+p.GetInt(2)+"\n\n";
+		}
+		
+		GameObject.Find("blackPanel").GetComponent<OTFilledSprite>().depth = -200;
+		GameObject.Find("endStats").GetComponent<OTTextSprite>().text = text;
 	}
 }

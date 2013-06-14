@@ -1,9 +1,10 @@
-package sfs2x.projectsasha.game;
+package sfs2x.projectsasha.game.handlers;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import sfs2x.projectsasha.game.GameConsts;
 import sfs2x.projectsasha.game.utils.RoomHelper;
 import sfs2x.projectsasha.game.entities.GameWorld;
 import sfs2x.projectsasha.game.entities.Player;

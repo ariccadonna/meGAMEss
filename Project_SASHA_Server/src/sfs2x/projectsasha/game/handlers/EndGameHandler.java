@@ -17,13 +17,12 @@ public class EndGameHandler extends BaseClientRequestHandler{
 	public void handleClientRequest(User sender, ISFSObject params){
 		
 		GameWorld world = RoomHelper.getWorld(this);
-		world.ai.stop();
-		world.money.stop();
 		List<User> ul = RoomHelper.getCurrentRoom(this).getUserList();
 		
 		SFSObject reback = SFSObject.newInstance(); 
 		
 		Iterator<User> itr = ul.iterator();
+		int i = 0;
 		while (itr.hasNext())
 		{
 			User key = itr.next();
@@ -38,7 +37,8 @@ public class EndGameHandler extends BaseClientRequestHandler{
 			px.addInt(conqueredGateway);
 			px.addInt(money);
 			px.addBool(victorious);
-			reback.putSFSArray("player",px);
+			reback.putSFSArray("player"+i,px);
+			i++;
 		}
 
 		send("endGameInfo", reback, RoomHelper.getCurrentRoom(this).getUserList());

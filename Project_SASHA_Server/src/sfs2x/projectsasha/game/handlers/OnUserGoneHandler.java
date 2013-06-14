@@ -56,9 +56,6 @@ public class OnUserGoneHandler extends BaseServerEventHandler {
 	         trace("User "+user.getName()+" quit game");
 	         stmt.execute();
 	         
-	         /*
-	          * FIXME: ridistribuzione delle risorse
-	          */
 	         
 	      }
 	      

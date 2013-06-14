@@ -35,7 +35,7 @@ public class StartGameHandler extends BaseClientRequestHandler{
 		crs.setMaxUsers(5);
 		crs.setGame(true);
 		crs.setDynamic(true);
-		crs.setExtension(new RoomExtensionSettings("project_SASHA", "sfs2x.extensions.projectsasha.game.GameExtension"));
+		crs.setExtension(new RoomExtensionSettings("project_SASHA", "sfs2x.projectsasha.game.GameExtension"));
 
 		
 		for (User u : userList) {

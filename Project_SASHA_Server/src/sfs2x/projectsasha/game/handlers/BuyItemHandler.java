@@ -74,7 +74,6 @@ public class BuyItemHandler extends BaseClientRequestHandler{
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", false);
 		
-		//FIXME switch on errors
 		if(errorType == "NOTENOUGHMONEY")
 		{
 			trace("Player hasn't enough money to buy this item");

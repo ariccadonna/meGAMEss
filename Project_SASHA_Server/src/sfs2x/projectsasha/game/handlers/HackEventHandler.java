@@ -180,7 +180,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 			Software[] defenderSw = to.getInstalledSoftwares();
 		
 			/*
-			 * FIXME: togliere i fix per Sam
+			 * FIXME: fix for JRE 1.6
 			 */
 			for(Software sw: attackerSw)
 				if(sw!=null)
@@ -278,7 +278,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 		Software[] attackerSw = from.getInstalledSoftwares();
 		Software[] defenderSw = to.getInstalledSoftwares();
 		/*
-		 * FIXME: togliere i fix per Sam
+		 * FIXME: fix for JRE 1.6
 		 */
 		for(Software sw: attackerSw)
 			if(sw!=null)
@@ -398,7 +398,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 		
 		bonus = GameConsts.SCI_BONUS_MULTIPLIER*from.getOwner().getConqueredGateway(world, GameConsts.SCI_GATEWAY);
 		
-		/* FIXME: rimuovere i 10 secondi */
+		/* FIXME: only for demo */
 		return 10;//120 - timeToLeave[diff-1] - bonus;
 	}
 	
@@ -465,7 +465,6 @@ public class HackEventHandler extends BaseClientRequestHandler
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", false);
 		
-		//FIXME switch on errors
 		if(errorType == "NOPATH")
 		{
 			trace("No hacking path available");
