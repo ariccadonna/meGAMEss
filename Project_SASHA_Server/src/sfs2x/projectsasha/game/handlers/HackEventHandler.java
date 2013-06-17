@@ -37,124 +37,134 @@ public class HackEventHandler extends BaseClientRequestHandler
 		Gateway from = world.gateways.get(params.getUtfString("gatewayFrom"));
 		Gateway to = world.gateways.get(params.getUtfString("gatewayTo"));
 		neutralize = params.getBool("neutralize");
-		
-		if(from.getOwner()!=null && from.getOwner().canHack() && 	//if i'm owner of starting node and i can hack
-			to.getDisabled() < System.currentTimeMillis() && 		//starting node is not disabled
-			from.getDisabled() < System.currentTimeMillis() 		//ending node i disabled
-		) 
+			
+		if(from.getOwner()==null || from.getOwner()!=p)//if i'm owner of starting node
 		{
-			if(to.getOwner()!=null && to.getOwner()!=p) // if there is an owner in attacked node and it's not me
-			{
-				attackRelevance = this.getAttackRelevance(from, to);
-				
-				if(from.getInstalledSoftware(GameConsts.PROXY) == null)
-				{
-					//trace("There is no proxy");
-					for(Gateway g : from.getNeighboors())
-					{
-						if(g == to)
-						{
-							//trace("I found a path");
-							hackingPath = new ArrayList<Gateway>();
-							hackingPath.add(from);
-							hackingPath.add(to);
-							break;
-						}
-					}							
-				}
-				else
-				{
-					//trace("There is a proxy of level "+((Proxy)from.getInstalledSoftware(GameConsts.PROXY)).getAttackLevel());
-					hackingPath = from.tracePath(to, attackRelevance);					
-				}
-				
-				if(hackingPath == null)
-				{
-					sendError("NOPATH", sender);
-				}
-				
-				
-				if(neutralize) // if neutralize
-				{
-					
-					sendPathInfo(hackingPath, sender); // send path info to the client
-					
-					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": PROCESSING");
-					success = this.neutralize(world, from, to, sender);
-					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
-					
-					if(success)
-						 to.setDisabled(System.currentTimeMillis()+GameConsts.DISABLED_TIME*1000);
-				}
-				else	// if conquer
-				{	
-					
-					sendPathInfo(hackingPath, sender); // send path info to the client
-					
-					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": PROCESSING");
-					success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD, sender);
-					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
-				}
-				from.setTrace(hackingPath, attackRelevance);
-			}
-			else // if there is an not an owner in attacked node
-			{
-				
-				attackRelevance = this.getAttackRelevance(from, to);
-				
-				if(from.getInstalledSoftware(GameConsts.PROXY) == null)
-				{
-					//trace("There is no proxy");
-					for(Gateway g : from.getNeighboors())
-					{
-						if(g == to)
-						{
-							//trace("I found a path");
-							hackingPath = new ArrayList<Gateway>();
-							hackingPath.add(from);
-							hackingPath.add(to);
-							break;
-						}
-					}							
-				}
-				else
-				{
-					hackingPath = from.tracePath(to, attackRelevance);
-					//trace("There is a proxy of level "+((Proxy)from.getInstalledSoftware(GameConsts.PROXY)).getRange());
-				}
-				
-				if(hackingPath == null)
-				{
-					sendError("NOPATH", sender);
-					return;
-				}
-				
-				
-				sendPathInfo(hackingPath, sender); // send path info to the client
-				
-				success = this.hack(world, from, to, sender);
-				trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
-				from.setTrace(hackingPath, attackRelevance);
-				
-			}
+			sendError("NOTOWNER", sender);
+			return;
 		}
-		else //if i'm not owner of starting node or i can't hack
+		
+		if(to.getOwner() == p)
 		{
+			sendError("SELFHACKING", sender);
+			return;
+		}
+		
+		if(!from.getOwner().canHack())//my hack is disabled
+		{
+			trace(from.getOwner().getName()+" cant hack...");
 			sendError("HACKDISABLED", sender);
 			return;
 		}
 		
+		if(from.getDisabled() > System.currentTimeMillis())//starting node is disabled
+		{
+			sendError("ATTACKINGDISABLED", sender);
+			return;
+		}
+		
+		if(to.getDisabled() > System.currentTimeMillis())//ending node is disabled
+		{
+			sendError("ATTACKEDISABLED", sender);
+			return;
+		}
+		
+		attackRelevance = this.getAttackRelevance(from, to);
+		
+		if(to.getOwner()!=null && to.getOwner()!=p) // if there is an owner in attacked node and it's not me
+		{
+			
+
+			if(from.getInstalledSoftware(GameConsts.PROXY) == null) //there is no proxy installed
+			{
+				for(Gateway g : from.getNeighboors())
+				{
+					if(g == to) //attacked gateway is a neighboor
+					{
+						hackingPath = new ArrayList<Gateway>();
+						hackingPath.add(from);
+						hackingPath.add(to);
+						break;
+					}
+				}							
+			}
+			else //there is a proxy installed
+			{
+				hackingPath = from.tracePath(to, attackRelevance);					
+			}
+			
+			if(hackingPath == null)
+			{
+				sendError("NOPATH", sender);
+				return;
+			}
+			
+			
+			if(neutralize) // if neutralize
+			{
+				sendPathInfo(hackingPath, sender); // send path info to the client
+				success = this.neutralize(world, from, to, sender);
+				if(success)//disable hacked gateway for DISABLED_TIME seconds
+				{
+					 to.setDisabled(System.currentTimeMillis()+GameConsts.DISABLED_TIME*1000);
+					 to.setOwner(null);
+				}
+			}
+			else // if conquer
+			{	
+				sendPathInfo(hackingPath, sender); // send path info to the client
+				success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD, sender);
+			}
+			
+			from.setTrace(hackingPath, attackRelevance);
+			if(success)
+				sendRefreshRequest(to.getOwner());
+		}
+		else // if there is an not an owner in attacked node
+		{	
+			if(from.getInstalledSoftware(GameConsts.PROXY) == null) //there is no proxy installed
+			{
+				for(Gateway g : from.getNeighboors())
+				{
+					if(g == to) //attacked gateway is a neighboor
+					{
+						hackingPath = new ArrayList<Gateway>();
+						hackingPath.add(from);
+						hackingPath.add(to);
+						break;
+					}
+				}							
+			}
+			else //there is a proxy installed
+			{
+				hackingPath = from.tracePath(to, attackRelevance);
+			}
+			
+			if(hackingPath == null)
+			{
+				sendError("NOPATH", sender);
+				return;
+			}
+			
+			sendPathInfo(hackingPath, sender); // send path info to the client
+			success = this.hack(world, from, to, sender);
+			from.setTrace(hackingPath, attackRelevance);
+		}
+		
+				
 		isVictoryReached = checkVictoryConditions(p);
 		ISFSObject reback = SFSObject.newInstance();
 		reback.putBool("success", success);
 		reback.putBool("victoryReached", isVictoryReached);
+		
 		if(isVictoryReached)
 		{
 			reback.putBool("lost", true);
 			List<User> ul = RoomHelper.getCurrentRoom(this).getUserList();
 			ul.remove(sender);
-			send("lost", reback, ul);
+			send("lost", reback, ul);//send a lost request to all the player who lost
 		}
+		
 		isQuestComplete = checkQuestComplete(p,to);
 		reback.putBool("questComplete", isQuestComplete);
 		send("hack", reback, sender);
@@ -179,16 +189,9 @@ public class HackEventHandler extends BaseClientRequestHandler
 			/*
 			 * FIXME: fix for JRE 1.6
 			 */
+			/*
 			for(Software sw: attackerSw)
 				if(sw!=null)
-					/*switch(sw.getType())
-					{
-					case GameConsts.DICTIONARY:
-						sw.runTriggeredAction(from, to);
-						break;
-					default:
-						break;
-				}*/
 					if(sw.getType() == GameConsts.DICTIONARY)
 						sw.runTriggeredAction(from, to);
 			for(Software sw: defenderSw)
@@ -198,24 +201,40 @@ public class HackEventHandler extends BaseClientRequestHandler
 						if(to.getOwner()!=null)
 							sw.runTriggeredAction(from, to);
 					if(sw.getType() == GameConsts.VIRUS)
-							sw.runTriggeredAction(from, to);
+						sw.runTriggeredAction(from, to);
 					if(sw.getType() == GameConsts.DEEPTHROAT)
-							((DeepThroat)sw).runTriggeredAction(from, to, ((AIThread)world.ai).police);
+						((DeepThroat)sw).runTriggeredAction(from, to, ((AIThread)world.ai).police);
 				}
-				/*switch(sw.getType())
-				{
-					case GameConsts.IDS:
-						if(to.getOwner()!=null)
+			*/
+			for(Software sw: attackerSw)
+				if(sw!=null)
+					switch(sw.getType())
+					{
+						case GameConsts.DICTIONARY:
 							sw.runTriggeredAction(from, to);
 						break;
-					case GameConsts.VIRUS:
-						sw.runTriggeredAction(from, to);
+						default:
 						break;
-					case GameConsts.DEEPTHROAT:
-						sw.runTriggeredAction(from, to);
-					default:
+					}
+					
+			for(Software sw: defenderSw)
+				if(sw!=null)
+					switch(sw.getType())
+					{
+						case GameConsts.IDS:
+							if(to.getOwner()!=null)
+								sw.runTriggeredAction(from, to);
 						break;
-				}*/
+						case GameConsts.VIRUS:
+							sw.runTriggeredAction(from, to);
+						break;
+						case GameConsts.DEEPTHROAT:
+							((DeepThroat)sw).runTriggeredAction(from, to, ((AIThread)world.ai).police);
+						break;
+						default:
+						break;
+					}
+			
 			Player currentOwner = from.getOwner();
 			if(difference > 0)
 			{
@@ -223,19 +242,15 @@ public class HackEventHandler extends BaseClientRequestHandler
 				sendHackTimer(waitTime, sender);
 				startTime = System.currentTimeMillis();
 				endTime = startTime+(waitTime*1000);
-				currentOwner.setCanHack(false);//disable hack for the following seconds
-				while(System.currentTimeMillis() != endTime)
-				{
-				/*BUSY WAIT*/
-				//currentTick = System.currentTimeMillis()-starTime;
-				//	if(currentTick%1000==0)
-				//		send a countdown to the player for remaining hack time??
-				}
-				if(from.getOwner() == null)
-				{
-					freeStatus(from,to);
-					currentOwner.setCanHack(true);
-					return ret;
+				currentOwner.setCanHack(false); //disable hack for the following seconds
+				while(System.currentTimeMillis() < endTime)
+				{/*BUSY WAIT*/
+					if(from.getOwner() == null)
+					{
+						currentOwner.setCanHack(true);
+						freeStatus(from,to);
+						return ret;
+					}
 				}
 				currentOwner.setCanHack(true);
 				to.setOwner(from.getOwner());
@@ -248,21 +263,17 @@ public class HackEventHandler extends BaseClientRequestHandler
 				endTime = startTime+(GameConsts.FAILTIME*1000);
 				int waitTime = (int) ((endTime-startTime)/1000);
 				sendHackTimer(waitTime, sender);
-				from.getOwner().setCanHack(false); //disable hack for the following seconds
-				while(System.currentTimeMillis() != endTime)
-				{
-				/*BUSY WAIT*/
-				//currentTick = System.currentTimeMillis()-starTime;
-				//	if(currentTick%1000==0)
-				//		send a countdown to the player??
+				currentOwner.setCanHack(false); //disable hack for the following seconds
+				while(System.currentTimeMillis() < endTime)
+				{/*BUSY WAIT*/
+					if(from.getOwner() == null)
+					{
+						currentOwner.setCanHack(true);
+						freeStatus(from,to);
+						return ret;
+					}
 				}
 			
-				if(from.getOwner() == null)
-				{
-					currentOwner.setCanHack(true);
-					freeStatus(from,to);
-					return ret;
-				}
 				currentOwner.setCanHack(true);
 				ret = false;
 				freeStatus(from,to);
@@ -274,105 +285,107 @@ public class HackEventHandler extends BaseClientRequestHandler
 	public boolean neutralize(GameWorld world, Gateway from, Gateway to, User sender)
 	{
 		boolean ret = false;
-		long startTime, endTime;
-		int difference = this.powerDifference(from, to);
-		
-		Software[] attackerSw = from.getInstalledSoftwares();
-		Software[] defenderSw = to.getInstalledSoftwares();
-		/*
-		 * FIXME: fix for JRE 1.6
-		 */
-		for(Software sw: attackerSw)
-			if(sw!=null)
-				if(sw.getType() == GameConsts.DICTIONARY)
-					sw.runTriggeredAction(from, to);
-		/*
-				switch(sw.getType())
+		if(changeStatus(from,to))
+		{
+			long startTime, endTime;
+			int difference = this.powerDifference(from, to);
+			
+			Software[] attackerSw = from.getInstalledSoftwares();
+			Software[] defenderSw = to.getInstalledSoftwares();
+			/*
+			 * FIXME: fix for JRE 1.6
+			 */
+			/*
+			for(Software sw: attackerSw)
+				if(sw!=null)
+					if(sw.getType() == GameConsts.DICTIONARY)
+						sw.runTriggeredAction(from, to);
+			for(Software sw: defenderSw)
+				if(sw!=null)
 				{
-					case GameConsts.DICTIONARY:
-						sw.runTriggeredAction(from, to);
-						break;
-					default:
-						break;
-				}
-		*/
-		for(Software sw: defenderSw)
-			if(sw!=null)
-			{
-				if(sw.getType() == GameConsts.IDS)
-					if(to.getOwner()!=null)
-						sw.runTriggeredAction(from, to);
-				if(sw.getType() == GameConsts.VIRUS)
-						sw.runTriggeredAction(from, to);
-				if(sw.getType() == GameConsts.DEEPTHROAT)
-						sw.runTriggeredAction(from, to);
-			}/*
-				switch(sw.getType())
-				{
-					case GameConsts.IDS:
+					if(sw.getType() == GameConsts.IDS)
 						if(to.getOwner()!=null)
 							sw.runTriggeredAction(from, to);
-						break;
-					case GameConsts.VIRUS:
+					if(sw.getType() == GameConsts.VIRUS)
 						sw.runTriggeredAction(from, to);
+					if(sw.getType() == GameConsts.DEEPTHROAT)
+						((DeepThroat)sw).runTriggeredAction(from, to, ((AIThread)world.ai).police);
+				}
+			*/
+			for(Software sw: attackerSw)
+				if(sw!=null)
+					switch(sw.getType())
+					{
+						case GameConsts.DICTIONARY:
+							sw.runTriggeredAction(from, to);
 						break;
-					case GameConsts.DEEPTHROAT:
-						sw.runTriggeredAction(from, to);
-					default:
+						default:
 						break;
-				}
-*/
-		Player currentOwner = from.getOwner();
-		if(difference > 0)
-		{
-			int waitTime = this.hackTime(world, from, to);
-			startTime = System.currentTimeMillis();
-			endTime = startTime+(waitTime*1000);
-			sendHackTimer(waitTime, sender);
-			from.getOwner().setCanHack(false);//disable hack for the following seconds
-
-			while(System.currentTimeMillis() != endTime)
+					}
+					
+			for(Software sw: defenderSw)
+				if(sw!=null)
+					switch(sw.getType())
+					{
+						case GameConsts.IDS:
+							if(to.getOwner()!=null)
+								sw.runTriggeredAction(from, to);
+						break;
+						case GameConsts.VIRUS:
+							sw.runTriggeredAction(from, to);
+						break;
+						case GameConsts.DEEPTHROAT:
+							((DeepThroat)sw).runTriggeredAction(from, to, ((AIThread)world.ai).police);
+						break;
+						default:
+						break;
+					}
+	
+			Player currentOwner = from.getOwner();
+			if(difference > 0)
 			{
-				if(from.getOwner() == null)
-				{
-					currentOwner.setCanHack(true);
-					freeStatus(from,to);
-					return ret;
+				int waitTime = this.hackTime(world, from, to);
+				startTime = System.currentTimeMillis();
+				endTime = startTime+(waitTime*1000);
+				sendHackTimer(waitTime, sender);
+				currentOwner.setCanHack(false);//disable hack for the following seconds
+				trace("waiting!");
+				while(System.currentTimeMillis() < endTime)
+				{/*BUSY WAIT*/
+					if(from.getOwner() == null)
+					{
+						trace("i became freeeeee!");
+						currentOwner.setCanHack(true);
+						freeStatus(from,to);
+						return ret;
+					}
 				}
-				/*BUSY WAIT*/
-				//currentTick = System.currentTimeMillis()-starTime;
-				//	if(currentTick%1000==0)
-				//		send a countdown to the player for remaining hack time??
+	
+				currentOwner.setCanHack(true);
+				
+				ret = true;
 			}
-
-			currentOwner.setCanHack(true);
-			
-			ret = true;
-		}
-		else
-		{
-			startTime = System.currentTimeMillis();
-			endTime = startTime+(GameConsts.FAILTIME*1000);
-			int waitTime = (int) ((endTime-startTime)/1000);
-			sendHackTimer(waitTime, sender);
-			from.getOwner().setCanHack(false); //disable hack for the following seconds
-			
-			while(System.currentTimeMillis() != endTime)
+			else
 			{
-				if(from.getOwner() == null)
-				{
-					currentOwner.setCanHack(true);
-					freeStatus(from,to);
-					return ret;
+				startTime = System.currentTimeMillis();
+				endTime = startTime+(GameConsts.FAILTIME*1000);
+				int waitTime = (int) ((endTime-startTime)/1000);
+				sendHackTimer(waitTime, sender);
+				currentOwner.setCanHack(false); //disable hack for the following seconds
+				
+				while(System.currentTimeMillis() < endTime)
+				{/*BUSY WAIT*/
+					if(from.getOwner() == null)
+					{
+						currentOwner.setCanHack(true);
+						freeStatus(from,to);
+						return ret;
+					}
 				}
-				/*BUSY WAIT*/
-				//currentTick = System.currentTimeMillis()-starTime;
-				//	if(currentTick%1000==0)
-				//		send a countdown to the player??
+				
+				currentOwner.setCanHack(true);
+				ret = false;
 			}
-			
-			currentOwner.setCanHack(true);
-			ret = false;
 		}
 		return ret;
 	}
@@ -484,6 +497,12 @@ public class HackEventHandler extends BaseClientRequestHandler
 		send("hackTimer", hackSeconds, sender);
 	}
 
+	private void sendRefreshRequest(Player player)
+	{
+		//ISFSObject reback = SFSObject.newInstance();
+		//reback.putUtfString("refresh", "REFRESH");
+		send("refresh", new SFSObject(), RoomHelper.getCurrentRoom(this).getUserList());	
+	}
 	private void sendError(String errorType, User sender)
 	{
 		ISFSObject reback = SFSObject.newInstance();
@@ -496,8 +515,28 @@ public class HackEventHandler extends BaseClientRequestHandler
 		}
 		if(errorType == "HACKDISABLED")
 		{
-			trace("Hack request from " + sender.getName() + ": FAILED since the hack is disabled for this player OR gateway is disabled for some seconds");
+			trace("Hack request from " + sender.getName() + ": FAILED since the hack is disabled for this player");
 			reback.putUtfString("error", "HACKDISABLED");
+		}
+		if(errorType == "NOTOWNER")
+		{
+			trace("Hack request from " + sender.getName() + ": FAILED since the player is not the owner of the gateway");
+			reback.putUtfString("error", "NOTOWNER");
+		}
+		if(errorType == "ATTACKINGDISABLED")
+		{
+			trace("Hack request from " + sender.getName() + ": FAILED since the hack is disabled FROM this gateway for some seconds");
+			reback.putUtfString("error", "ATTACKINGDISABLED");
+		}
+		if(errorType == "ATTACKEDISABLED")
+		{
+			trace("Hack request from " + sender.getName() + ": FAILED since the hack is disabled TO this gateway for some seconds");
+			reback.putUtfString("error", "ATTACKEDISABLED");
+		}
+		if(errorType == "SELFHACKING")
+		{
+			trace("Hack request from " + sender.getName() + ": FAILED he is hacking one of his gateway");
+			reback.putUtfString("error", "SELFHACKING");
 		}
 		send("error", reback, sender);	
 	}

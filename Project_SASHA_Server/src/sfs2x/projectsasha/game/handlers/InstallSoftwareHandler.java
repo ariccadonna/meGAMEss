@@ -19,18 +19,22 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 		Player p = RoomHelper.getPlayer(this, sender.getName());
 		GameWorld world = RoomHelper.getWorld(this);
 		Gateway currentGw = world.gateways.get(gw);
+		String swName = nameToConst(sw.substring(0,sw.length()-1));
+		int swVersion = Integer.parseInt(sw.substring(sw.length()-1));
+		
 		if (currentGw.getOwner().getUserName() != p.getName())
 		{
 			sendError("NOTOWNER", sender);
 			return;
 		}
-		String swName = nameToConst(sw.substring(0,sw.length()-1));
-		int swVersion = Integer.parseInt(sw.substring(sw.length()-1));
+		
+		
 		if(!p.hasItems(swName, swVersion))
 		{
 			sendError("ITEMNOTOWNED", sender);
 			return;
 		}
+		
 		if(currentGw.hasSoftware(swName) && !currentGw.getInstalledSoftware(swName).isCumulative())
 		{
 			sendError("NOTCUMULATIVE", sender);
@@ -40,7 +44,6 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 		if(currentGw.hasSoftware(swName) && swVersion > currentGw.getInstalledSoftware(swName).getVersion())
 		{
 			currentGw.upgradeSoftware(swName, p);
-			trace("has sw, i'm upgrading it");
 		}
 		else
 		{
@@ -51,8 +54,6 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 				sendError("ITEMNOTPRESENT",sender);
 				return;
 			}
-				
-			trace("has sw, i'm installing it");
 		}
 		
 		ISFSObject reback = SFSObject.newInstance();
@@ -106,6 +107,7 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 		{
 			reback.putUtfString("error","ITEMNOTPRESENT");
 		}
+		
 		send("error", reback, sender);	
 	}
 }

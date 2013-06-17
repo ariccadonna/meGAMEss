@@ -18,7 +18,6 @@ public class otMouseInput : MonoBehaviour {
 	void Start()
 	{
 			sprite = GetComponent<OTSprite>();
-			thisGameObject=gameObject;
 			hackEvent = GameObject.Find("hackButton").GetComponent<hackEvent>();
 			neutralizeEvent = GameObject.Find("neutralizeButton").GetComponent<neutralizeEvent>();
 			networkManager = GameObject.Find("referencePanel").GetComponent<NetworkManager>();

@@ -5,16 +5,18 @@
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
+            <Node name="References" expanded="True" />
             <Node name="Assets" expanded="True">
               <Node name="Scripts" expanded="True">
                 <Node name="gameScripts" expanded="True">
-                  <Node name="print" expanded="True">
-                    <Node name="newsRandom.cs" selected="True" />
-                  </Node>
+                  <Node name="events" expanded="True" />
+                  <Node name="print" expanded="True" />
+                  <Node name="Gateway.cs" selected="True" />
                 </Node>
               </Node>
             </Node>
           </Node>
+          <Node name="Assembly-CSharp-Editor" expanded="True" />
         </State>
       </Pad>
     </Pads>

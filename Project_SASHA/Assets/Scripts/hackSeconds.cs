@@ -59,7 +59,6 @@ public class hackSeconds : MonoBehaviour {
 	{
 		int seconds = this.hackSec%60;
 		int minutes = this.hackSec/60;
-		int hours = this.hackSec/3600;
 		return string.Format("{0:00}:{1:00}", minutes, seconds);
 	}
 	

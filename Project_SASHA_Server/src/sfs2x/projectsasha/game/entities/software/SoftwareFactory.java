@@ -6,7 +6,10 @@ public class SoftwareFactory {
 	public static Software makeSoftware(String type) 
 	{
 		Software ret = null;
-		if(type == GameConsts.FIREWALL)
+		/*
+		 * FIXME: fix for JRE 1.6
+		 */
+		/*if(type == GameConsts.FIREWALL)
 			ret = new Firewall();
 		if(type == GameConsts.IDS)
 			ret = new IDS();
@@ -25,11 +28,9 @@ public class SoftwareFactory {
 		if(type == GameConsts.DICTIONARY)
 			ret = new DictionaryAttacker();
 		if(type == GameConsts.PROXY)
-			ret = new Proxy();
-		/*
-		 * FIXME: fix for JRE 1.6
-		 */
-		/*switch(type){	
+			ret = new Proxy();*/
+		
+		switch(type){	
 		case GameConsts.FIREWALL:	
 			ret = new Firewall();
 		break;
@@ -60,13 +61,17 @@ public class SoftwareFactory {
 		case GameConsts.PROXY: 
 			ret = new Proxy();
 			break;
-		}*/
+		}
 		return ret;
 	}
 	
 	public static Software makeSoftware(String type, int version) 
 	{
 		Software ret = null;
+		/*
+		 * FIXME: fix for JRE 1.6
+		 */
+		/*
 		if(type == GameConsts.FIREWALL)
 			ret = new Firewall(version);
 		if(type == GameConsts.IDS)
@@ -87,10 +92,8 @@ public class SoftwareFactory {
 			ret = new DictionaryAttacker(version);
 		if(type == GameConsts.PROXY)
 			ret = new Proxy(version);
-		/*
-		 * FIXME: fix for JRE 1.6
-		 */
-		/*switch(type){	
+		*/
+		switch(type){	
 		case GameConsts.FIREWALL:	
 			ret = new Firewall(version);
 		break;
@@ -121,7 +124,8 @@ public class SoftwareFactory {
 		case GameConsts.PROXY: 
 			ret = new Proxy(version);
 			break;
-		}*/
+		}
+		
 		return ret;
 	}
 }

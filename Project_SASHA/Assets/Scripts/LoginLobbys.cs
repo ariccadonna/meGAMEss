@@ -40,7 +40,6 @@ public class LoginLobbys : MonoBehaviour {
 	private string createGameErrorMessage = "";
 	private string errorMessage = "";
 	private bool showLoadingScreen = false;
-	private bool myOnline;
 	
 	private string gameName = "";
 	private bool gamePrivate;
@@ -55,7 +54,6 @@ public class LoginLobbys : MonoBehaviour {
 				
 	private Vector2 gameScrollPosition, userScrollPosition, chatScrollPosition, buddiesScrollPosition;
 	private int roomSelection = -1;
-	private int userSelection = -1;
 	private string[] roomNameStrings;
 	private string[] roomFullStrings;
 	
@@ -72,7 +70,6 @@ public class LoginLobbys : MonoBehaviour {
 	private ArrayList messages = new ArrayList();
 	private List<Buddy> buddies = new List<Buddy>();
 	GUIContent[] buddyContents;
-	private bool isBuddyListInited;
 	
 	private Invitation currentInvitation;
 	
@@ -93,9 +90,7 @@ public class LoginLobbys : MonoBehaviour {
 		}
 
 		smartFox.AddLogListener(LogLevel.INFO, OnDebugMessage);
-		
-		isBuddyListInited = false; 
-		
+				
 		SetErrorMessages();
 		
 		username = PlayerPrefs.GetString(LASTUSERNAME, "");
@@ -313,7 +308,6 @@ public class LoginLobbys : MonoBehaviour {
 		isLoggedIn = false;	
 		creatingGame = false;
 		showGameLobby = false;
-		isBuddyListInited = false;
 		currentActiveRoom = null;
 		smartFox.LastJoinedRoom = null;
 		smartFox.BuddyManager.Inited = false;
@@ -604,7 +598,6 @@ public class LoginLobbys : MonoBehaviour {
 	private void OnBuddyListUpdate(BaseEvent evt)
 	{
 		//while updating, set this to false to keep it from displaying
-		//isBuddyListInited = false;
 		buddies.Clear();
 		buddies = smartFox.BuddyManager.BuddyList;
 
@@ -648,7 +641,6 @@ public class LoginLobbys : MonoBehaviour {
 			buddyContents.SetValue(buddyContent, i);
 		}
 		//Now it's complete, so set this to true to display it
-		isBuddyListInited = true;
 	}
 	
 	/*
@@ -659,8 +651,6 @@ public class LoginLobbys : MonoBehaviour {
 		// Populate user's list of buddies
 		OnBuddyListUpdate(evt);		
 		
-		//Your details can now be displayed
-		myOnline = true;
 	}
 	
 	/*
@@ -1365,7 +1355,6 @@ public class LoginLobbys : MonoBehaviour {
 					}
 				
 					buddyUsername = splittedMessage[1];
-					User buddyToAdd;
 					if(buddyUsername == smartFox.MySelf.Name){
 						lock(messagesLocker){
 							chatMessages.Add ("[SASHA]: you can't add yourself to your buddy list");

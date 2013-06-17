@@ -22,6 +22,10 @@ public class NetworkManager : MonoBehaviour {
 	public Texture bas;
 	
 	public GameObject rayPrefab; 
+	public GameObject policePrefab = null;
+	public GameObject glowParticlePrefab = null;
+	public GameObject GatewayPrefab = null;
+	
 	private GameObject ray;
  	private float rayLenght;
  	private float rayRotation;
@@ -38,12 +42,7 @@ public class NetworkManager : MonoBehaviour {
 	private Dictionary<string, Color> playerColors = new Dictionary<string,Color>();
 	private Color[] colors = { Color.red, Color.green, Color.cyan, Color.magenta, Color.yellow };
 	private string currentPlayer;
-	public GameObject policePrefab = null;
-	public GameObject glowParticlePrefab = null;
-	private GameObject glow = null;
-	
-	private static NetworkManager instance;	
-	public GameObject GatewayPrefab = null;
+
 	private GameObject currentPolice;
 	
 	private System.Object messagesLocker = new System.Object();
@@ -54,11 +53,6 @@ public class NetworkManager : MonoBehaviour {
 	
 	private ISFSObject shop;
 
-	void Awake() 
-	{
-		instance = this;
-	}
-
 	void Start() 
 	{
 		playerNumbers = PlayerPrefs.GetInt("playerNumber");
@@ -67,8 +61,9 @@ public class NetworkManager : MonoBehaviour {
 			Application.LoadLevel("loginScreen");
 			return;
 		}
-		prevTime = Time.time;
-		statTime = Time.time;
+		
+		prevTime = statTime = Time.time;
+		
 		currentPolice = Instantiate(policePrefab) as GameObject;
 		currentPolice.transform.name = "Police";
 		SubscribeDelegates();
@@ -77,7 +72,8 @@ public class NetworkManager : MonoBehaviour {
 		spots = new GameObject();
 		spots.transform.name = "spots";
 		
-		currentPlayer=smartFox.MySelf.Name;
+		this.currentPlayer=smartFox.MySelf.Name;
+		Debug.Log (this.currentPlayer);
 	}
 	
 	void Update()
@@ -193,13 +189,11 @@ public class NetworkManager : MonoBehaviour {
 			}
 			if (cmd == "syncWorld") 
 			{
-				Debug.Log("got sync");
 				UpdateWorldSetup(data);
 			}
 			else if (cmd == "gatewayInfo") 
 			{
 				Debug.Log ("info request recived for "+data.GetUtfString("state"));	
-				//handle result
 			}
 			else if (cmd == "getObjectives") 
 			{
@@ -247,6 +241,10 @@ public class NetworkManager : MonoBehaviour {
 			else if (cmd == "hackTimer")
 			{
 				showTimer(data);
+			}
+			else if (cmd == "refresh")
+			{
+				smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
 			}
 			else if (cmd == "path")
 				tracePath(data);
@@ -336,7 +334,7 @@ public class NetworkManager : MonoBehaviour {
 	
 	public string getCurrentPlayer()
 	{
-		return currentPlayer;
+		return this.currentPlayer;
 	}
 	
 	private void InstantiateWorld(ISFSObject data)
@@ -485,7 +483,6 @@ public class NetworkManager : MonoBehaviour {
 			
 			Vector3 p0 = new Vector3(int.Parse(coord_1[0]), int.Parse(coord_1[1]), 5);
 			Vector3 p1 = new Vector3(int.Parse(coord_2[0]), int.Parse(coord_2[1]), 5);
-			Vector3 direction = (Vector3)((p1 - p0).normalized);
 			float distance = Vector3.Distance(p1,p0);
 			
 			ray = Instantiate(rayPrefab) as GameObject;
@@ -540,47 +537,53 @@ public class NetworkManager : MonoBehaviour {
 		switch(action)
 		{
 			case "SUCCESS":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Item bought with success";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Item bought with success.";
 			break;
 			case "YOUWON":
 				lost = true;
 				StartCoroutine(endGame());
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You win";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You win.";
 			break;
 			case "INSTALLED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Software installed";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Software installed.";
 			break;
 			case "NOPATH":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "No hacking path\navailable";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "No hacking path available.";
 			break;
 			case "HACKDISABLED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Your hack is disabled\nOR one of the selected nGateway\nis disabled for some seconds";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Your hack is disabled OR one of the selected Gateway is disabled for some seconds.";
 			break;
 			case "NOTOWNER":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont own\nthat nGateway";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont own that Gateway.";
 			break;
 			case "ITEMNOTOWNED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont own\nthat item";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont own that item.";
 			break;
 			case "INVENTORYFULL":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Your inventory is full";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Your inventory is full.";
 			break;
 			case "NOTENOUGHMONEY":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont have\nenough money";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont have enough money.";
 			break;
 			case "NOTCUMULATIVE":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You cant install\nthat item on that\nGateway since it's\nalready installed";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You cant install that item on that Gateway since it's already installed.";
 			break;
 			case "ITEMNOTPRESENT":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You need to install\na previous version\nof that software";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You need to install a previous version of that software.";
 			break;
 			case "LOST":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You lost";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You lost.";
 				lost = true;
 				StartCoroutine(endGame());
 			break;
 			case "ACTIONSDISABLED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "All the actions\nhave been disabled";
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "All the actions have been disabled.";
+			break;
+			case "ATTACKINGDISABLED":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Attacking gateway is disabled for some seconds. Try again later.";
+			break;
+			case "ATTACKEDISABLED":
+				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Attacked gateway is disabled for some seconds. Try again later.";
 			break;
 		}
 	}

@@ -11,8 +11,6 @@ public class neutralizeEvent : MonoBehaviour {
 	private bool sc = false;
 	Vector3 scale;
 	
-	
-	
 	// Use this for initialization
 	void Start () {
 	
@@ -50,24 +48,23 @@ public class neutralizeEvent : MonoBehaviour {
 			sc = true;
 		}
 		
-		if(Input.GetMouseButtonUp(0))
+		if(Input.GetMouseButtonDown(0))
 		{
-			gameObject.transform.localScale=scale;
-			sc = false;
-		}
-		
-		if(!gatewayStart)
-		{
-		print ("first select the start gateway from those you own");
-		}
-		else
-		{
-			if(gatewayTarget)
+			gameObject.transform.localScale=new Vector3(gameObject.transform.localScale.x-1f,gameObject.transform.localScale.y-1f,gameObject.transform.localScale.z);
+			sc = true;
+			
+			if(!gatewayStart)
 			{
-				target=gatewayTarget.GetComponent<Gateway>().getState();
-				start=gatewayStart.GetComponent<Gateway>().getState();
-				nwm.SendNeutralizeRequest(start,target);
-				
+				print ("first select the start gateway from those you own");
+			}
+			else
+			{
+				if(gatewayTarget)
+				{
+					target=gatewayTarget.GetComponent<Gateway>().getState();
+					start=gatewayStart.GetComponent<Gateway>().getState();
+					nwm.SendNeutralizeRequest(start,target);
+				}
 			}
 		}
 	}
@@ -80,5 +77,4 @@ public class neutralizeEvent : MonoBehaviour {
 			sc = false;
 		}
 	}
-	
 }

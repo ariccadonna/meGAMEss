@@ -27,24 +27,9 @@ public class TestingLoginLobbys : MonoBehaviour {
 	private string username = "";
 	private string password = "";
 	
-	private bool isLoggedIn;
 	private bool creatingGame;
 	private bool showGameLobby;
-	private bool loginError = false;
-	private string loginErrorMessage = "";
-	private bool gameCreationError = false;
-	private string createGameErrorMessage = "";
-	private string errorMessage = "";
-	private bool showLoadingScreen = false;
 	private bool myOnline;
-	
-	private string gameName = "";
-	private bool gamePrivate;
-	private string gamePassword = "";
-
-	
-	private Room currentActiveRoom;
-	
 	
 	// Use this for initialization
 	void Start () 
@@ -108,16 +93,12 @@ public class TestingLoginLobbys : MonoBehaviour {
 	{
         bool success = (bool)evt.Params["success"];
         string error = (string)evt.Params["errorMessage"];
-        errorMessage = (string)evt.Params["errorMessage"];
-        if (errorMessage != "")
-            loginError = true;
 
         Debug.Log("On Connection callback got: " + success + " (error : <" + error + ">)");
 
         if (success)
         {
             SmartFoxConnection.Connection = smartFox;
-            loginError = false;
             Debug.Log("Sending login request");
 
             smartFox.Send(new LoginRequest(username, password, zone));
@@ -126,8 +107,6 @@ public class TestingLoginLobbys : MonoBehaviour {
 	
 	public void OnConnectionLost(BaseEvent evt) {
 		Debug.Log("OnConnectionLost");
-		isLoggedIn = false;
-		currentActiveRoom = null;
 		UnregisterSFSSceneCallbacks();
 	}
 	
@@ -140,8 +119,8 @@ public class TestingLoginLobbys : MonoBehaviour {
 	public void OnUdpInit(BaseEvent evt) 
 	{
 		if (evt.Params.ContainsKey("success") && !(bool)evt.Params["success"]) {
-			loginErrorMessage = (string)evt.Params["errorMessage"];
-			Debug.Log("UDP error: "+loginErrorMessage);
+
+			Debug.Log("UDP error");
 		} else {
 			Debug.Log("UDP ok");
 		}
@@ -153,13 +132,10 @@ public class TestingLoginLobbys : MonoBehaviour {
 	public void OnLogin(BaseEvent evt) {
 		try {
 			if (evt.Params.ContainsKey("success") && !(bool)evt.Params["success"]) {
-				loginErrorMessage = (string)evt.Params["errorMessage"];
-				Debug.Log("Login error: "+loginErrorMessage);
+				Debug.Log("Login error");
 			}
 			else 
 			{
-				
-				isLoggedIn = true;
 				
 				//Startup UDP
 				smartFox.InitUDP(serverName, serverPort);
@@ -179,8 +155,6 @@ public class TestingLoginLobbys : MonoBehaviour {
 	 */
 	public void OnLoginError(BaseEvent evt) {
        Debug.Log("Login error: " + (string)evt.Params["errorMessage"]);
-       errorMessage = (string)evt.Params["errorMessage"];
-       loginError = true;
        if (smartFox.IsConnected)
            smartFox.Disconnect();
    }
@@ -270,8 +244,6 @@ public class TestingLoginLobbys : MonoBehaviour {
 	public void OnExtensionResponse(BaseEvent evt)
 	{
 		string cmd = (string)evt.Params["cmd"];
-    	SFSObject dataObject = (SFSObject)evt.Params["params"];
-		
 		switch (cmd) {
 
 			case "startGame":

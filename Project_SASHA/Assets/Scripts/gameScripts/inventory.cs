@@ -16,7 +16,6 @@ public class inventory : MonoBehaviour {
 	GameObject obj;
 	string nm;
 	imgRepo imgRepo;
-	private float x,y;
 	private string[] sw = new string[9];
 	GameObject[] swInstantiated = new GameObject[9];
 	
@@ -45,8 +44,6 @@ public class inventory : MonoBehaviour {
 			GameObject currentSW = Instantiate (invPrefab) as GameObject;
 			currentSW.transform.parent = gameObject.transform;
 			currentSW.transform.name = sw[i];
-			x = 0.3f * (float)i;
-			y = 0.3f;
 			currentSW.transform.localScale = new Vector3(0.05F, 0.05F, 0F);
 			
 			float positionX = -0.3F+0.3F*(i%3);

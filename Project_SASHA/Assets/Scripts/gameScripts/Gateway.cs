@@ -13,15 +13,11 @@ public class Gateway : MonoBehaviour {
 	private string type;
 	private string[] sw;
 	public string region;
-	OTSprite sprite;
-	private NetworkManager nwm = null;
 
 	// Use this for initialization
 	void Start()
 	{
-	 	GameObject networkManager = GameObject.Find("referencePanel");
-		nwm = networkManager.GetComponent<NetworkManager>();
-		sprite = GetComponent<OTSprite>();
+
 	}
 		// Update is called once per frame
 	void Update() {}

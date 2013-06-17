@@ -68,6 +68,7 @@ public class hackEvent : MonoBehaviour {
 			}
 		}
 	}
+	
 	void exit(OTObject sprite) 
 	{
 		if(sc)
