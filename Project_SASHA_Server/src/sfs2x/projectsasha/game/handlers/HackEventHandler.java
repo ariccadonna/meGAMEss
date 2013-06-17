@@ -80,7 +80,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 					sendPathInfo(hackingPath, sender); // send path info to the client
 					
 					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": PROCESSING");
-					success = this.neutralize(world, from, to);
+					success = this.neutralize(world, from, to, sender);
 					trace("Neutralization request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 					
 					if(success)
@@ -92,7 +92,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 					sendPathInfo(hackingPath, sender); // send path info to the client
 					
 					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": PROCESSING");
-					success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD);
+					success = this.hack(world, from, to, GameConsts.CONQUER_TIME_TRESHOLD, sender);
 					trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 				}
 				from.setTrace(hackingPath, attackRelevance);
@@ -132,7 +132,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				
 				sendPathInfo(hackingPath, sender); // send path info to the client
 				
-				success = this.hack(world, from, to);
+				success = this.hack(world, from, to, sender);
 				trace("Hack request from " + p.getUserName() + ": from " + from.getState()+" to " + to.getState() + ": " +  (success?"SUCCESS":"FAIL"));
 				from.setTrace(hackingPath, attackRelevance);
 				
@@ -160,12 +160,12 @@ public class HackEventHandler extends BaseClientRequestHandler
 		send("hack", reback, sender);
 	}
 	
-	public boolean hack(GameWorld world, Gateway from, Gateway to)
+	public boolean hack(GameWorld world, Gateway from, Gateway to, User sender)
 	{
-		return hack(world, from, to, 0);
+		return hack(world, from, to, 0, sender);
 	}
 	
-	public boolean hack(GameWorld world, Gateway from, Gateway to, int extraTime)
+	public boolean hack(GameWorld world, Gateway from, Gateway to, int extraTime, User sender)
 	{
 		boolean ret = false;
 		if(changeStatus(from,to))
@@ -220,6 +220,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 			if(difference > 0)
 			{
 				int waitTime = this.hackTime(world, from, to) + extraTime;
+				sendHackTimer(waitTime, sender);
 				startTime = System.currentTimeMillis();
 				endTime = startTime+(waitTime*1000);
 				currentOwner.setCanHack(false);//disable hack for the following seconds
@@ -232,6 +233,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				}
 				if(from.getOwner() == null)
 				{
+					freeStatus(from,to);
 					currentOwner.setCanHack(true);
 					return ret;
 				}
@@ -244,6 +246,8 @@ public class HackEventHandler extends BaseClientRequestHandler
 			{
 				startTime = System.currentTimeMillis();
 				endTime = startTime+(GameConsts.FAILTIME*1000);
+				int waitTime = (int) ((endTime-startTime)/1000);
+				sendHackTimer(waitTime, sender);
 				from.getOwner().setCanHack(false); //disable hack for the following seconds
 				while(System.currentTimeMillis() != endTime)
 				{
@@ -256,6 +260,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 				if(from.getOwner() == null)
 				{
 					currentOwner.setCanHack(true);
+					freeStatus(from,to);
 					return ret;
 				}
 				currentOwner.setCanHack(true);
@@ -266,7 +271,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 			return ret;
 		}
 	
-	public boolean neutralize(GameWorld world, Gateway from, Gateway to)
+	public boolean neutralize(GameWorld world, Gateway from, Gateway to, User sender)
 	{
 		boolean ret = false;
 		long startTime, endTime;
@@ -323,19 +328,24 @@ public class HackEventHandler extends BaseClientRequestHandler
 			int waitTime = this.hackTime(world, from, to);
 			startTime = System.currentTimeMillis();
 			endTime = startTime+(waitTime*1000);
+			sendHackTimer(waitTime, sender);
 			from.getOwner().setCanHack(false);//disable hack for the following seconds
 
 			while(System.currentTimeMillis() != endTime)
 			{
-				if(currentOwner == null)
+				if(from.getOwner() == null)
+				{
+					currentOwner.setCanHack(true);
+					freeStatus(from,to);
 					return ret;
+				}
 				/*BUSY WAIT*/
 				//currentTick = System.currentTimeMillis()-starTime;
 				//	if(currentTick%1000==0)
 				//		send a countdown to the player for remaining hack time??
 			}
 
-			from.getOwner().setCanHack(true);
+			currentOwner.setCanHack(true);
 			
 			ret = true;
 		}
@@ -343,17 +353,25 @@ public class HackEventHandler extends BaseClientRequestHandler
 		{
 			startTime = System.currentTimeMillis();
 			endTime = startTime+(GameConsts.FAILTIME*1000);
+			int waitTime = (int) ((endTime-startTime)/1000);
+			sendHackTimer(waitTime, sender);
 			from.getOwner().setCanHack(false); //disable hack for the following seconds
 			
 			while(System.currentTimeMillis() != endTime)
 			{
+				if(from.getOwner() == null)
+				{
+					currentOwner.setCanHack(true);
+					freeStatus(from,to);
+					return ret;
+				}
 				/*BUSY WAIT*/
 				//currentTick = System.currentTimeMillis()-starTime;
 				//	if(currentTick%1000==0)
 				//		send a countdown to the player??
 			}
 			
-			from.getOwner().setCanHack(true);
+			currentOwner.setCanHack(true);
 			ret = false;
 		}
 		return ret;
@@ -453,9 +471,17 @@ public class HackEventHandler extends BaseClientRequestHandler
 		SFSArray pathArray = new SFSArray();
 		for (int i = 0; i < hackingPath.size(); i++) 
 			pathArray.addUtfString(hackingPath.get(i).getX()+":"+hackingPath.get(i).getY());
-		
+		trace("Sending path info to "+sender.getName());
 		pathReback.putSFSArray("hackingPath", pathArray);
 		send("path", pathReback, sender);
+	}
+	
+	private void sendHackTimer(int seconds, User sender)
+	{
+		ISFSObject hackSeconds = SFSObject.newInstance();
+		hackSeconds.putInt("seconds", seconds);
+		trace("sending hack timer to "+sender.getName()+": "+seconds);
+		send("hackTimer", hackSeconds, sender);
 	}
 
 	private void sendError(String errorType, User sender)

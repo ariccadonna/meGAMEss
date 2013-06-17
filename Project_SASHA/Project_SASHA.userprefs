@@ -1,16 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\gameScripts\panels\generateShopPanel.cs">
-    <Files>
-      <File FileName="Assets\Scripts\gameScripts\panels\generateShopPanel.cs" Line="28" Column="28" />
-      <File FileName="Assets\Scripts\gameScripts\panels\generateMailPanel.cs" Line="26" Column="28" />
-      <File FileName="Assets\Scripts\gameScripts\events\hackEvent.cs" Line="43" Column="28" />
-      <File FileName="Assets\Scripts\gameScripts\events\neutralizeEvent.cs" Line="51" Column="28" />
-      <File FileName="Assets\Scripts\gameScripts\events\buttonShopInput.cs" Line="77" Column="28" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" />
+        <State expanded="True">
+          <Node name="Assembly-CSharp" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="gameScripts" expanded="True">
+                  <Node name="print" expanded="True">
+                    <Node name="newsRandom.cs" selected="True" />
+                  </Node>
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

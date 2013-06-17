@@ -185,7 +185,6 @@ public class NetworkManager : MonoBehaviour {
 											
 			if (cmd == "hack") 
 			{
-				GameObject.Find("hackInfo").GetComponent<hackInfo>().isHacking = false;
 				smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
 				foreach(GameObject g in GameObject.FindGameObjectsWithTag("ray"))
 					Destroy(g);
@@ -244,6 +243,10 @@ public class NetworkManager : MonoBehaviour {
 			else if (cmd == "endGameInfo")
 			{
 				DisplayStats(data);
+			}
+			else if (cmd == "hackTimer")
+			{
+				showTimer(data);
 			}
 			else if (cmd == "path")
 				tracePath(data);
@@ -469,7 +472,6 @@ public class NetworkManager : MonoBehaviour {
 			DisplayWindow("ACTIONSDISABLED");
 			return;
 		}
-		GameObject.Find("hackInfo").GetComponent<hackInfo>().isHacking = true;
 		ISFSArray path = data.GetSFSArray("hackingPath");
 		int i = 0;
 		while(i < path.Size()-1)
@@ -511,6 +513,12 @@ public class NetworkManager : MonoBehaviour {
 	public void resetInstalledSuccess()
 	{
 		this.installSuccess = false;
+	}
+	
+	public void showTimer(ISFSObject data)
+	{
+		GameObject.Find ("hackSeconds").GetComponent<hackSeconds>().setSeconds(data.GetInt("seconds"));
+		
 	}
 	
 	public void buyItem(string software)
