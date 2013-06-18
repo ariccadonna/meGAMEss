@@ -47,9 +47,13 @@ public class Antivirus extends Software
 		{
 			from.uninstallSoftware(GameConsts.ANTIVIRUS, from.getOwner());
 			to.uninstallSoftware(GameConsts.VIRUS, to.getOwner());
+			return;
 		}
 		else if(this.getVersion()>v.getVersion())
+		{
 			to.uninstallSoftware(GameConsts.VIRUS, to.getOwner());
+			return;
+		}
 		else
 			from.uninstallSoftware(GameConsts.ANTIVIRUS, from.getOwner());
 		
