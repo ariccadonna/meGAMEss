@@ -1,4 +1,4 @@
-using System;
+	using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,6 +37,10 @@ public class inventory : MonoBehaviour {
 	public void instantiateSW()
 	{
 		imgRepo=GameObject.Find("imagesRepository").GetComponent<imgRepo>();
+		
+		foreach(GameObject g in GameObject.FindGameObjectsWithTag("invItem"))
+			Destroy(g);
+		
 		int i = 0;
 		while(i < sw.Length)
 		{
@@ -44,7 +48,7 @@ public class inventory : MonoBehaviour {
 			GameObject currentSW = Instantiate (invPrefab) as GameObject;
 			currentSW.transform.parent = gameObject.transform;
 			currentSW.transform.name = sw[i];
-			currentSW.transform.localScale = new Vector3(0.05F, 0.05F, 0F);
+			currentSW.transform.localScale = new Vector3(0.02F, 0.02F, 0F);
 			
 			float positionX = -0.3F+0.3F*(i%3);
 			float positionY = 0.3F-0.3F*(i/3);

@@ -14,13 +14,11 @@ public class Gateway : MonoBehaviour {
 	private string[] sw;
 	public string region;
 
-	// Use this for initialization
-	void Start()
-	{
-
-	}
-		// Update is called once per frame
-	void Update() {}
+	void Start(){}
+	
+	void Update(){}
+	
+	void OnMouseDown(){/*nwm.SendInfoRequest(this.state);*/}
 	
 	public void Setup(ISFSObject obj)
 	{
@@ -38,10 +36,7 @@ public class Gateway : MonoBehaviour {
 		this.sw[2] = (string) sws.GetElementAt(2);
 	}
 	
-	void OnMouseDown() 
-	{
-		//nwm.SendInfoRequest(this.state);
-	}
+	
 	
 	public string getName()
 	{

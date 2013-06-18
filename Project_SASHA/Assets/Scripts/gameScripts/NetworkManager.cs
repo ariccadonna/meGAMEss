@@ -73,7 +73,6 @@ public class NetworkManager : MonoBehaviour {
 		spots.transform.name = "spots";
 		
 		this.currentPlayer=smartFox.MySelf.Name;
-		Debug.Log (this.currentPlayer);
 	}
 	
 	void Update()
@@ -175,6 +174,7 @@ public class NetworkManager : MonoBehaviour {
 	
 	private void OnExtensionResponse(BaseEvent evt) 
 	{
+		inventory inv = gameObject.GetComponent<referencePanel>().inventoryPanel.GetComponent<inventory>();
 		try {
 			string cmd = (string)evt.Params["cmd"];
 			ISFSObject data = (ISFSObject)evt.Params["params"];
@@ -210,11 +210,13 @@ public class NetworkManager : MonoBehaviour {
 			else if (cmd == "playerInfo")
 			{
 				GameObject.Find("playerStats").GetComponent<printPlayerStat>().printStat(data.GetUtfString("name"), data.GetInt("money"), data.GetLong("time"), playerColors[smartFox.MySelf.Name]);
-				gameObject.GetComponent<referencePanel>().inventoryPanel.GetComponent<inventory>().refreshInventory(data.GetSFSArray("inventory"));
+				inv.refreshInventory(data.GetSFSArray("inventory"));
 			}
 			else if (cmd == "install")
 			{
 				installSuccess = data.GetBool("success");
+				inv.refreshInventory(data.GetSFSArray("inventory"));
+				inv.instantiateSW();
 				smartFox.Send(new ExtensionRequest("sync", new SFSObject(), smartFox.LastJoinedRoom));
 				DisplayWindow("INSTALLED");
 			}
@@ -225,6 +227,9 @@ public class NetworkManager : MonoBehaviour {
 			else if (cmd == "buy")
 			{
 				DisplayWindow("SUCCESS");
+				inv.refreshInventory(data.GetSFSArray("inventory"));
+				inv.instantiateSW();
+				
 			}
 			else if (cmd == "error")
 			{
@@ -425,6 +430,9 @@ public class NetworkManager : MonoBehaviour {
 		ExtensionRequest objectiveRequest = new ExtensionRequest("getObjectives", new SFSObject(), smartFox.LastJoinedRoom);
 		smartFox.Send(objectiveRequest);
 		AskPolicePosition();
+		
+		printStat ps = GameObject.Find("bottomPanel").GetComponent<printStat>();
+		ps.stat(ps.gtw);
 	}
 	
 	private void UpdateObjective(ISFSObject data)
@@ -479,8 +487,6 @@ public class NetworkManager : MonoBehaviour {
 			String targetC =(String) path.GetElementAt(i+1);
 			String[] coord_2 = targetC.Split(':');
 			
-			
-			
 			Vector3 p0 = new Vector3(int.Parse(coord_1[0]), int.Parse(coord_1[1]), 5);
 			Vector3 p1 = new Vector3(int.Parse(coord_2[0]), int.Parse(coord_2[1]), 5);
 			float distance = Vector3.Distance(p1,p0);
@@ -495,8 +501,6 @@ public class NetworkManager : MonoBehaviour {
 			float inclinazioneRay = Mathf.Atan((p1.y-p0.y)/(p1.x-p0.x))*Mathf.Rad2Deg;
 			rotation.eulerAngles = new Vector3(0,0,inclinazioneRay);
 			ray.transform.rotation=rotation;
-			
-			
 			
 			i++;
 		}

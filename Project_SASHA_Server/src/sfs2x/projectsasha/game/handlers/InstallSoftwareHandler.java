@@ -5,9 +5,11 @@ import sfs2x.projectsasha.game.GameConsts;
 import sfs2x.projectsasha.game.entities.GameWorld;
 import sfs2x.projectsasha.game.entities.Player;
 import sfs2x.projectsasha.game.entities.gateways.Gateway;
+import sfs2x.projectsasha.game.entities.software.Software;
 
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
+import com.smartfoxserver.v2.entities.data.SFSArray;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 
@@ -35,11 +37,6 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 			return;
 		}
 		
-		if(currentGw.hasSoftware(swName) && !currentGw.getInstalledSoftware(swName).isCumulative())
-		{
-			sendError("NOTCUMULATIVE", sender);
-			return;
-		}
 		
 		if(currentGw.hasSoftware(swName) && swVersion > currentGw.getInstalledSoftware(swName).getVersion())
 		{
@@ -47,8 +44,16 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 		}
 		else
 		{
+			if(currentGw.hasSoftware(swName) && !currentGw.getInstalledSoftware(swName).isCumulative())
+			{
+				sendError("NOTCUMULATIVE", sender);
+				return;
+			}
+			
 			if(swVersion == 1)
+			{
 				currentGw.installSoftware(swName, p);
+			}
 			else
 			{
 				sendError("ITEMNOTPRESENT",sender);
@@ -57,12 +62,24 @@ public class InstallSoftwareHandler extends BaseClientRequestHandler{
 		}
 		
 		ISFSObject reback = SFSObject.newInstance();
+		
+		Software[] inv = p.getInventory();
+		SFSArray returnInventory = new SFSArray();
+		
+		for(int i=0; i<GameConsts.INVENTORY_SIZE; i++)
+		{
+			if(inv[i] == null)
+				returnInventory.addUtfString("");
+			else
+				returnInventory.addUtfString(inv[i].toString());
+		}
+		
+		reback.putSFSArray("inventory", returnInventory);
 		reback.putBool("success", true);
 		send("install", reback, sender);	
 	}
 	private String nameToConst(String name)
 	{
-		trace(name);
 		String ret = "";
 		if(name.equals("brute"))
 			ret = GameConsts.BRUTEFORCER;

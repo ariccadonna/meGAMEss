@@ -9,6 +9,7 @@ import sfs2x.projectsasha.game.entities.software.SoftwareFactory;
 
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
+import com.smartfoxserver.v2.entities.data.SFSArray;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 
@@ -39,6 +40,20 @@ public class BuyItemHandler extends BaseClientRequestHandler{
 		
 		p.addInventory(world, s);
 		ISFSObject reback = SFSObject.newInstance();
+		
+		Software[] inv = p.getInventory();
+		SFSArray returnInventory = new SFSArray();
+		
+		for(int i=0; i<GameConsts.INVENTORY_SIZE; i++)
+		{
+			if(inv[i] == null)
+				returnInventory.addUtfString("");
+			else
+				returnInventory.addUtfString(inv[i].toString());
+		}
+			
+		
+		reback.putSFSArray("inventory", returnInventory);
 		reback.putBool("success", true);
 		send("buy", reback, sender);	
 	}

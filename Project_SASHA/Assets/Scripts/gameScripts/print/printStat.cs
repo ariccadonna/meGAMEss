@@ -21,6 +21,7 @@ public class printStat : MonoBehaviour {
 	
 	
 	public void stat(Gateway gtw){
+		this.gtw = gtw;
 		player = GameObject.Find("referencePanel").GetComponent<NetworkManager>().getCurrentPlayer();
 		stats=GameObject.Find("spotStats");
 		stats.GetComponent<OTTextSprite>().text="Name: " + gtw.getName() + " \nType: " + gtw.getType() + "\nAttack: " + gtw.getAtk() + " Defence: " + gtw.getDef();

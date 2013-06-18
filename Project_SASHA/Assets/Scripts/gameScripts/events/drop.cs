@@ -75,12 +75,12 @@ public class drop : MonoBehaviour {
 		
 		networkManager.installSoftware(imgRepo.current.name, gatewayName);
 		yield return new WaitForSeconds(0.3f);
-			if(networkManager.isSoftwareInstalled())
+			/*if(networkManager.isSoftwareInstalled())
 			{
 				imgSprite.image=imgRepo.current;
 				softwareAssigned=imgRepo.currentSw;
 				GameObject.Destroy(GameObject.Find(softwareAssigned.name));
-			}
+			}*/
 		
 		networkManager.resetInstalledSuccess();
 	}
