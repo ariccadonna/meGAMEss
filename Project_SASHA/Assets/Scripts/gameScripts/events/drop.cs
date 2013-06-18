@@ -15,7 +15,7 @@ public class drop : MonoBehaviour {
 	OTSprite sprite;
 	
 	// Use this for initialization
-	void Awake () 
+	void Awake() 
 	{
 		networkManager = GameObject.Find("referencePanel").GetComponent<NetworkManager>();
 		
@@ -41,7 +41,7 @@ public class drop : MonoBehaviour {
 	}
 	
 	
-	void onDrop (OTObject sprite)
+	void onDrop(OTObject sprite)
 	{
 		player = networkManager.getCurrentPlayer();
 		string owner = gtw.GetComponent<Gateway>().getOwner();
@@ -61,9 +61,7 @@ public class drop : MonoBehaviour {
 	
 	
 	// Update is called once per frame
-	void Update () {
-	
-	}
+	void Update(){}
 	
 	public void setGateway(GameObject gtw)
 	{
@@ -75,13 +73,6 @@ public class drop : MonoBehaviour {
 		
 		networkManager.installSoftware(imgRepo.current.name, gatewayName);
 		yield return new WaitForSeconds(0.3f);
-			/*if(networkManager.isSoftwareInstalled())
-			{
-				imgSprite.image=imgRepo.current;
-				softwareAssigned=imgRepo.currentSw;
-				GameObject.Destroy(GameObject.Find(softwareAssigned.name));
-			}*/
-		
 		networkManager.resetInstalledSuccess();
 	}
 }

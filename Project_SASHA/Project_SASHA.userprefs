@@ -1,19 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\gameScripts\NetworkManager.cs">
-    <Files>
-      <File FileName="Assets\Scripts\gameScripts\events\clickOnItem.cs" Line="2" Column="11" />
-      <File FileName="Assets\Scripts\gameScripts\NetworkManager.cs" Line="435" Column="11" />
-      <File FileName="Assets\Scripts\gameScripts\inventory.cs" Line="48" Column="32" />
-      <File FileName="Assets\Scripts\gameScripts\print\printStat.cs" Line="24" Column="18" />
-      <File FileName="Assets\Scripts\gameScripts\Gateway.cs" Line="56" Column="23" />
-      <File FileName="Assets\Scripts\gameScripts\events\otMouseInput.cs" Line="97" Column="51" />
-      <File FileName="Assets\Scripts\gameScripts\panels\referencePanel.cs" Line="6" Column="28" />
-      <File FileName="Assets\Scripts\gameScripts\events\drop.cs" Line="85" Column="34" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" />
+        <State expanded="True">
+          <Node name="Assembly-CSharp" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="gameScripts" expanded="True">
+                  <Node name="events" expanded="True" />
+                  <Node name="panels" expanded="True" />
+                </Node>
+                <Node name="LoginLobbys.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

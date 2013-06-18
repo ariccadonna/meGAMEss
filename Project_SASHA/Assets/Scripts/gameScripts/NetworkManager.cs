@@ -50,6 +50,7 @@ public class NetworkManager : MonoBehaviour {
 	private bool installSuccess = false;
 	
 	private bool lost = false;
+	public bool displayWindowIsOpen = false;
 	
 	private ISFSObject shop;
 
@@ -269,7 +270,7 @@ public class NetworkManager : MonoBehaviour {
         Debug.Log("User " + user.Name + " left room " + room);
 	}
 	
-	void OnApplicationQuit() 
+	public void CloseApplication() 
 	{
 		UnsubscribeDelegates();
 		smartFox.Disconnect();
@@ -538,58 +539,76 @@ public class NetworkManager : MonoBehaviour {
 	public void DisplayWindow(string action)
 	{
 		GameObject.Find("messageContainer").transform.position = new Vector3(-200F, 64F, -80F);
+		displayWindowIsOpen = true;
+		OTTextSprite windowMessage = GameObject.Find("messageWindow").GetComponent<OTTextSprite>();
 		switch(action)
 		{
 			case "SUCCESS":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Item bought with success.";
+				windowMessage.text = "Item bought with success.";
 			break;
 			case "YOUWON":
 				lost = true;
 				StartCoroutine(endGame());
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You win.";
+				windowMessage.text = "You win.";
 			break;
 			case "INSTALLED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Software installed.";
+				windowMessage.text = "Software installed.";
 			break;
 			case "NOPATH":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "No hacking path available.";
+				windowMessage.text = "No hacking path available.";
 			break;
 			case "HACKDISABLED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Your hack is disabled OR one of the selected Gateway is disabled for some seconds.";
+				windowMessage.text = "Your hack is disabled OR one of the selected Gateway is disabled for some seconds.";
 			break;
 			case "NOTOWNER":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont own that Gateway.";
+				windowMessage.text = "You dont own that Gateway.";
 			break;
 			case "ITEMNOTOWNED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont own that item.";
+				windowMessage.text = "You dont own that item.";
 			break;
 			case "INVENTORYFULL":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Your inventory is full.";
+				windowMessage.text = "Your inventory is full.";
 			break;
 			case "NOTENOUGHMONEY":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You dont have enough money.";
+				windowMessage.text = "You dont have enough money.";
 			break;
 			case "NOTCUMULATIVE":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You cant install that item on that Gateway since it's already installed.";
+				windowMessage.text = "You cant install that item on that Gateway since it's already installed.";
 			break;
 			case "ITEMNOTPRESENT":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You need to install a previous version of that software.";
+				windowMessage.text = "You need to install a previous version of that software.";
 			break;
 			case "LOST":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "You lost.";
+				windowMessage.text = "You lost.";
 				lost = true;
 				StartCoroutine(endGame());
 			break;
 			case "ACTIONSDISABLED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "All the actions have been disabled.";
+				windowMessage.text = "All the actions have been disabled.";
 			break;
 			case "ATTACKINGDISABLED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Attacking gateway is disabled for some seconds. Try again later.";
+				windowMessage.text = "Attacking gateway is disabled for some seconds. Try again later.";
 			break;
 			case "ATTACKEDISABLED":
-				GameObject.Find("messageWindow").GetComponent<OTTextSprite>().text = "Attacked gateway is disabled for some seconds. Try again later.";
+				windowMessage.text = "Attacked gateway is disabled for some seconds. Try again later.";
 			break;
+			case "SELFHACKING":
+				windowMessage.text = "You are trying to hack one of your gateways!";
+			break;
+			case "MISSINGORIGIN":
+				windowMessage.text = "You have to select a starting gateway.";
+			break;
+			case "MISSINGDESTINATION":
+				windowMessage.text = "You have to select a destination gateway.";
+			break;
+			
 		}
+	}
+	
+	public void closeDisplayWindow()
+	{
+		displayWindowIsOpen = false;
+		GameObject.Find("messageContainer").transform.position = new Vector3(-200F, 1000F, -80F);
 	}
 	
 	private IEnumerator endGame()
@@ -602,7 +621,7 @@ public class NetworkManager : MonoBehaviour {
 	
 	private void DisplayStats(ISFSObject data)
 	{
-		GameObject.Find("referencePanel").GetComponent<referencePanel>().deactivateMailPanel();
+		GameObject.Find("referencePanel").GetComponent<referencePanel>().deactivateInventoryPanel();
 		GameObject.Find("referencePanel").GetComponent<referencePanel>().deactivateShopPanel();
 		string text = "";
 		for(int i = 0; i < data.Size(); i++){
@@ -615,5 +634,11 @@ public class NetworkManager : MonoBehaviour {
 		
 		GameObject.Find("blackPanel").GetComponent<OTFilledSprite>().depth = -200;
 		GameObject.Find("endStats").GetComponent<OTTextSprite>().text = text;
+	}
+
+	public void leaveGame()
+	{
+		smartFox.Send(new LeaveRoomRequest());
+		Application.LoadLevel("loginScreen");
 	}
 }

@@ -138,10 +138,12 @@
     <Compile Include="Assets\Scripts\gameScripts\events\hackEvent.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\neutralizeEvent.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\otMouseInput.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\events\shortcutManager.cs" />
     <Compile Include="Assets\Scripts\gameScripts\imgRepo.cs" />
     <Compile Include="Assets\Scripts\gameScripts\inventory.cs" />
-    <Compile Include="Assets\Scripts\gameScripts\panels\generateMailPanel.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\panels\generateInventoryPanel.cs" />
     <Compile Include="Assets\Scripts\gameScripts\panels\generateShopPanel.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\panels\menuPanelActions.cs" />
     <Compile Include="Assets\Scripts\gameScripts\panels\referencePanel.cs" />
     <Compile Include="Assets\Scripts\gameScripts\print\newsRandom.cs" />
     <Compile Include="Assets\Scripts\gameScripts\print\printObjectives.cs" />

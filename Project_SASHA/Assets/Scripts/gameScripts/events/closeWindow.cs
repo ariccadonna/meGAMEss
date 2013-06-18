@@ -17,8 +17,7 @@ public class closeWindow : MonoBehaviour {
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
-			gameObject.transform.parent.parent.position = new Vector3(-200F, 1000F, -80F);
-
+			GameObject.Find ("referencePanel").GetComponent<NetworkManager>().closeDisplayWindow();
 		}
 	}
 }

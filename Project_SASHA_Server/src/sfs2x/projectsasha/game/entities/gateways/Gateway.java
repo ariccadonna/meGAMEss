@@ -311,16 +311,16 @@ public abstract class Gateway
 		
 		if(this.hasSoftware(type)) //is installed
 		{
-			Software theSoftware = this.getInstalledSoftware(type); 
 			
 			if(!this.getInstalledSoftware(type).isCumulative()) //not cumulative
 			{
-				theSoftware.setVersion(0);
+				Software theSoftware = this.getInstalledSoftware(type); 
+				//theSoftware.setVersion(0);
 				installedSoftware[theSoftware.getSlot()] = null;
 			}
 			else //cumulative
 			{
-				this.getInstalledSoftware(slot).setVersion(0);
+				//this.getInstalledSoftware(slot).setVersion(0);
 				installedSoftware[slot] = null;
 			}
 		}

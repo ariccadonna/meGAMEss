@@ -5,6 +5,7 @@ public class referencePanel : MonoBehaviour {
 	
 	public GameObject bottomPanel;
 	public GameObject shopPanel;
+	public GameObject menuPanel;
 	public GameObject inventoryPanel;
 	public GameObject lastSelectedGateway;
 	GameObject obj;
@@ -40,13 +41,21 @@ public class referencePanel : MonoBehaviour {
 	public void activateShopPanel(){shopPanel.SetActive(true);}
 	public void deactivateShopPanel(){shopPanel.SetActive(false);}
 
-	public void activateMailPanel(){
+	public void activateInventoryPanel()
+	{
 		inventoryPanel.GetComponent<inventory>().instantiateSW();
 		inventoryPanel.SetActive(true);
 	}
-	public void deactivateMailPanel(){
+	public void deactivateInventoryPanel()
+	{
 		inventoryPanel.SetActive(false);
 		inventoryPanel.GetComponent<inventory>().deleteSW();
+	}
+	
+	public void activateMenu(){menuPanel.SetActive(true);}
+	public void deactivateMenu()
+	{
+		menuPanel.SetActive(false);
 	}
 	
 	

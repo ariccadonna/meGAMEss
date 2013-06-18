@@ -1,26 +1,22 @@
 using UnityEngine;
 using System.Collections;
 
-public class generateMailPanel : MonoBehaviour {
+public class generateInventoryPanel : MonoBehaviour {
 
 
-	GameObject pop;
-	OTSprite sprite;
-	referencePanel script;
+	private GameObject pop;
+	private OTSprite sprite;
+	private referencePanel script;
 	private bool sc = false;
-	Vector3 scale;
+	private Vector3 scale;
 	
 	void Start () {
-		
 		pop = GameObject.Find("referencePanel");
 		script = pop.GetComponent<referencePanel>();
 		sprite = GetComponent<OTSprite>();
 		sprite.onInput=click;
 		sprite.onMouseExitOT = exit;
 		scale = gameObject.transform.localScale;
-		
-		
-	
 	}
 	
 	void click (OTObject sprite) 
@@ -38,11 +34,11 @@ public class generateMailPanel : MonoBehaviour {
 			
 			if (script.inventoryPanel.activeSelf==false)
 			{
-				script.activateMailPanel();
+				script.activateInventoryPanel();
 			}
 			else
 			{
-				script.deactivateMailPanel();
+				script.deactivateInventoryPanel();
 			}	
 		}
 	}

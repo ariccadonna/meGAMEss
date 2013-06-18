@@ -81,6 +81,7 @@ public class LoginLobbys : MonoBehaviour {
 		{
 			smartFox = SmartFoxConnection.Connection;
 			AddEventListeners();
+			isLoggedIn = true;
 			//SetupGeneralLobby();
 		}
 		else

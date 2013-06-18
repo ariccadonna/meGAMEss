@@ -9,7 +9,7 @@ import sfs2x.projectsasha.game.utils.RoomHelper;
 import sfs2x.projectsasha.game.entities.GameWorld;
 import sfs2x.projectsasha.game.entities.Player;
 import sfs2x.projectsasha.game.entities.gateways.Gateway;
-/*import sfs2x.projectsasha.game.entities.software.SoftwareFactory;*/
+import sfs2x.projectsasha.game.entities.software.SoftwareFactory;
 
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
@@ -46,7 +46,7 @@ public class WorldSetupHandler extends BaseClientRequestHandler
 			p.addMoney(GameConsts.STARTING_MONEY);
 			
 			/* FIXME: only for demo */
-			/*
+			
 			p.addMoney(9999999);
 			p.addInventory(SoftwareFactory.makeSoftware(GameConsts.BRUTEFORCER));
 			p.addInventory(SoftwareFactory.makeSoftware(GameConsts.BRUTEFORCER, 2));
@@ -71,7 +71,7 @@ public class WorldSetupHandler extends BaseClientRequestHandler
 			p.addInventory(SoftwareFactory.makeSoftware(GameConsts.PROXY));
 			p.addInventory(SoftwareFactory.makeSoftware(GameConsts.BRUTEFORCER));
 			p.addInventory(SoftwareFactory.makeSoftware(GameConsts.FIREWALL));
-			*/
+			
 			/************************/
 			i++;
 		}
