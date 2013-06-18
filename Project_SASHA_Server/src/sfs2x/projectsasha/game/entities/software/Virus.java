@@ -43,7 +43,7 @@ public class Virus extends Software
 	{
 		if(to.hasSoftware(GameConsts.ANTIVIRUS))
 		{
-			Software s = to.getInstalledSoftware(GameConsts.ANTIVIRUS);
+			Software s = (Antivirus)to.getInstalledSoftware(GameConsts.ANTIVIRUS);
 			s.runTriggeredAction(from, to);
 		}
 		if(from.hasSoftware(GameConsts.VIRUS))
