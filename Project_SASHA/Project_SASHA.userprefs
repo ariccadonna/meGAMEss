@@ -1,21 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\gameScripts\events\buttonShopInput.cs">
+    <Files>
+      <File FileName="Assets\Scripts\gameScripts\events\buttonShopInput.cs" Line="127" Column="75" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="Scripts" expanded="True">
-                <Node name="gameScripts" expanded="True">
-                  <Node name="events" expanded="True" />
-                  <Node name="panels" expanded="True" />
-                </Node>
-                <Node name="LoginLobbys.cs" selected="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
+        <State expanded="True" selected="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

@@ -14,7 +14,7 @@ public class buttonShopInput : MonoBehaviour {
 	
 	public GameObject shop2;
 	OTSprite sprite;
-	string name,xyz;
+	string name, V1, V2, V3;
 	imgRepo imgRepo;
 	GameObject item1,item2,item3;
 	OTSprite imgItem1,imgItem2,imgItem3;
@@ -98,17 +98,19 @@ public class buttonShopInput : MonoBehaviour {
 		
 		SWdsc_txt.text=desc;
 		
-		xyz=name+"_V1";
-		imgItem1.image=imgRepo.getTxt(xyz);
+		V1=name+"_V1";
+		imgItem1.image=imgRepo.getTxt(V1);
 		imgItem1.size=resize;
 		
 		if(name!="Deep_Throat")
 		{
-			xyz=name+"_V2";
-			imgItem2.image=imgRepo.getTxt(xyz);
+			V2=name+"_V2";
+			V3=name+"_V3";
+			imgItem2.image=imgRepo.getTxt(V2);
+			
+			
+			imgItem3.image=imgRepo.getTxt(V3);
 			imgItem2.size=resize;
-			xyz=name+"_V3";
-			imgItem3.image=imgRepo.getTxt(xyz);
 			imgItem3.size=resize;
 			dscItem1.text=name+": V1";
 			dscItem2.text=name+": V2";
@@ -122,8 +124,8 @@ public class buttonShopInput : MonoBehaviour {
 		}
 		else
 		{
-			imgItem2.image=imgItem3.image=imgRepo.getTxt("");
-			
+			imgItem2.image = imgItem3.image = imgRepo.getTxt("Version not available");
+			imgItem2.size = imgItem3.size = resize;
 			item1.GetComponent<clickOnItem>().active=true;
 			dscItem1.text=name;
 			dscItem2.text=dscItem3.text="";
