@@ -10,7 +10,10 @@ import sfs2x.projectsasha.game.entities.GameWorld;
 import sfs2x.projectsasha.game.entities.Player;
 import sfs2x.projectsasha.game.entities.gateways.Gateway;
 import sfs2x.projectsasha.game.entities.software.DeepThroat;
+import sfs2x.projectsasha.game.entities.software.DictionaryAttacker;
+import sfs2x.projectsasha.game.entities.software.IDS;
 import sfs2x.projectsasha.game.entities.software.Software;
+import sfs2x.projectsasha.game.entities.software.Virus;
 
 
 import com.smartfoxserver.v2.entities.User;
@@ -211,7 +214,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 					switch(sw.getType())
 					{
 						case GameConsts.DICTIONARY:
-							sw.runTriggeredAction(from, to);
+							((DictionaryAttacker)sw).runTriggeredAction(from, to);
 						break;
 						default:
 						break;
@@ -223,10 +226,10 @@ public class HackEventHandler extends BaseClientRequestHandler
 					{
 						case GameConsts.IDS:
 							if(to.getOwner()!=null)
-								sw.runTriggeredAction(from, to);
+								((IDS)sw).runTriggeredAction(from, to);
 						break;
 						case GameConsts.VIRUS:
-							sw.runTriggeredAction(from, to);
+							((Virus)sw).runTriggeredAction(from, to);
 						break;
 						case GameConsts.DEEPTHROAT:
 							((DeepThroat)sw).runTriggeredAction(from, to, ((AIThread)world.ai).police);
@@ -317,7 +320,7 @@ public class HackEventHandler extends BaseClientRequestHandler
 					switch(sw.getType())
 					{
 						case GameConsts.DICTIONARY:
-							sw.runTriggeredAction(from, to);
+							((DictionaryAttacker)sw).runTriggeredAction(from, to);
 						break;
 						default:
 						break;
@@ -329,10 +332,10 @@ public class HackEventHandler extends BaseClientRequestHandler
 					{
 						case GameConsts.IDS:
 							if(to.getOwner()!=null)
-								sw.runTriggeredAction(from, to);
+								((IDS)sw).runTriggeredAction(from, to);
 						break;
 						case GameConsts.VIRUS:
-							sw.runTriggeredAction(from, to);
+							((Virus)sw).runTriggeredAction(from, to);
 						break;
 						case GameConsts.DEEPTHROAT:
 							((DeepThroat)sw).runTriggeredAction(from, to, ((AIThread)world.ai).police);
