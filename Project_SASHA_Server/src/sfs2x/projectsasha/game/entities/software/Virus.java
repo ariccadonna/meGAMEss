@@ -41,16 +41,16 @@ public class Virus extends Software
 	@Override
 	public void runTriggeredAction(Gateway from, Gateway to)
 	{
-		if(to.hasSoftware(GameConsts.ANTIVIRUS))
+		if(from.hasSoftware(GameConsts.ANTIVIRUS))
 		{
-			Software s = (Antivirus)to.getInstalledSoftware(GameConsts.ANTIVIRUS);
+			Software s = (Antivirus)from.getInstalledSoftware(GameConsts.ANTIVIRUS);
 			s.runTriggeredAction(from, to);
 		}
-		if(from.hasSoftware(GameConsts.VIRUS))
+		if(to.hasSoftware(GameConsts.VIRUS))
 		{
-			Software[] lista = to.getInstalledSoftwares();
+			Software[] lista = from.getInstalledSoftwares();
 			for(int i=0;i<this.getVersion();i++)
-				to.uninstallSoftware(lista[i].getType(), to.getOwner());
+				from.uninstallSoftware(lista[i].getType(), from.getOwner());
 		}
 	}
 }
