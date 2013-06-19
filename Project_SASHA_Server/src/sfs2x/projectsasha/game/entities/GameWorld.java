@@ -21,12 +21,12 @@ public class GameWorld
 		gateways.put("scandinavia", 		new Educational(null, "Uppsala University", "Scandinavia", -6, 225, 62.278648f, 12.340171f));
 		gateways.put("northern europe",		new Bank(null, "European Central Bank", "Northern Europe", -21, 151, 52.519171f, 13.406091f));
 		gateways.put("ukraine", 			new Base(null, "nUKlear Research Lab.", "Ukraine", 50, 171, 48.379433f, 31.165580f));
-		gateways.put("western europe",		new Educational(null, "Pietro Maria Marrone's Vintage Movie Archives", "Western Europe", -81, 103, 40.463667f, -3.749220f));
+		gateways.put("western europe",		new Educational(null, "Pietro Maria Marrone's Movie Archives", "Western Europe", -81, 103, 40.463667f, -3.749220f));
 		gateways.put("southern europe",		new Base(null, "PONG Lab.", "Southern Europe", -7, 126, 41.608635f, 21.745275f));
 		gateways.put("north africa",		new Base(null, "Black Oil Corp.", "North Africa", -85, 25, 21.007890f, -10.940835f));
 		gateways.put("egypt",				new Military(null, "Anubi Military Airpor", "Egypt", -9, 55, 26.820553f, 30.802498f));
 		gateways.put("east africa",			new Base(null, "Desert City Mainframe", "East Africa", 35, -15, -0.023559f, 37.906193f));
-		gateways.put("congo",				new Base(null, "Forest City Database", "Congo", -20, -44, -0.228021f, 15.827659f));
+		gateways.put("congo",				new Base(null, "Reign in Blood Anti-Democracy", "Congo", -20, -44, -0.228021f, 15.827659f));
 		gateways.put("madagascar",			new Bank(null, "MastErAldo's Diamonds bank", "Madagascar", 66, -96, -18.766947f, 46.869107f));
 		gateways.put("south africa",		new Educational(null, "University of the South", "South Africa", 0, -115, -30.559482f, 22.937506f));
 		gateways.put("middle east",			new Base(null, "Technion Israel Inst. of Technology", "Middle East", 46, 73, 29.298528f, 42.550960f));
@@ -56,7 +56,7 @@ public class GameWorld
 		gateways.put("greenland",			new Government(null, "Greenland DNS", "Greenland", -163, 238, 71.706936f, -42.604303f));
 		gateways.put("venezuela",			new Base(null, "Caracas Rum Factory", "Venezuela", -239, -48, 6.423750f, -66.589730f));
 		gateways.put("peru",				new Base(null, "New Mayan Empire", "Peru", -250, -89, -9.189967f, -75.015152f));
-		gateways.put("brazil",				new Military(null, "Brazilian Army", "Brazil", -193, -110, -14.235004f, -51.925280f));
+		gateways.put("brazil",				new Military(null, "Uncle Sam Army Ranch", "Brazil", -193, -110, -14.235004f, -51.925280f));
 		gateways.put("argentina",			new Government(null, "Tango Down operation HQ", "Argentina", -231, -183, -38.416097f, -63.616672f));	
 		
 		gateways.get("iceland").setNeighborhoods(new Gateway[]
