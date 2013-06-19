@@ -136,6 +136,7 @@
     <Compile Include="Assets\Scripts\gameScripts\events\drag.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\drop.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\hackEvent.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\events\moveToolTipOutside.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\neutralizeEvent.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\otMouseInput.cs" />
     <Compile Include="Assets\Scripts\gameScripts\events\shortcutManager.cs" />
@@ -146,11 +147,13 @@
     <Compile Include="Assets\Scripts\gameScripts\panels\menuPanelActions.cs" />
     <Compile Include="Assets\Scripts\gameScripts\panels\referencePanel.cs" />
     <Compile Include="Assets\Scripts\gameScripts\print\newsRandom.cs" />
+    <Compile Include="Assets\Scripts\gameScripts\print\printGw.cs" />
     <Compile Include="Assets\Scripts\gameScripts\print\printObjectives.cs" />
     <Compile Include="Assets\Scripts\gameScripts\print\printPlayerStat.cs" />
     <Compile Include="Assets\Scripts\gameScripts\print\printStat.cs" />
     <Compile Include="Assets\Scripts\hackSeconds.cs" />
     <Compile Include="Assets\Scripts\openingLogo.cs" />
+    <None Include="Assets\font\fontgiocoWhite.txt" />
     <None Include="Assets\Orthello\Standard Assets\OT\_Base\TintedAlpha.shader" />
     <None Include="Assets\font\fontgioco.txt" />
     <Reference Include="SmartFox2">

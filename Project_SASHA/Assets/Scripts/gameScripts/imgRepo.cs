@@ -32,6 +32,7 @@ public class imgRepo : MonoBehaviour {
 	public Texture Thor_Garlic_Proxy_V1;
 	public Texture Thor_Garlic_Proxy_V2;
 	public Texture Thor_Garlic_Proxy_V3;
+	public Texture black_image;
 	public Texture questionMark;
 			
 	public Texture current;
@@ -110,8 +111,10 @@ public class imgRepo : MonoBehaviour {
 			return Prelude_Detection_System_V2;
 		if (varName=="Prelude_Detection_System_V3")
 			return Prelude_Detection_System_V3;
-		else 
+		if(varName=="empty")
 			return questionMark;
+		else
+			return black_image;
 		
 	}
 }

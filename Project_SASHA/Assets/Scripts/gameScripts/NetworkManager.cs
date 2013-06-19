@@ -641,4 +641,9 @@ public class NetworkManager : MonoBehaviour {
 		smartFox.Send(new LeaveRoomRequest());
 		Application.LoadLevel("loginScreen");
 	}
+	
+	public Color getColor(string plr)
+	{
+		return this.playerColors[plr];
+	}
 }

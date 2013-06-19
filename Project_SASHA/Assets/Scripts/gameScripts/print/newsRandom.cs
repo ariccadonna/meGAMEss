@@ -13,8 +13,10 @@ public class newsRandom : MonoBehaviour {
 	IEnumerator Start () {
 
 		phrases.Add("Masteraldo says - stacca tutto stacca tutto!-");
-		phrases.Add("Popular rich woman disappear in PoE");
-		phrases.Add ("assaulted armored truck carrying the finest tea of the world");
+		phrases.Add("Seems Eraldo is losing control");
+		phrases.Add("Found stoned penguin in PONG lab...");
+		phrases.Add("...it speaks only HEX");
+		phrases.Add("Russian bears have taken to huffin fuel");
 		
 		txt=GetComponent<OTTextSprite>();
 		txt.text="";

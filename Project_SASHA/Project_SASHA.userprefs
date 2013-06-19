@@ -1,12 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\gameScripts\events\buttonShopInput.cs">
-    <Files>
-      <File FileName="Assets\Scripts\gameScripts\events\buttonShopInput.cs" Line="127" Column="75" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" selected="True" />
+        <State expanded="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
