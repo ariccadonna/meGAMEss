@@ -2,6 +2,6 @@
 
 ChangeLog: https://github.com/Hargalaten/meGAMEss/commits/master
 
-Teaser: http://www.youtube.com/watch?v=j475yK6ZJGc
+Teaser: http://www.youtube.com/watch?v=H8-zv24jPbI
 
-Project developed for the 'Online Game Design' course at Universit� degli studi di Milano (a.y. 2012/13)
+Project developed for the 'Online Game Design' course at Universita' degli studi di Milano (a.y. 2012/13)
