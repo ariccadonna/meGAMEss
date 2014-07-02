@@ -1,0 +1,215 @@
+Base path: D:/Programmi/Unity/Editor/Data
+Pipe name: \\.\pipe\UnityShaderCompiler-1-4512
+Cmd: getPlatforms
+Cmd: preprocess
+  insize=717 outsize=717 ok=1
+Cmd: preprocess
+  insize=432 outsize=1178 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=4279 outsize=595 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=4279 outsize=270 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=2255 outsize=383 kw=POINT ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=2255 outsize=399 kw=POINT ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1783 outsize=190 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1783 outsize=118 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=3996 outsize=639 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=3996 outsize=220 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: preprocess
+  insize=850 outsize=315 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=833 outsize=223 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=833 outsize=516 kw= ok=1
+Cmd: compileSnippet
+  api=0 type=0 insize=833 outsize=402 kw= ok=1
+Cmd: compileSnippet
+  api=0 type=1 insize=833 outsize=658 kw= ok=1
+Cmd: preprocess
+  insize=7429 outsize=7426 ok=1
+Cmd: preprocess
+  insize=7029 outsize=7026 ok=1
+Cmd: preprocess
+  insize=7429 outsize=7426 ok=1
+Cmd: preprocess
+  insize=3678 outsize=748 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=3230 outsize=234 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=3230 outsize=2181 kw= ok=1
+Cmd: preprocess
+  insize=3600 outsize=559 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=3241 outsize=335 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=3241 outsize=111 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=3241 outsize=218 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=3241 outsize=284 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=3243 outsize=203 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=3243 outsize=242 kw= ok=1
+Cmd: preprocess
+  insize=6385 outsize=690 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=2107 outsize=153 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=2107 outsize=1224 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=4191 outsize=153 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=4191 outsize=4952 kw= ok=1
+Cmd: preprocess
+  insize=3678 outsize=748 ok=1
+Cmd: preprocess
+  insize=427 outsize=1173 ok=1
+Cmd: preprocess
+  insize=915 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=930 outsize=234 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=930 outsize=69 kw= ok=1
+Cmd: preprocess
+  insize=915 outsize=282 ok=1
+Cmd: preprocess
+  insize=1272 outsize=282 ok=1
+Cmd: compileSnippet
+  error: 2 plat 1 at (40): expression type incompatible with function return type
+  api=1 type=0 insize=1287 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=1272 outsize=282 ok=1
+Cmd: compileSnippet
+  error: 2 plat 1 at (40): expression type incompatible with function return type
+  api=1 type=0 insize=1287 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=1285 outsize=282 ok=1
+Cmd: compileSnippet
+  error: 2 plat 1 at (40): expression type incompatible with function return type
+  api=1 type=0 insize=1300 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=1269 outsize=282 ok=1
+Cmd: compileSnippet
+  error: 2 plat 1 at (37): undefined variable "color"
+  error: 2 plat 1 at (38): undefined variable "color"
+  error: 2 plat 1 at (39): undefined variable "color"
+  api=1 type=0 insize=1284 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=1269 outsize=282 ok=1
+Cmd: compileSnippet
+  error: 2 plat 1 at (34): undefined variable "i" undefined variable "i"
+  error: 2 plat 1 at (37): undefined variable "color"
+  error: 2 plat 1 at (38): undefined variable "color"
+  error: 2 plat 1 at (39): undefined variable "color"
+  api=1 type=0 insize=1284 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=1017 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1032 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1032 outsize=69 kw= ok=1
+Cmd: preprocess
+  insize=1074 outsize=282 ok=1
+Cmd: compileSnippet
+  error: 2 plat 1 at (34): undefined variable "i" undefined variable "i"
+  api=1 type=0 insize=1089 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=1087 outsize=281 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1102 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1102 outsize=69 kw= ok=1
+Cmd: preprocess
+  insize=1294 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1309 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1309 outsize=837 kw= ok=1
+Cmd: preprocess
+  insize=1324 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1339 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1339 outsize=104 kw= ok=1
+Cmd: preprocess
+  insize=1324 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1339 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1339 outsize=106 kw= ok=1
+Cmd: preprocess
+  insize=1324 outsize=282 ok=1
+Cmd: compileSnippet
+  error: 2 plat 1 at (34): undefined variable "color"
+  api=1 type=0 insize=1339 outsize=0 kw= ok=0
+Cmd: preprocess
+  insize=1324 outsize=282 ok=1
+Cmd: preprocess
+  insize=1356 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1371 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1371 outsize=106 kw= ok=1
+Cmd: preprocess
+  insize=1281 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1296 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1296 outsize=837 kw= ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1343 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1343 outsize=104 kw= ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1343 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1343 outsize=106 kw= ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1328 outsize=282 ok=1
+Cmd: preprocess
+  insize=1316 outsize=282 ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1331 outsize=362 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1331 outsize=106 kw= ok=1
+Unhandled exception: Readfile from pipe failed. GLE=The pipe has been ended.
+
+
+Quitting shader compiler process
